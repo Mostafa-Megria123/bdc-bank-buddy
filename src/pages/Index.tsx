@@ -135,10 +135,13 @@ const Index = () => {
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
           
-          <ResponsiveCarousel 
-            items={announcements}
-            className="animate-fade-in"
-          />
+          <div className="relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent animate-pulse"></div>
+            <ResponsiveCarousel 
+              items={announcements}
+              className="animate-fade-in hover-scale"
+            />
+          </div>
         </div>
       </section>
 
@@ -153,13 +156,17 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {projects.map((project) => (
-              <Card key={project.id} className="overflow-hidden hover:shadow-brand transition-all duration-300 group">
+            {projects.map((project, index) => (
+              <Card 
+                key={project.id} 
+                className="overflow-hidden hover:shadow-brand transition-all duration-500 group animate-fade-in hover:scale-[1.02] hover:-translate-y-2"
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
                 <div className="relative overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.name}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute top-4 right-4">
@@ -234,16 +241,17 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {ads.map((ad) => (
+            {ads.map((ad, index) => (
               <Card 
                 key={ad.id} 
-                className="overflow-hidden hover:shadow-brand transition-all duration-300 group cursor-pointer"
+                className="overflow-hidden hover:shadow-brand transition-all duration-500 group cursor-pointer animate-fade-in hover:scale-105 hover:-rotate-1"
+                style={{ animationDelay: `${index * 0.3}s` }}
               >
                 <div className="relative overflow-hidden">
                   <img
                     src={ad.image}
                     alt={ad.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

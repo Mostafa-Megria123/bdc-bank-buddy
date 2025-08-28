@@ -7,6 +7,12 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import About from "./pages/About";
+import FAQs from "./pages/FAQs";
+import Announcements from "./pages/Announcements";
+import MyReservations from "./pages/MyReservations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +29,12 @@ const App = () => (
             <main className="flex-1">
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/faqs" element={<FAQs />} />
+                <Route path="/announcements" element={<Announcements />} />
+                <Route path="/my-reservations" element={<MyReservations />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -1,32 +1,49 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Eye, EyeOff, LogIn, Loader2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, LoginFormData } from '@/lib/validations';
+import { toast } from 'sonner';
+import CaptchaField from '@/components/CaptchaField';
 
 const Login = () => {
   const { language } = useLanguage();
+  const { login, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    nationalId: '',
-    password: '',
-    captcha: ''
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      nationalId: '',
+      password: '',
+      captcha: ''
+    }
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', formData);
-  };
+  const captchaValue = watch('captcha');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await login(data.nationalId, data.password, data.captcha);
+      toast.success(language === 'ar' ? 'تم تسجيل الدخول بنجاح' : 'Login successful');
+      navigate('/');
+    } catch (error) {
+      toast.error(language === 'ar' ? 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى' : 'Login failed. Please try again');
+    }
   };
 
   return (
@@ -45,38 +62,37 @@ const Login = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
-                  {language === 'ar' ? 'الرقم القومي' : 'National ID'}
+                  {language === 'ar' ? 'الرقم القومي' : 'National ID'} *
                 </Label>
                 <Input
                   id="nationalId"
-                  name="nationalId"
                   type="text"
-                  required
                   maxLength={14}
-                  value={formData.nationalId}
-                  onChange={handleInputChange}
                   placeholder={language === 'ar' ? 'أدخل الرقم القومي (14 رقم)' : 'Enter National ID (14 digits)'}
                   className="transition-all duration-300 focus:shadow-sm"
+                  {...register('nationalId')}
+                  aria-invalid={!!errors.nationalId}
                 />
+                {errors.nationalId && (
+                  <p className="text-sm text-destructive">{errors.nationalId.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password">
-                  {language === 'ar' ? 'كلمة المرور' : 'Password'}
+                  {language === 'ar' ? 'كلمة المرور' : 'Password'} *
                 </Label>
                 <div className="relative">
                   <Input
                     id="password"
-                    name="password"
                     type={showPassword ? 'text' : 'password'}
-                    required
-                    value={formData.password}
-                    onChange={handleInputChange}
                     placeholder={language === 'ar' ? 'أدخل كلمة المرور' : 'Enter password'}
                     className="transition-all duration-300 focus:shadow-sm pr-10"
+                    {...register('password')}
+                    aria-invalid={!!errors.password}
                   />
                   <button
                     type="button"
@@ -90,29 +106,27 @@ const Login = () => {
                     )}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-sm text-destructive">{errors.password.message}</p>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="captcha">
-                  {language === 'ar' ? 'رمز التحقق' : 'Captcha'}
-                </Label>
-                <Input
-                  id="captcha"
-                  name="captcha"
-                  type="text"
-                  required
-                  value={formData.captcha}
-                  onChange={handleInputChange}
-                  placeholder={language === 'ar' ? 'أدخل رمز التحقق' : 'Enter captcha'}
-                  className="transition-all duration-300 focus:shadow-sm"
-                />
-              </div>
+              <CaptchaField
+                value={captchaValue}
+                onChange={(value) => setValue('captcha', value)}
+                error={errors.captcha?.message}
+              />
 
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300"
+                disabled={isLoading}
+                className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300 disabled:opacity-50"
               >
-                <LogIn className="mr-2 h-4 w-4" />
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <LogIn className="mr-2 h-4 w-4" />
+                )}
                 {language === 'ar' ? 'تسجيل الدخول' : 'Login'}
               </Button>
 

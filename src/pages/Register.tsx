@@ -1,54 +1,75 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Upload, UserPlus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Upload, UserPlus, Loader2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerSchema, RegisterFormData } from '@/lib/validations';
+import { toast } from 'sonner';
+import CaptchaField from '@/components/CaptchaField';
 
 const Register = () => {
   const { language } = useLanguage();
-  const [formData, setFormData] = useState({
-    nationalId: '',
-    name: '',
-    nationalIdImage: null as File | null,
-    printedNumber: '',
-    mobile: '',
-    confirmMobile: '',
-    email: '',
-    confirmEmail: '',
-    notificationLanguage: '',
-    nationality: 'Egypt',
-    residence: '',
-    governorate: '',
-    address: '',
-    phone: '',
-    maritalStatus: '',
-    captcha: ''
+  const { register: registerUser, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+    watch
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      nationalId: '',
+      name: '',
+      printedNumber: '',
+      mobile: '',
+      confirmMobile: '',
+      email: '',
+      confirmEmail: '',
+      notificationLanguage: 'ar',
+      nationality: 'Egypt',
+      residence: '',
+      governorate: '',
+      address: '',
+      phone: '',
+      maritalStatus: '',
+      captcha: ''
+    }
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle registration logic here
-    console.log('Registration attempt:', formData);
-  };
+  const residenceValue = watch('residence');
+  const captchaValue = watch('captcha');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      await registerUser({
+        ...data,
+        nationalIdImage: uploadedFile
+      });
+      toast.success(language === 'ar' ? 'تم إنشاء الحساب بنجاح' : 'Account created successfully');
+      navigate('/');
+    } catch (error) {
+      toast.error(language === 'ar' ? 'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى' : 'Registration failed. Please try again');
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData({
-        ...formData,
-        nationalIdImage: e.target.files[0]
-      });
+      const file = e.target.files[0];
+      setUploadedFile(file);
+      setValue('nationalIdImage', file);
     }
   };
 
@@ -81,7 +102,7 @@ const Register = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* National ID */}
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
@@ -89,14 +110,15 @@ const Register = () => {
                 </Label>
                 <Input
                   id="nationalId"
-                  name="nationalId"
                   type="text"
-                  required
                   maxLength={14}
-                  value={formData.nationalId}
-                  onChange={handleInputChange}
                   placeholder={language === 'ar' ? 'أدخل الرقم القومي' : 'Enter National ID'}
+                  {...register('nationalId')}
+                  aria-invalid={!!errors.nationalId}
                 />
+                {errors.nationalId && (
+                  <p className="text-sm text-destructive">{errors.nationalId.message}</p>
+                )}
               </div>
 
               {/* Name */}
@@ -106,13 +128,14 @@ const Register = () => {
                 </Label>
                 <Input
                   id="name"
-                  name="name"
                   type="text"
-                  required
-                  value={formData.name}
-                  onChange={handleInputChange}
                   placeholder={language === 'ar' ? 'أدخل الاسم الكامل' : 'Enter full name'}
+                  {...register('name')}
+                  aria-invalid={!!errors.name}
                 />
+                {errors.name && (
+                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                )}
               </div>
 
               {/* National ID Image */}
@@ -124,7 +147,6 @@ const Register = () => {
                   <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                   <input
                     id="nationalIdImage"
-                    name="nationalIdImage"
                     type="file"
                     accept=".jpg,.jpeg,.pdf"
                     onChange={handleFileChange}
@@ -139,10 +161,13 @@ const Register = () => {
                       : 'Click to upload file (JPG, PDF only)'
                     }
                   </Label>
-                  {formData.nationalIdImage && (
-                    <p className="mt-2 text-sm text-primary">{formData.nationalIdImage.name}</p>
+                  {uploadedFile && (
+                    <p className="mt-2 text-sm text-primary">{uploadedFile.name}</p>
                   )}
                 </div>
+                {errors.nationalIdImage && (
+                  <p className="text-sm text-destructive">{String(errors.nationalIdImage.message)}</p>
+                )}
               </div>
 
               {/* Printed Number */}
@@ -152,13 +177,14 @@ const Register = () => {
                 </Label>
                 <Input
                   id="printedNumber"
-                  name="printedNumber"
                   type="text"
-                  required
-                  value={formData.printedNumber}
-                  onChange={handleInputChange}
                   placeholder={language === 'ar' ? 'أدخل الرقم المطبوع' : 'Enter printed number'}
+                  {...register('printedNumber')}
+                  aria-invalid={!!errors.printedNumber}
                 />
+                {errors.printedNumber && (
+                  <p className="text-sm text-destructive">{errors.printedNumber.message}</p>
+                )}
               </div>
 
               {/* Mobile Numbers */}
@@ -169,13 +195,14 @@ const Register = () => {
                   </Label>
                   <Input
                     id="mobile"
-                    name="mobile"
                     type="tel"
-                    required
-                    value={formData.mobile}
-                    onChange={handleInputChange}
                     placeholder={language === 'ar' ? 'أدخل رقم المحمول' : 'Enter mobile number'}
+                    {...register('mobile')}
+                    aria-invalid={!!errors.mobile}
                   />
+                  {errors.mobile && (
+                    <p className="text-sm text-destructive">{errors.mobile.message}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmMobile">
@@ -183,13 +210,14 @@ const Register = () => {
                   </Label>
                   <Input
                     id="confirmMobile"
-                    name="confirmMobile"
                     type="tel"
-                    required
-                    value={formData.confirmMobile}
-                    onChange={handleInputChange}
                     placeholder={language === 'ar' ? 'أعد إدخال رقم المحمول' : 'Re-enter mobile number'}
+                    {...register('confirmMobile')}
+                    aria-invalid={!!errors.confirmMobile}
                   />
+                  {errors.confirmMobile && (
+                    <p className="text-sm text-destructive">{errors.confirmMobile.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -201,13 +229,14 @@ const Register = () => {
                   </Label>
                   <Input
                     id="email"
-                    name="email"
                     type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
                     placeholder={language === 'ar' ? 'أدخل البريد الإلكتروني' : 'Enter email address'}
+                    {...register('email')}
+                    aria-invalid={!!errors.email}
                   />
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email.message}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmEmail">
@@ -215,13 +244,14 @@ const Register = () => {
                   </Label>
                   <Input
                     id="confirmEmail"
-                    name="confirmEmail"
                     type="email"
-                    required
-                    value={formData.confirmEmail}
-                    onChange={handleInputChange}
                     placeholder={language === 'ar' ? 'أعد إدخال البريد الإلكتروني' : 'Re-enter email address'}
+                    {...register('confirmEmail')}
+                    aria-invalid={!!errors.confirmEmail}
                   />
+                  {errors.confirmEmail && (
+                    <p className="text-sm text-destructive">{errors.confirmEmail.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -230,15 +260,24 @@ const Register = () => {
                 <Label>
                   {language === 'ar' ? 'لغة الإشعارات المفضلة' : 'Preferred Notification Language'} *
                 </Label>
-                <Select value={formData.notificationLanguage} onValueChange={(value) => setFormData({...formData, notificationLanguage: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={language === 'ar' ? 'اختر اللغة' : 'Select language'} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ar">العربية</SelectItem>
-                    <SelectItem value="en">English</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="notificationLanguage"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={language === 'ar' ? 'اختر اللغة' : 'Select language'} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ar">العربية</SelectItem>
+                        <SelectItem value="en">English</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.notificationLanguage && (
+                  <p className="text-sm text-destructive">{errors.notificationLanguage.message}</p>
+                )}
               </div>
 
               {/* Country and Residence */}
@@ -247,50 +286,71 @@ const Register = () => {
                   <Label>
                     {language === 'ar' ? 'بلد الجنسية' : 'Country of Nationality'}
                   </Label>
-                  <Select value={formData.nationality} onValueChange={(value) => setFormData({...formData, nationality: value})}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={country} value={country}>{country}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="nationality"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem key={country} value={country}>{country}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>
-                    {language === 'ar' ? 'مكان الإقامة' : 'Place of Residence'}
+                    {language === 'ar' ? 'مكان الإقامة' : 'Place of Residence'} *
                   </Label>
-                  <Select value={formData.residence} onValueChange={(value) => setFormData({...formData, residence: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={language === 'ar' ? 'اختر البلد' : 'Select country'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={country} value={country}>{country}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="residence"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={language === 'ar' ? 'اختر البلد' : 'Select country'} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem key={country} value={country}>{country}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.residence && (
+                    <p className="text-sm text-destructive">{errors.residence.message}</p>
+                  )}
                 </div>
               </div>
 
               {/* Governorate (if Egypt) */}
-              {formData.residence === 'Egypt' && (
+              {residenceValue === 'Egypt' && (
                 <div className="space-y-2">
                   <Label>
                     {language === 'ar' ? 'المحافظة' : 'Governorate'}
                   </Label>
-                  <Select value={formData.governorate} onValueChange={(value) => setFormData({...formData, governorate: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={language === 'ar' ? 'اختر المحافظة' : 'Select governorate'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {governorates.map((gov) => (
-                        <SelectItem key={gov} value={gov}>{gov}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="governorate"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={language === 'ar' ? 'اختر المحافظة' : 'Select governorate'} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {governorates.map((gov) => (
+                            <SelectItem key={gov} value={gov}>{gov}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               )}
 
@@ -301,11 +361,9 @@ const Register = () => {
                 </Label>
                 <Textarea
                   id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
                   placeholder={language === 'ar' ? 'أدخل العنوان التفصيلي' : 'Enter detailed address'}
                   rows={3}
+                  {...register('address')}
                 />
               </div>
 
@@ -317,53 +375,55 @@ const Register = () => {
                   </Label>
                   <Input
                     id="phone"
-                    name="phone"
                     type="tel"
                     minLength={8}
                     maxLength={20}
-                    value={formData.phone}
-                    onChange={handleInputChange}
                     placeholder={language === 'ar' ? 'أدخل رقم التليفون' : 'Enter phone number'}
+                    {...register('phone')}
                   />
+                  {errors.phone && (
+                    <p className="text-sm text-destructive">{errors.phone.message}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>
                     {language === 'ar' ? 'الحالة الاجتماعية' : 'Marital Status'}
                   </Label>
-                  <Select value={formData.maritalStatus} onValueChange={(value) => setFormData({...formData, maritalStatus: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={language === 'ar' ? 'اختر الحالة' : 'Select status'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {maritalStatuses.map((status, index) => (
-                        <SelectItem key={index} value={status}>{status}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="maritalStatus"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={language === 'ar' ? 'اختر الحالة' : 'Select status'} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {maritalStatuses.map((status, index) => (
+                            <SelectItem key={index} value={status}>{status}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
 
-              {/* Captcha */}
-              <div className="space-y-2">
-                <Label htmlFor="captcha">
-                  {language === 'ar' ? 'رمز التحقق' : 'Captcha'} *
-                </Label>
-                <Input
-                  id="captcha"
-                  name="captcha"
-                  type="text"
-                  required
-                  value={formData.captcha}
-                  onChange={handleInputChange}
-                  placeholder={language === 'ar' ? 'أدخل رمز التحقق' : 'Enter captcha'}
-                />
-              </div>
+              <CaptchaField
+                value={captchaValue}
+                onChange={(value) => setValue('captcha', value)}
+                error={errors.captcha?.message}
+              />
 
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300"
+                disabled={isLoading}
+                className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300 disabled:opacity-50"
               >
-                <UserPlus className="mr-2 h-4 w-4" />
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <UserPlus className="mr-2 h-4 w-4" />
+                )}
                 {language === 'ar' ? 'إنشاء الحساب' : 'Create Account'}
               </Button>
 

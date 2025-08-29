@@ -90,16 +90,20 @@ export const Navigation: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <Button variant="outline" size="sm">
-                  {t('login')}
-                </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="bg-gradient-primary hover:opacity-90"
-                >
-                  {t('register')}
-                </Button>
+                <Link to="/login">
+                  <Button variant="outline" size="sm">
+                    {t('login')}
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-gradient-primary hover:opacity-90"
+                  >
+                    {t('register')}
+                  </Button>
+                </Link>
               </div>
             )}
           </div>
@@ -163,16 +167,20 @@ export const Navigation: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Button variant="outline" size="sm" className="w-full">
-                    {t('login')}
-                  </Button>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="w-full bg-gradient-primary hover:opacity-90"
-                  >
-                    {t('register')}
-                  </Button>
+                  <Link to="/login" className="block">
+                    <Button variant="outline" size="sm" className="w-full">
+                      {t('login')}
+                    </Button>
+                  </Link>
+                  <Link to="/register" className="block">
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="w-full bg-gradient-primary hover:opacity-90"
+                    >
+                      {t('register')}
+                    </Button>
+                  </Link>
                 </>
               )}
             </div>

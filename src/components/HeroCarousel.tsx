@@ -3,15 +3,8 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import heroBuilding from '@/assets/hero-building.jpg';
-
-interface HeroSlide {
-  id: string;
-  backgroundImage: string;
-  title: string;
-  subtitle: string;
-  primaryButtonText: string;
-  secondaryButtonText: string;
-}
+import announcement1 from '@/assets/announcement-1.jpg';
+import project1 from '@/assets/project-1.jpg';
 
 interface HeroCarouselProps {
   autoPlay?: boolean;
@@ -25,69 +18,40 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
   const { language, t } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const slides: HeroSlide[] = [
-    {
-      id: '1',
-      backgroundImage: heroBuilding,
-      title: language === 'ar' ? 'مرحباً بكم في BDC' : 'Welcome to BDC',
-      subtitle: language === 'ar' 
-        ? 'شريككم الموثوق في التطوير العقاري' 
-        : 'Your trusted partner in real estate development',
-      primaryButtonText: language === 'ar' ? 'استكشف مشاريعنا' : 'Explore Our Projects',
-      secondaryButtonText: language === 'ar' ? 'تعرف علينا أكثر' : 'Learn More About Us'
-    },
-    {
-      id: '2',
-      backgroundImage: heroBuilding,
-      title: language === 'ar' ? 'مشاريع استثنائية' : 'Exceptional Projects',
-      subtitle: language === 'ar' 
-        ? 'نبني أحلامكم بجودة وإتقان لا مثيل لهما' 
-        : 'Building your dreams with unmatched quality and precision',
-      primaryButtonText: language === 'ar' ? 'شاهد مشاريعنا' : 'View Our Projects',
-      secondaryButtonText: language === 'ar' ? 'تواصل معنا' : 'Contact Us'
-    },
-    {
-      id: '3',
-      backgroundImage: heroBuilding,
-      title: language === 'ar' ? 'استثمار آمن' : 'Secure Investment',
-      subtitle: language === 'ar' 
-        ? 'فرص استثمارية مربحة مع ضمان الجودة والتميز' 
-        : 'Profitable investment opportunities with guaranteed quality and excellence',
-      primaryButtonText: language === 'ar' ? 'اطلع على العروض' : 'View Offers',
-      secondaryButtonText: language === 'ar' ? 'احجز موعد' : 'Book Appointment'
-    }
+  const backgroundImages = [
+    heroBuilding,
+    announcement1,
+    project1
   ];
 
   useEffect(() => {
     if (autoPlay) {
       const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
+        setCurrentSlide((prev) => (prev + 1) % backgroundImages.length);
       }, autoPlayInterval);
 
       return () => clearInterval(interval);
     }
-  }, [autoPlay, autoPlayInterval, slides.length]);
+  }, [autoPlay, autoPlayInterval, backgroundImages.length]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setCurrentSlide((prev) => (prev + 1) % backgroundImages.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrentSlide((prev) => (prev - 1 + backgroundImages.length) % backgroundImages.length);
   };
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
-  const currentSlideData = slides[currentSlide];
-
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
-        style={{ backgroundImage: `url(${currentSlideData.backgroundImage})` }}
+        style={{ backgroundImage: `url(${backgroundImages[currentSlide]})` }}
       />
       <div className="absolute inset-0 bg-gradient-overlay" />
       
@@ -110,28 +74,18 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 
-          key={`title-${currentSlide}`}
-          className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in"
-        >
-          {currentSlideData.title}
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
+          {t('welcomeTitle')}
         </h1>
-        <p 
-          key={`subtitle-${currentSlide}`}
-          className="text-xl md:text-2xl text-white/90 mb-8 animate-fade-in"
-          style={{ animationDelay: '0.2s' }}
-        >
-          {currentSlideData.subtitle}
+        <p className="text-xl md:text-2xl text-white/90 mb-8 animate-fade-in">
+          {t('welcomeSubtitle')}
         </p>
-        <div 
-          className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in"
-          style={{ animationDelay: '0.4s' }}
-        >
+        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
           <Button 
             size="lg" 
             className="bg-white text-bdc-orange hover:bg-white/90 shadow-brand text-lg px-8 py-4 group"
           >
-            {currentSlideData.primaryButtonText}
+            {language === 'ar' ? 'استكشف مشاريعنا' : 'Explore Our Projects'}
             {language === 'ar' ? (
               <ArrowLeft className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             ) : (
@@ -143,7 +97,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
             size="lg"
             className="border-white text-white hover:bg-white hover:text-bdc-orange text-lg px-8 py-4 backdrop-blur-sm"
           >
-            {currentSlideData.secondaryButtonText}
+            {t('learnMore')}
           </Button>
         </div>
       </div>
@@ -151,7 +105,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       {/* Slide Indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
         <div className="flex space-x-3">
-          {slides.map((_, index) => (
+          {backgroundImages.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
@@ -172,7 +126,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
           <div 
             className="h-full bg-white transition-all duration-300 ease-linear"
             style={{ 
-              width: `${((currentSlide + 1) / slides.length) * 100}%`,
+              width: `${((currentSlide + 1) / backgroundImages.length) * 100}%`,
               animation: `progressBar ${autoPlayInterval}ms linear infinite`
             }}
           />

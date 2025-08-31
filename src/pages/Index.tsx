@@ -3,6 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ResponsiveCarousel } from '@/components/Carousel';
+import { HeroCarousel } from '@/components/HeroCarousel';
 import { ArrowRight, ArrowLeft, Calendar, MapPin, Home, Download } from 'lucide-react';
 import heroBuilding from '@/assets/hero-building.jpg';
 import announcement1 from '@/assets/announcement-1.jpg';
@@ -88,42 +89,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${heroBuilding})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-overlay" />
-        
-        <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
-            {t('welcomeTitle')}
-          </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 animate-fade-in">
-            {t('welcomeSubtitle')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-            <Button 
-              size="lg" 
-              className="bg-white text-bdc-orange hover:bg-white/90 shadow-brand text-lg px-8 py-4"
-            >
-              {language === 'ar' ? 'استكشف مشاريعنا' : 'Explore Our Projects'}
-              {language === 'ar' ? (
-                <ArrowLeft className="ml-2 h-5 w-5" />
-              ) : (
-                <ArrowRight className="ml-2 h-5 w-5" />
-              )}
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-white text-white hover:bg-white hover:text-bdc-orange text-lg px-8 py-4"
-            >
-              {t('learnMore')}
-            </Button>
-          </div>
-        </div>
-      </section>
+      <HeroCarousel autoPlay={true} autoPlayInterval={6000} />
 
       {/* Announcements Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">

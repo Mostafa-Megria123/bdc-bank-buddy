@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -173,16 +174,18 @@ const Index = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button 
-                      className="flex-1 bg-gradient-primary hover:opacity-90"
-                    >
-                      {t('viewDetails')}
-                      {language === 'ar' ? (
-                        <ArrowLeft className="ml-2 h-4 w-4" />
-                      ) : (
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      )}
-                    </Button>
+                    <Link to={project.link} className="flex-1">
+                      <Button 
+                        className="w-full bg-gradient-primary hover:opacity-90"
+                      >
+                        {t('viewDetails')}
+                        {language === 'ar' ? (
+                          <ArrowLeft className="ml-2 h-4 w-4" />
+                        ) : (
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        )}
+                      </Button>
+                    </Link>
                     
                     <Button variant="outline" className="flex-1">
                       <Download className="mr-2 h-4 w-4" />

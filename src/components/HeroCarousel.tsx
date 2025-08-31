@@ -54,23 +54,6 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         style={{ backgroundImage: `url(${backgroundImages[currentSlide]})` }}
       />
       <div className="absolute inset-0 bg-gradient-overlay" />
-      
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-300 group"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
-      </button>
-      
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-300 group"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
-      </button>
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,24 +82,6 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
           >
             {t('learnMore')}
           </Button>
-        </div>
-      </div>
-
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
-        <div className="flex space-x-3">
-          {backgroundImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide 
-                  ? 'bg-white scale-125' 
-                  : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
         </div>
       </div>
 

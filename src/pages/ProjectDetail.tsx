@@ -13,6 +13,32 @@ const ProjectDetail = () => {
   const { language, t } = useLanguage();
 
   // Mock project data based on ID
+  // Mock units data for each project
+  const getUnitsData = (projectId: string) => {
+    const unitsData = {
+      '1': [
+        { id: 'A101', type: language === 'ar' ? 'شقة' : 'Apartment', area: '120 m²', bedrooms: 2, bathrooms: 2, price: '1,850,000', status: 'available' },
+        { id: 'A102', type: language === 'ar' ? 'شقة' : 'Apartment', area: '140 m²', bedrooms: 3, bathrooms: 2, price: '2,100,000', status: 'reserved' },
+        { id: 'A103', type: language === 'ar' ? 'شقة' : 'Apartment', area: '160 m²', bedrooms: 3, bathrooms: 3, price: '2,450,000', status: 'available' },
+        { id: 'D201', type: language === 'ar' ? 'دوبلكس' : 'Duplex', area: '220 m²', bedrooms: 4, bathrooms: 3, price: '3,200,000', status: 'available' },
+        { id: 'D202', type: language === 'ar' ? 'دوبلكس' : 'Duplex', area: '250 m²', bedrooms: 4, bathrooms: 4, price: '3,650,000', status: 'sold' },
+        { id: 'V301', type: language === 'ar' ? 'فيلا' : 'Villa', area: '350 m²', bedrooms: 5, bathrooms: 4, price: '4,200,000', status: 'available' },
+        { id: 'V302', type: language === 'ar' ? 'فيلا' : 'Villa', area: '380 m²', bedrooms: 5, bathrooms: 5, price: '4,500,000', status: 'reserved' },
+        { id: 'A104', type: language === 'ar' ? 'شقة' : 'Apartment', area: '110 m²', bedrooms: 2, bathrooms: 1, price: '1,650,000', status: 'available' },
+      ],
+      '2': [
+        { id: 'B101', type: language === 'ar' ? 'شقة' : 'Apartment', area: '130 m²', bedrooms: 2, bathrooms: 2, price: '2,200,000', status: 'available' },
+        { id: 'B102', type: language === 'ar' ? 'شقة' : 'Apartment', area: '150 m²', bedrooms: 3, bathrooms: 2, price: '2,600,000', status: 'reserved' },
+        { id: 'P201', type: language === 'ar' ? 'بنتهاوس' : 'Penthouse', area: '280 m²', bedrooms: 4, bathrooms: 3, price: '4,800,000', status: 'available' },
+        { id: 'P202', type: language === 'ar' ? 'بنتهاوس' : 'Penthouse', area: '320 m²', bedrooms: 5, bathrooms: 4, price: '5,500,000', status: 'sold' },
+        { id: 'C101', type: language === 'ar' ? 'محل تجاري' : 'Commercial', area: '80 m²', bedrooms: 0, bathrooms: 1, price: '1,800,000', status: 'available' },
+        { id: 'C102', type: language === 'ar' ? 'محل تجاري' : 'Commercial', area: '120 m²', bedrooms: 0, bathrooms: 2, price: '2,400,000', status: 'reserved' },
+      ]
+    };
+    
+    return unitsData[projectId as keyof typeof unitsData] || unitsData['1'];
+  };
+
   const getProjectData = (projectId: string) => {
     const projectsData = {
       '1': {
@@ -152,26 +178,138 @@ const ProjectDetail = () => {
               </CardContent>
             </Card>
 
-            {/* Unit Types */}
+            {/* Available Units */}
             <Card>
               <CardContent className="p-6">
-                <h2 className="text-2xl font-bold text-foreground mb-4">
-                  {language === 'ar' ? 'أنواع الوحدات' : 'Unit Types'}
+                <h2 className="text-2xl font-bold text-foreground mb-6">
+                  {language === 'ar' ? 'الوحدات المتاحة' : 'Available Units'}
                 </h2>
+                
+                {/* Units Grid */}
                 <div className="space-y-4">
-                  {project.unitTypes.map((unit, index) => (
-                    <div key={index} className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h3 className="font-semibold text-foreground">{unit.type}</h3>
-                          <p className="text-sm text-muted-foreground">{unit.area}</p>
+                  {getUnitsData(id || '1').map((unit) => (
+                    <Card key={unit.id} className={`border-2 transition-all duration-300 hover:shadow-brand ${
+                      unit.status === 'reserved' 
+                        ? 'border-destructive/30 bg-destructive/5' 
+                        : unit.status === 'sold'
+                        ? 'border-muted bg-muted/20'
+                        : 'border-primary/30 hover:border-primary/50 cursor-pointer'
+                    }`}>
+                      <CardContent className="p-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          {/* Unit Info */}
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="text-lg font-semibold text-foreground">
+                                {language === 'ar' ? `وحدة رقم ${unit.id}` : `Unit #${unit.id}`}
+                              </h3>
+                              <Badge 
+                                variant={unit.status === 'available' ? 'default' : unit.status === 'reserved' ? 'destructive' : 'secondary'}
+                                className={unit.status === 'available' ? 'bg-green-500 hover:bg-green-600' : ''}
+                              >
+                                {language === 'ar' 
+                                  ? unit.status === 'available' ? 'متاح' : unit.status === 'reserved' ? 'محجوز' : 'مباع'
+                                  : unit.status === 'available' ? 'Available' : unit.status === 'reserved' ? 'Reserved' : 'Sold'
+                                }
+                              </Badge>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div>
+                                <p className="text-muted-foreground">{language === 'ar' ? 'النوع' : 'Type'}</p>
+                                <p className="font-medium text-foreground">{unit.type}</p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">{language === 'ar' ? 'المساحة' : 'Area'}</p>
+                                <p className="font-medium text-foreground">{unit.area}</p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">{language === 'ar' ? 'الغرف' : 'Bedrooms'}</p>
+                                <p className="font-medium text-foreground">
+                                  {unit.bedrooms} {language === 'ar' ? 'غرف' : 'BR'}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">{language === 'ar' ? 'الحمامات' : 'Bathrooms'}</p>
+                                <p className="font-medium text-foreground">
+                                  {unit.bathrooms} {language === 'ar' ? 'حمامات' : 'BA'}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Price and Action */}
+                          <div className="flex flex-col md:items-end gap-3">
+                            <div className="text-right">
+                              <p className="text-2xl font-bold text-primary">{unit.price}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {language === 'ar' ? 'جنيه مصري' : 'EGP'}
+                              </p>
+                            </div>
+                            
+                            {unit.status === 'available' && (
+                              <Button 
+                                size="sm" 
+                                className="bg-gradient-primary hover:opacity-90 whitespace-nowrap"
+                              >
+                                {language === 'ar' ? 'احجز الآن' : 'Reserve Now'}
+                              </Button>
+                            )}
+                            
+                            {unit.status === 'reserved' && (
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                disabled
+                                className="whitespace-nowrap"
+                              >
+                                {language === 'ar' ? 'محجوز' : 'Reserved'}
+                              </Button>
+                            )}
+                            
+                            {unit.status === 'sold' && (
+                              <Button 
+                                variant="secondary" 
+                                size="sm" 
+                                disabled
+                                className="whitespace-nowrap"
+                              >
+                                {language === 'ar' ? 'مباع' : 'Sold'}
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold text-primary">{unit.price}</p>
-                        </div>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))}
+                </div>
+                
+                {/* Units Summary */}
+                <div className="mt-6 grid grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-green-600">
+                      {getUnitsData(id || '1').filter(u => u.status === 'available').length}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {language === 'ar' ? 'متاح' : 'Available'}
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-destructive">
+                      {getUnitsData(id || '1').filter(u => u.status === 'reserved').length}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {language === 'ar' ? 'محجوز' : 'Reserved'}
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-muted-foreground">
+                      {getUnitsData(id || '1').filter(u => u.status === 'sold').length}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {language === 'ar' ? 'مباع' : 'Sold'}
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

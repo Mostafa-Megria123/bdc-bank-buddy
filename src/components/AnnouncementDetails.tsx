@@ -24,7 +24,7 @@ export const AnnouncementDetails: React.FC<AnnouncementDetailsProps> = ({
   announcement,
   onBack,
 }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">

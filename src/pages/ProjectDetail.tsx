@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ReservationModal } from '@/components/ReservationModal';
 import { ArrowLeft, Calendar, MapPin, Home, Download, Phone, Mail, Users, Building } from 'lucide-react';
 import project1 from '@/assets/project-1.jpg';
 import heroBuilding from '@/assets/hero-building.jpg';
@@ -11,6 +12,18 @@ import heroBuilding from '@/assets/hero-building.jpg';
 const ProjectDetail = () => {
   const { id } = useParams();
   const { language, t } = useLanguage();
+  const [selectedUnit, setSelectedUnit] = React.useState<any>(null);
+  const [isReservationModalOpen, setIsReservationModalOpen] = React.useState(false);
+
+  const handleReserveUnit = (unit: any) => {
+    setSelectedUnit(unit);
+    setIsReservationModalOpen(true);
+  };
+
+  const closeReservationModal = () => {
+    setIsReservationModalOpen(false);
+    setSelectedUnit(null);
+  };
 
   // Mock project data based on ID
   // Mock units data for each project
@@ -251,6 +264,7 @@ const ProjectDetail = () => {
                               <Button 
                                 size="sm" 
                                 className="bg-gradient-primary hover:opacity-90 whitespace-nowrap"
+                                onClick={() => handleReserveUnit(unit)}
                               >
                                 {language === 'ar' ? 'احجز الآن' : 'Reserve Now'}
                               </Button>
@@ -410,6 +424,14 @@ const ProjectDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Reservation Modal */}
+      <ReservationModal
+        isOpen={isReservationModalOpen}
+        onClose={closeReservationModal}
+        unit={selectedUnit}
+        projectName={project.name}
+      />
     </div>
   );
 };

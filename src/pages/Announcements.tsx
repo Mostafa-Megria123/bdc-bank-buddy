@@ -88,65 +88,76 @@ const Announcements = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-            {language === 'ar' ? 'الإعلانات' : 'Announcements'}
-          </h1>
-          <p className="text-xl text-muted-foreground animate-fade-in">
-            {language === 'ar' 
-              ? 'تابع أحدث إعلاناتنا ومشاريعنا العقارية الجديدة'
-              : 'Follow our latest announcements and new real estate projects'
-            }
-          </p>
+      <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-primary/5" />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <div className="animate-fade-in">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-8 leading-tight">
+              {language === 'ar' ? 'الإعلانات' : 'Announcements'}
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              {language === 'ar' 
+                ? 'تابع أحدث إعلاناتنا ومشاريعنا العقارية الجديدة'
+                : 'Follow our latest announcements and new real estate projects'
+              }
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Announcements Grid */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {announcements.map((announcement, index) => (
               <Card 
                 key={announcement.id} 
-                className="overflow-hidden hover:shadow-brand transition-all duration-500 group animate-fade-in hover:scale-105"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="group overflow-hidden border-0 shadow-elegant hover:shadow-elegant-lg transition-all duration-700 animate-fade-in hover-scale bg-card/80 backdrop-blur-sm"
+                style={{ animationDelay: `${index * 0.15}s` }}
               >
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden h-56">
                   <img
                     src={announcement.image}
                     alt={announcement.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                   />
-                  <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
                   <div className="absolute top-4 right-4">
-                    <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                      <div className="flex items-center text-sm text-foreground">
-                        <Calendar className="h-3 w-3 mr-1" />
+                    <div className="bg-background/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
+                      <div className="flex items-center text-sm font-medium text-foreground">
+                        <Calendar className="h-3 w-3 mr-2" />
                         {announcement.publishDate}
                       </div>
                     </div>
                   </div>
+
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-background/90 backdrop-blur-md rounded-lg p-3 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {announcement.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors duration-300">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold text-foreground mb-4 line-clamp-2 group-hover:text-primary transition-colors duration-300 leading-tight">
                     {announcement.title}
                   </h3>
-                  <p className="text-muted-foreground mb-6 line-clamp-3 leading-relaxed">
-                    {announcement.description}
-                  </p>
                   
-                  <Link to={announcement.link}>
+                  <Link to={announcement.link} className="block">
                     <Button 
-                      className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300 group-hover:shadow-lg"
+                      className="w-full bg-gradient-primary hover:shadow-brand transition-all duration-500 text-lg py-6 story-link group/button"
                     >
-                      {language === 'ar' ? 'اقرأ المزيد' : 'Read More'}
-                      {language === 'ar' ? (
-                        <ArrowLeft className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                      ) : (
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                      )}
+                      <span className="flex items-center justify-center">
+                        {language === 'ar' ? 'اقرأ المزيد' : 'Read More'}
+                        {language === 'ar' ? (
+                          <ArrowLeft className="mr-3 h-5 w-5 group-hover/button:-translate-x-1 transition-transform duration-300" />
+                        ) : (
+                          <ArrowRight className="ml-3 h-5 w-5 group-hover/button:translate-x-1 transition-transform duration-300" />
+                        )}
+                      </span>
                     </Button>
                   </Link>
                 </CardContent>
@@ -157,30 +168,34 @@ const Announcements = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Card className="bg-gradient-primary text-white animate-fade-in">
-            <CardContent className="p-12">
-              <h2 className="text-3xl font-bold mb-4">
-                {language === 'ar' ? 'لا تفوت الفرصة!' : "Don't Miss Out!"}
-              </h2>
-              <p className="text-xl text-white/90 mb-8">
-                {language === 'ar'
-                  ? 'اشترك في نشرتنا الإخبارية لتكون أول من يعلم بالإعلانات والعروض الجديدة'
-                  : 'Subscribe to our newsletter to be the first to know about new announcements and offers'
-                }
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder={language === 'ar' ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
-                  className="flex-1 px-4 py-3 rounded-lg text-foreground bg-white/90 backdrop-blur-sm border-0 focus:outline-none focus:ring-2 focus:ring-white/50"
-                />
-                <Button className="bg-white text-primary hover:bg-white/90 px-6 py-3 font-semibold">
-                  {language === 'ar' ? 'اشتراك' : 'Subscribe'}
-                </Button>
+      <section className="py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Card className="overflow-hidden border-0 shadow-elegant animate-fade-in">
+            <div className="relative bg-gradient-primary p-12 md:p-16">
+              <div className="absolute inset-0 bg-[url('/placeholder.svg')] bg-cover bg-center opacity-10" />
+              <div className="relative text-center text-white">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  {language === 'ar' ? 'لا تفوت الفرصة!' : "Don't Miss Out!"}
+                </h2>
+                <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
+                  {language === 'ar'
+                    ? 'اشترك في نشرتنا الإخبارية لتكون أول من يعلم بالإعلانات والعروض الجديدة'
+                    : 'Subscribe to our newsletter to be the first to know about new announcements and offers'
+                  }
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                  <input
+                    type="email"
+                    placeholder={language === 'ar' ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
+                    className="flex-1 px-6 py-4 rounded-xl text-foreground bg-background/95 backdrop-blur-md border-0 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 text-lg"
+                  />
+                  <Button className="bg-background text-primary hover:bg-background/90 px-8 py-4 font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale">
+                    {language === 'ar' ? 'اشتراك' : 'Subscribe'}
+                  </Button>
+                </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       </section>

@@ -293,7 +293,6 @@ const MyReservations = () => {
                       <SelectValue placeholder={language === 'ar' ? 'جميع المشاريع' : 'All Projects'} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">{language === 'ar' ? 'جميع المشاريع' : 'All Projects'}</SelectItem>
                       {projects.map((project) => (
                         <SelectItem key={project} value={project}>{project}</SelectItem>
                       ))}
@@ -307,7 +306,6 @@ const MyReservations = () => {
                       <SelectValue placeholder={language === 'ar' ? 'جميع الحالات' : 'All Statuses'} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">{language === 'ar' ? 'جميع الحالات' : 'All Statuses'}</SelectItem>
                       {statuses.map((status) => (
                         <SelectItem key={status.value} value={status.value}>{status.label}</SelectItem>
                       ))}

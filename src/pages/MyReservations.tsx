@@ -23,11 +23,11 @@ const MyReservations = () => {
   const reservations = [
     {
       id: '1',
-      formNo: 'RES-2024-001',
+      formNo: 'RES-2025-001',
       project: language === 'ar' ? 'مشروع النخيل الذهبي' : 'Golden Palm Project',
       status: 'New',
       statusText: language === 'ar' ? 'جديد' : 'New',
-      modified: '2024-01-15',
+      modified: '2025-01-15',
       governorate: language === 'ar' ? 'القاهرة' : 'Cairo',
       city: language === 'ar' ? 'القاهرة الجديدة' : 'New Cairo',
       area: language === 'ar' ? 'التجمع الخامس' : 'Fifth Settlement',
@@ -37,15 +37,18 @@ const MyReservations = () => {
       unitNo: '301',
       floorNo: '3',
       floorType: language === 'ar' ? 'متكرر' : 'Repeated',
-      paymentAttachments: null
+      paymentAttachments: null,
+      unitType: language === 'ar' ? '3 غرف + 2 حمام' : '3 BR + 2 Bath',
+      price: '2,500,000 EGP',
+      deposit: '250,000 EGP'
     },
     {
       id: '2',
-      formNo: 'RES-2024-002',
+      formNo: 'RES-2025-002',
       project: language === 'ar' ? 'كمبوند الواحة' : 'Oasis Compound',
       status: 'Payment data entered',
       statusText: language === 'ar' ? 'تم إدخال بيانات الدفع' : 'Payment data entered',
-      modified: '2024-01-10',
+      modified: '2025-01-10',
       governorate: language === 'ar' ? 'الجيزة' : 'Giza',
       city: language === 'ar' ? '6 أكتوبر' : '6th of October',
       area: language === 'ar' ? 'الشيخ زايد' : 'Sheikh Zayed',
@@ -55,15 +58,18 @@ const MyReservations = () => {
       unitNo: '205',
       floorNo: '2',
       floorType: language === 'ar' ? 'متكرر' : 'Repeated',
-      paymentAttachments: ['payment_receipt.pdf']
+      paymentAttachments: ['payment_receipt.pdf'],
+      unitType: language === 'ar' ? '2 غرفة + 1 حمام' : '2 BR + 1 Bath',
+      price: '1,800,000 EGP',
+      deposit: '180,000 EGP'
     },
     {
       id: '3',
-      formNo: 'RES-2024-003',
+      formNo: 'RES-2025-003',
       project: language === 'ar' ? 'مشروع الكورنيش' : 'Corniche Project',
-      status: 'Rejected',
-      statusText: language === 'ar' ? 'مرفوض' : 'Rejected',
-      modified: '2024-01-05',
+      status: 'Approved',
+      statusText: language === 'ar' ? 'مقبول' : 'Approved',
+      modified: '2025-01-05',
       governorate: language === 'ar' ? 'القاهرة' : 'Cairo',
       city: language === 'ar' ? 'مصر الجديدة' : 'Heliopolis',
       area: language === 'ar' ? 'النزهة' : 'El Nozha',
@@ -73,14 +79,61 @@ const MyReservations = () => {
       unitNo: '102',
       floorNo: '1',
       floorType: language === 'ar' ? 'أرضي' : 'Ground',
-      paymentAttachments: ['payment_receipt.pdf', 'bank_transfer.jpg']
+      paymentAttachments: ['payment_receipt.pdf', 'bank_transfer.jpg'],
+      unitType: language === 'ar' ? '4 غرف + 3 حمام' : '4 BR + 3 Bath',
+      price: '3,200,000 EGP',
+      deposit: '320,000 EGP'
+    },
+    {
+      id: '4',
+      formNo: 'RES-2025-004',
+      project: language === 'ar' ? 'مشروع السكن المتميز' : 'Premium Living Project',
+      status: 'Rejected',
+      statusText: language === 'ar' ? 'مرفوض' : 'Rejected',
+      modified: '2024-12-28',
+      governorate: language === 'ar' ? 'الإسكندرية' : 'Alexandria',
+      city: language === 'ar' ? 'الإسكندرية' : 'Alexandria',
+      area: language === 'ar' ? 'سيدي جابر' : 'Sidi Gaber',
+      neighborhood: language === 'ar' ? 'الحي الثاني' : 'Second District',
+      mougawra: '5',
+      buildingNo: 'D1',
+      unitNo: '405',
+      floorNo: '4',
+      floorType: language === 'ar' ? 'متكرر' : 'Repeated',
+      paymentAttachments: ['rejected_payment.pdf'],
+      unitType: language === 'ar' ? '1 غرفة + 1 حمام' : '1 BR + 1 Bath',
+      price: '1,200,000 EGP',
+      deposit: '120,000 EGP'
+    },
+    {
+      id: '5',
+      formNo: 'RES-2025-005',
+      project: language === 'ar' ? 'منتجع البحر الأحمر' : 'Red Sea Resort',
+      status: 'Payment data entered',
+      statusText: language === 'ar' ? 'تم إدخال بيانات الدفع' : 'Payment data entered',
+      modified: '2025-01-01',
+      governorate: language === 'ar' ? 'البحر الأحمر' : 'Red Sea',
+      city: language === 'ar' ? 'الغردقة' : 'Hurghada',
+      area: language === 'ar' ? 'السقالة' : 'Sekalla',
+      neighborhood: language === 'ar' ? 'الحي السياحي' : 'Tourist District',
+      mougawra: '20',
+      buildingNo: 'E5',
+      unitNo: '108',
+      floorNo: '1',
+      floorType: language === 'ar' ? 'أرضي' : 'Ground',
+      paymentAttachments: ['bank_receipt.pdf', 'transfer_proof.jpg'],
+      unitType: language === 'ar' ? '2 غرفة + 2 حمام' : '2 BR + 2 Bath',
+      price: '2,800,000 EGP',
+      deposit: '280,000 EGP'
     }
   ];
 
   const projects = [
     language === 'ar' ? 'مشروع النخيل الذهبي' : 'Golden Palm Project',
     language === 'ar' ? 'كمبوند الواحة' : 'Oasis Compound',
-    language === 'ar' ? 'مشروع الكورنيش' : 'Corniche Project'
+    language === 'ar' ? 'مشروع الكورنيش' : 'Corniche Project',
+    language === 'ar' ? 'مشروع السكن المتميز' : 'Premium Living Project',
+    language === 'ar' ? 'منتجع البحر الأحمر' : 'Red Sea Resort'
   ];
 
   const statuses = [
@@ -93,12 +146,12 @@ const MyReservations = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'New': return 'bg-blue-100 text-blue-800';
-      case 'Payment data entered': return 'bg-yellow-100 text-yellow-800';
-      case 'Approved': return 'bg-green-100 text-green-800';
-      case 'Rejected': return 'bg-red-100 text-red-800';
-      case 'Payment Refund Requested': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'New': return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'Payment data entered': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+      case 'Approved': return 'bg-green-50 text-green-700 border-green-200';
+      case 'Rejected': return 'bg-red-50 text-red-700 border-red-200';
+      case 'Payment Refund Requested': return 'bg-purple-50 text-purple-700 border-purple-200';
+      default: return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -114,7 +167,7 @@ const MyReservations = () => {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button size="sm" className="bg-gradient-primary hover:opacity-90">
+          <Button size="sm" className="bg-primary hover:bg-primary/90">
             <CreditCard className="h-4 w-4 mr-1" />
             {reservation.status === 'New' 
               ? (language === 'ar' ? 'إضافة بيانات الدفع' : 'Add Payment Data')
@@ -197,7 +250,7 @@ const MyReservations = () => {
                 )}
               </div>
             </div>
-            <Button className="w-full bg-gradient-primary hover:opacity-90">
+            <Button className="w-full bg-primary hover:bg-primary/90">
               {language === 'ar' ? 'حفظ' : 'Save'}
             </Button>
           </div>
@@ -207,7 +260,7 @@ const MyReservations = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -291,10 +344,10 @@ const MyReservations = () => {
                       <TableHead>{language === 'ar' ? 'المشروع' : 'Project'}</TableHead>
                       <TableHead>{language === 'ar' ? 'رقم الطلب' : 'Form No'}</TableHead>
                       <TableHead>{language === 'ar' ? 'الحالة' : 'Status'}</TableHead>
+                      <TableHead>{language === 'ar' ? 'نوع الوحدة' : 'Unit Type'}</TableHead>
+                      <TableHead>{language === 'ar' ? 'السعر' : 'Price'}</TableHead>
                       <TableHead>{language === 'ar' ? 'آخر تعديل' : 'Modified'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'المحافظة' : 'Governorate'}</TableHead>
                       <TableHead>{language === 'ar' ? 'المدينة' : 'City'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'المنطقة' : 'Area'}</TableHead>
                       <TableHead>{language === 'ar' ? 'رقم الوحدة' : 'Unit No'}</TableHead>
                       <TableHead>{language === 'ar' ? 'المرفقات' : 'Attachments'}</TableHead>
                       <TableHead>{language === 'ar' ? 'الإجراءات' : 'Actions'}</TableHead>
@@ -310,19 +363,19 @@ const MyReservations = () => {
                         <TableCell className="font-medium">{reservation.project}</TableCell>
                         <TableCell>{reservation.formNo}</TableCell>
                         <TableCell>
-                          <Badge className={getStatusColor(reservation.status)}>
+                          <Badge variant="outline" className={getStatusColor(reservation.status)}>
                             {reservation.statusText}
                           </Badge>
                         </TableCell>
+                        <TableCell>{reservation.unitType}</TableCell>
+                        <TableCell className="font-semibold text-primary">{reservation.price}</TableCell>
                         <TableCell>
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
                             {reservation.modified}
                           </div>
                         </TableCell>
-                        <TableCell>{reservation.governorate}</TableCell>
                         <TableCell>{reservation.city}</TableCell>
-                        <TableCell>{reservation.area}</TableCell>
                         <TableCell className="font-medium">{reservation.unitNo}</TableCell>
                         <TableCell>
                           {reservation.paymentAttachments ? (

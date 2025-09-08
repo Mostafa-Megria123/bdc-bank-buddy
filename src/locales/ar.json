@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "announcements": "الإعلانات",
+    "faqs": "الأسئلة الشائعة",
+    "about": "حولنا",
+    "myReservations": "طلبات الحجز",
+    "login": "تسجيل الدخول",
+    "register": "التسجيل",
+    "logout": "تسجيل الخروج",
+    "resetPassword": "إعادة تعيين كلمة المرور"
+  },
+  "hero": {
+    "welcomeTitle": "مرحباً بكم في بي دي سي العقارية",
+    "welcomeSubtitle": "اكتشف منزل أحلامك مع بي دي سي العقارية",
+    "exploreProjects": "استكشف مشاريعنا",
+    "learnMore": "اعرف أكثر"
+  },
+  "announcements": {
+    "sectionTitle": "أحدث الإعلانات",
+    "dream": {
+      "title": "إعلان مشروع الأحلام السكني الجديد",
+      "description": "مشروع سكني متميز يوفر وحدات سكنية فاخرة بأسعار تنافسية في قلب القاهرة الجديدة."
+    },
+    "corniche": {
+      "title": "بدء الحجز لمشروع الكورنيش",
+      "description": "ابدأ رحلتك نحو الحياة المثالية مع وحدات سكنية تطل على النيل مباشرة."
+    }
+  },
+  "projects": {
+    "sectionTitle": "أحدث المشاريع",
+    "goldenPalm": {
+      "name": "مشروع النخيل الذهبي",
+      "description": "مجمع سكني فاخر يضم شقق ودوبلكس وفيلات مع مساحات خضراء واسعة."
+    },
+    "oasis": {
+      "name": "كمبوند الواحة",
+      "description": "مشروع متكامل يجمع بين الوحدات السكنية والمساحات التجارية في موقع استراتيجي."
+    },
+    "types": {
+      "residential": "سكني",
+      "mixed": "سكني وتجاري"
+    },
+    "display": {
+      "dateRange": "العرض من {start} إلى {end}",
+      "unitsAvailable": "{count} وحدة متاحة"
+    }
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ ما",
+    "notFound": "غير موجود",
+    "category": "الفئة",
+    "viewDetails": "عرض التفاصيل",
+    "learnMore": "اعرف أكثر",
+    "search": "بحث",
+    "filter": "تصفية",
+    "back": "السابق",
+    "next": "التالي",
+    "previous": "السابق",
+    "termsAndConditions": "الشروط والأحكام"
+  },
+  "ads": {
+    "sectionTitle": "العروض الخاصة",
+    "downPayment": {
+      "title": "عروض خاصة للدفع المقدم"
+    },
+    "investment": {
+      "title": "فرصة استثمارية ذهبية"
+    }
+  }
+}

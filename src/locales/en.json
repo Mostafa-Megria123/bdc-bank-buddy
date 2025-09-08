@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "home": "Home",
+    "announcements": "Announcements",
+    "faqs": "FAQs",
+    "about": "About",
+    "myReservations": "My Reservations",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "resetPassword": "Reset Password"
+  },
+  "hero": {
+    "welcomeTitle": "Welcome to BDC Real Estate",
+    "welcomeSubtitle": "Discover your dream property with BDC Real Estate",
+    "exploreProjects": "Explore Our Projects",
+    "learnMore": "Learn More"
+  },
+  "announcements": {
+    "sectionTitle": "Latest Announcements",
+    "dream": {
+      "title": "New Dream Residential Project Announcement",
+      "description": "Distinguished residential project offering luxury housing units at competitive prices in the heart of New Cairo."
+    },
+    "corniche": {
+      "title": "Corniche Project Reservations Now Open",
+      "description": "Start your journey to perfect living with residential units directly overlooking the Nile."
+    }
+  },
+  "projects": {
+    "sectionTitle": "Latest Projects",
+    "goldenPalm": {
+      "name": "Golden Palm Project",
+      "description": "Luxury residential complex featuring apartments, duplexes and villas with vast green spaces."
+    },
+    "oasis": {
+      "name": "Oasis Compound",
+      "description": "Integrated project combining residential units and commercial spaces in a strategic location."
+    },
+    "types": {
+      "residential": "Residential",
+      "mixed": "Residential & Commercial"
+    },
+    "display": {
+      "dateRange": "Display from {start} to {end}",
+      "unitsAvailable": "{count} units available"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "notFound": "Not Found",
+    "category": "Category",
+    "viewDetails": "View Details",
+    "learnMore": "Learn More",
+    "search": "Search",
+    "filter": "Filter",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "termsAndConditions": "Terms & Conditions"
+  },
+  "ads": {
+    "sectionTitle": "Special Offers",
+    "downPayment": {
+      "title": "Special Down Payment Offers"
+    },
+    "investment": {
+      "title": "Golden Investment Opportunity"
+    }
+  }
+}

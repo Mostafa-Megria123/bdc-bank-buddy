@@ -18,23 +18,15 @@ const Index = () => {
     {
       id: '1',
       image: announcement1,
-      title: language === 'ar' 
-        ? 'إعلان مشروع الأحلام السكني الجديد'
-        : 'New Dream Residential Project Announcement',
-      description: language === 'ar'
-        ? 'مشروع سكني متميز يوفر وحدات سكنية فاخرة بأسعار تنافسية في قلب القاهرة الجديدة.'
-        : 'Distinguished residential project offering luxury housing units at competitive prices in the heart of New Cairo.',
+      title: t('announcements.dream.title'),
+      description: t('announcements.dream.description'),
       link: '/announcements/1'
     },
     {
       id: '2',  
       image: announcement1,
-      title: language === 'ar'
-        ? 'بدء الحجز لمشروع الكورنيش'
-        : 'Corniche Project Reservations Now Open',
-      description: language === 'ar'
-        ? 'ابدأ رحلتك نحو الحياة المثالية مع وحدات سكنية تطل على النيل مباشرة.'
-        : 'Start your journey to perfect living with residential units directly overlooking the Nile.',
+      title: t('announcements.corniche.title'),
+      description: t('announcements.corniche.description'),
       link: '/announcements/2'
     }
   ];
@@ -44,11 +36,9 @@ const Index = () => {
     {
       id: '1',
       image: project1,
-      name: language === 'ar' ? 'مشروع النخيل الذهبي' : 'Golden Palm Project',
-      type: language === 'ar' ? 'سكني' : 'Residential',
-      description: language === 'ar'
-        ? 'مجمع سكني فاخر يضم شقق ودوبلكس وفيلات مع مساحات خضراء واسعة.'
-        : 'Luxury residential complex featuring apartments, duplexes and villas with vast green spaces.',
+      name: t('projects.goldenPalm.name'),
+      type: t('projects.types.residential'),
+      description: t('projects.goldenPalm.description'),
       displayStartDate: '2024-01-15',
       displayEndDate: '2024-12-31',
       unitsAvailable: 250,
@@ -57,11 +47,9 @@ const Index = () => {
     {
       id: '2',
       image: project1,
-      name: language === 'ar' ? 'كمبوند الواحة' : 'Oasis Compound',
-      type: language === 'ar' ? 'سكني وتجاري' : 'Residential & Commercial',
-      description: language === 'ar'
-        ? 'مشروع متكامل يجمع بين السكن والتسوق والترفيه في موقع استراتيجي.'
-        : 'Integrated project combining residential, shopping and entertainment in a strategic location.',
+      name: t('projects.oasis.name'),
+      type: t('projects.types.mixed'),
+      description: t('projects.oasis.description'),
       displayStartDate: '2024-02-01',
       displayEndDate: '2024-11-30',
       unitsAvailable: 180,
@@ -73,14 +61,14 @@ const Index = () => {
   const ads = [
     {
       id: '1',
-      title: language === 'ar' ? 'عروض خاصة للدفع المقدم' : 'Special Down Payment Offers',
+      title: t('ads.downPayment.title'),
       image: project1,
       order: 1,
       link: '/projects/special-offers'
     },
     {
       id: '2',
-      title: language === 'ar' ? 'فرصة استثمارية ذهبية' : 'Golden Investment Opportunity',
+      title: t('ads.investment.title'),
       image: announcement1,
       order: 2,
       link: '/projects/investment'
@@ -97,7 +85,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t('latestAnnouncements')}
+              {t('announcements.sectionTitle')}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -117,7 +105,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t('latestProjects')}
+              {t('projects.sectionTitle')}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -155,20 +143,14 @@ const Index = () => {
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {language === 'ar' 
-                          ? `العرض من ${project.displayStartDate} إلى ${project.displayEndDate}`
-                          : `Display from ${project.displayStartDate} to ${project.displayEndDate}`
-                        }
+                        {t('projects.display.dateRange').replace('{start}', project.displayStartDate).replace('{end}', project.displayEndDate)}
                       </span>
                     </div>
                     
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Home className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {language === 'ar' 
-                          ? `${project.unitsAvailable} وحدة متاحة`
-                          : `${project.unitsAvailable} units available`
-                        }
+                        {t('projects.display.unitsAvailable').replace('{count}', project.unitsAvailable.toString())}
                       </span>
                     </div>
                   </div>
@@ -178,7 +160,7 @@ const Index = () => {
                       <Button 
                         className="w-full bg-gradient-primary hover:opacity-90"
                       >
-                        {t('viewDetails')}
+                        {t('common.viewDetails')}
                         {language === 'ar' ? (
                           <ArrowLeft className="ml-2 h-4 w-4" />
                         ) : (
@@ -189,7 +171,7 @@ const Index = () => {
                     
                     <Button variant="outline" className="flex-1">
                       <Download className="mr-2 h-4 w-4" />
-                      {language === 'ar' ? 'الشروط والأحكام' : 'Terms & Conditions'}
+                      {t('common.termsAndConditions')}
                     </Button>
                   </div>
                 </CardContent>
@@ -204,7 +186,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {language === 'ar' ? 'العروض الخاصة' : 'Special Offers'}
+              {t('ads.sectionTitle')}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>

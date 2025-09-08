@@ -58,17 +58,17 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
-          {t('welcomeTitle')}
+          {t('hero.welcomeTitle')}
         </h1>
         <p className="text-xl md:text-2xl text-white/90 mb-8 animate-fade-in">
-          {t('welcomeSubtitle')}
+          {t('hero.welcomeSubtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
           <Button 
             size="lg" 
             className="bg-white text-bdc-orange hover:bg-white/90 shadow-brand text-lg px-8 py-4 group"
           >
-            {language === 'ar' ? 'استكشف مشاريعنا' : 'Explore Our Projects'}
+            {t('hero.exploreProjects')}
             {language === 'ar' ? (
               <ArrowLeft className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             ) : (
@@ -80,7 +80,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
             size="lg"
             className="border-white text-[#6d6f74] hover:bg-white hover:text-bdc-orange text-lg px-8 py-4 backdrop-blur-sm bg-white/80"
           >
-            {t('learnMore')}
+            {t('hero.learnMore')}
           </Button>
         </div>
       </div>

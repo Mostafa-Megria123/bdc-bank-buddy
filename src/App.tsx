@@ -18,9 +18,21 @@ import ProjectDetail from "./pages/ProjectDetail";
 import NotFound from "./pages/NotFound";
 // import AnnouncementDetails from "./components/AnnouncementDetails";
 import { AnnouncementDetails } from "@/components/AnnouncementDetails";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
+
+// Scroll to top component
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  
+  return null;
+}
 
 // Dummy data for demonstration
 const announcements = [
@@ -122,6 +134,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <div className="min-h-screen flex flex-col">
               <Navigation />
               <main className="flex-1">

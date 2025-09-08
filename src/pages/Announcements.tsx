@@ -92,7 +92,7 @@ const Announcements = () => {
         <div className="absolute inset-0 bg-gradient-primary/5" />
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="animate-fade-in">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight bg-gradient-primary bg-clip-text text-white">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
               {language === 'ar' ? 'الإعلانات' : 'Announcements'}
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">

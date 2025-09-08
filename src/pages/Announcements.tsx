@@ -88,11 +88,11 @@ const Announcements = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
-      <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative py-24 px-5 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-primary/5" />
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="animate-fade-in">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-8 leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight bg-gradient-primary bg-clip-text text-white">
               {language === 'ar' ? 'الإعلانات' : 'Announcements'}
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">

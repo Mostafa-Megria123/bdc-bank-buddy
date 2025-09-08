@@ -78,7 +78,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
           <Button 
             variant="outline" 
             size="lg"
-            className="border-white text-white hover:bg-white hover:text-bdc-orange text-lg px-8 py-4 backdrop-blur-sm"
+            className="border-white text-[#6d6f74] hover:bg-white hover:text-bdc-orange text-lg px-8 py-4 backdrop-blur-sm bg-white/80"
           >
             {t('learnMore')}
           </Button>

@@ -37,7 +37,7 @@ export const Navigation: React.FC = () => {
               className="h-8 w-auto hover:opacity-80 transition-opacity"
             />
             <span className="ml-2 text-xl font-bold text-foreground">
-              {language === 'ar' ? 'بنك القاهرة' : 'BDC'}
+              {/* {language === 'ar' ? 'بنك القاهرة' : 'BDC'} */}
             </span>
           </Link>
 

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, ArrowLeft, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import announcement1 from '@/assets/announcement-1.jpg';
+const announcement1 = '/assets/announcement-1.jpg';
 
 const Announcements = () => {
   const { language } = useLanguage();

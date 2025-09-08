@@ -61,8 +61,8 @@ Join us for the celebration on September 15th, 2025, from 10:00 AM to 4:00 PM. T
 Location: 123 Financial District, Downtown
 RSVP required for attendance.`,
     images: [
-      "/src/assets/hero-building.jpg",
-      "/src/assets/announcement-1.jpg"
+      "/assets/hero-building.jpg",
+      "/assets/announcement-1.jpg"
     ],
     links: [
       { label: "RSVP for the Opening Ceremony", url: "https://example.com/rsvp" },
@@ -100,8 +100,8 @@ Special Launch Offers:
 
 Visit our show apartment or schedule a virtual tour today.`,
     images: [
-      "/src/assets/project-1.jpg",
-      "/src/assets/hero-building.jpg"
+      "/assets/project-1.jpg",
+      "/assets/hero-building.jpg"
     ],
     links: [
       { label: "View Project Details", url: "https://example.com/project" },

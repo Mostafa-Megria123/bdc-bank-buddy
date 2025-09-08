@@ -6,9 +6,9 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowLeft, ArrowRight, Calendar, MapPin, User, Share2, Download } from 'lucide-react';
 
 // Import images properly
-import announcement1 from '@/assets/announcement-1.jpg';
-import heroBuilding from '@/assets/hero-building.jpg';
-import project1 from '@/assets/project-1.jpg';
+const announcement1 = '/assets/announcement-1.jpg';
+const heroBuilding = '/assets/hero-building.jpg';
+const project1 = '/assets/project-1.jpg';
 
 type LegacyAnnouncement = {
   id: string;

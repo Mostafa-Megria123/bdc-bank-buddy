@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import heroBuilding from '@/assets/hero-building.jpg';
-import announcement1 from '@/assets/announcement-1.jpg';
-import project1 from '@/assets/project-1.jpg';
+const heroBuilding = '/assets/hero-building.jpg';
+const announcement1 = '/assets/announcement-1.jpg';
+const project1 = '/assets/project-1.jpg';
 
 interface HeroCarouselProps {
   autoPlay?: boolean;

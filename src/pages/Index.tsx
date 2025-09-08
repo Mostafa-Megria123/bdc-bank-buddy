@@ -6,9 +6,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ResponsiveCarousel } from '@/components/Carousel';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import { ArrowRight, ArrowLeft, Calendar, MapPin, Home, Download } from 'lucide-react';
-import heroBuilding from '@/assets/hero-building.jpg';
-import announcement1 from '@/assets/announcement-1.jpg';
-import project1 from '@/assets/project-1.jpg';
+const heroBuilding = '/assets/hero-building.jpg';
+const announcement1 = '/assets/announcement-1.jpg';
+const project1 = '/assets/project-1.jpg';
 
 const Index = () => {
   const { language, t } = useLanguage();

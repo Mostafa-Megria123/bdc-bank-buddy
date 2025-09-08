@@ -6,8 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ReservationModal } from '@/components/ReservationModal';
 import { ArrowLeft, Calendar, MapPin, Home, Download, Phone, Mail, Users, Building } from 'lucide-react';
-import project1 from '@/assets/project-1.jpg';
-import heroBuilding from '@/assets/hero-building.jpg';
+const project1 = '/assets/project-1.jpg';
+const heroBuilding = '/assets/hero-building.jpg';
 
 const ProjectDetail = () => {
   const { id } = useParams();

@@ -204,12 +204,21 @@ export const AnnouncementDetails: React.FC<AnnouncementDetailsProps> = ({
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
       <section className="relative h-[70vh] overflow-hidden">
-        <img
-          src={announcement.image}
-          alt={language === 'ar' ? announcement.titleAr : announcement.title}
-          className="w-full h-full object-cover animate-fade-in"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="w-full h-full bg-muted/20">
+          <img
+            src={announcement.image}
+            alt={language === 'ar' ? announcement.titleAr : announcement.title}
+            className="w-full h-full object-cover animate-fade-in"
+            onError={(e) => {
+              console.log('Image failed to load:', announcement.image);
+              e.currentTarget.style.display = 'none';
+            }}
+            onLoad={() => {
+              console.log('Image loaded successfully:', announcement.image);
+            }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent" />
         
         {/* Back Button */}
         <div className="absolute top-8 left-8 z-10">
@@ -299,11 +308,18 @@ export const AnnouncementDetails: React.FC<AnnouncementDetailsProps> = ({
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {announcement.gallery.map((image, idx) => (
-                      <div key={idx} className="group overflow-hidden rounded-xl">
+                      <div key={idx} className="group overflow-hidden rounded-xl bg-muted/20">
                         <img
                           src={image}
-                          alt={`Gallery image ${idx + 1}`}
+                          alt={`${language === 'ar' ? 'صورة المعرض' : 'Gallery image'} ${idx + 1}`}
                           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
+                          onError={(e) => {
+                            console.log('Gallery image failed to load:', image);
+                            e.currentTarget.src = '/placeholder.svg';
+                          }}
+                          onLoad={() => {
+                            console.log('Gallery image loaded:', image);
+                          }}
                         />
                       </div>
                     ))}

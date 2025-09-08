@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowLeft, ArrowRight, Calendar, MapPin, User, Share2, Download } from 'lucide-react';
+
+// Import images properly
 import announcement1 from '@/assets/announcement-1.jpg';
+import heroBuilding from '@/assets/hero-building.jpg';
+import project1 from '@/assets/project-1.jpg';
 
 type LegacyAnnouncement = {
   id: string;
@@ -47,7 +51,7 @@ const announcementsData: Announcement[] = [
     description: 'Distinguished residential project offering luxury housing units at competitive prices in the heart of New Cairo.',
     descriptionAr: 'مشروع سكني متميز يوفر وحدات سكنية فاخرة بأسعار تنافسية في قلب القاهرة الجديدة.',
     publishDate: '2024-01-15',
-    image: announcement1,
+    image: heroBuilding,
     content: `We are excited to announce the launch of our latest residential project, "Dream Homes", located in the prestigious area of New Cairo. This exceptional development offers a perfect blend of modern architecture, luxury amenities, and strategic location.
 
 The project features:
@@ -82,7 +86,7 @@ Investment opportunities are available with flexible payment plans and attractiv
     categoryAr: 'مشاريع جديدة',
     location: 'New Cairo',
     locationAr: 'القاهرة الجديدة',
-    gallery: [announcement1, announcement1, announcement1],
+    gallery: [heroBuilding, announcement1, project1],
     downloadLinks: [
       { label: 'Project Brochure', labelAr: 'كتيب المشروع', url: '#' },
       { label: 'Floor Plans', labelAr: 'مخططات الطوابق', url: '#' }
@@ -95,7 +99,7 @@ Investment opportunities are available with flexible payment plans and attractiv
     description: 'Start your journey to perfect living with residential units directly overlooking the Nile.',
     descriptionAr: 'ابدأ رحلتك نحو الحياة المثالية مع وحدات سكنية تطل على النيل مباشرة.',
     publishDate: '2024-01-10',
-    image: announcement1,
+    image: project1,
     content: `The prestigious Corniche project offers an unparalleled living experience with breathtaking Nile views. Located on the banks of the historic Nile River, this luxury development combines modern amenities with timeless elegance.
 
 Project highlights include:
@@ -132,7 +136,7 @@ Flexible payment plans are available with up to 7 years financing. Special launc
     categoryAr: 'مشاريع فاخرة',
     location: 'Nile Corniche',
     locationAr: 'كورنيش النيل',
-    gallery: [announcement1, announcement1],
+    gallery: [announcement1, project1],
     downloadLinks: [
       { label: 'Virtual Tour', labelAr: 'جولة افتراضية', url: '#' },
       { label: 'Price List', labelAr: 'قائمة الأسعار', url: '#' }
@@ -178,7 +182,7 @@ export const AnnouncementDetails: React.FC<AnnouncementDetailsProps> = ({
     description: foundAnnouncement.content.substring(0, 200) + '...',
     descriptionAr: foundAnnouncement.content.substring(0, 200) + '...',
     publishDate: foundAnnouncement.date,
-    image: foundAnnouncement.images?.[0] || announcement1,
+    image: foundAnnouncement.images?.[0] || heroBuilding,
     contentAr: foundAnnouncement.content,
     authorAr: foundAnnouncement.author || 'فريق بنك القاهرة',
     categoryAr: foundAnnouncement.category || 'عام',
@@ -211,7 +215,7 @@ export const AnnouncementDetails: React.FC<AnnouncementDetailsProps> = ({
             className="w-full h-full object-cover animate-fade-in"
             onError={(e) => {
               console.log('Image failed to load:', announcement.image);
-              e.currentTarget.style.display = 'none';
+              e.currentTarget.src = '/placeholder.svg';
             }}
             onLoad={() => {
               console.log('Image loaded successfully:', announcement.image);

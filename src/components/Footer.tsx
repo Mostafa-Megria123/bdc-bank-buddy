@@ -8,10 +8,10 @@ export const Footer: React.FC = () => {
   const { language, t } = useLanguage();
 
   const quickLinks = [
-    { path: '/', label: t('home') },
-    { path: '/announcements', label: t('announcements') },
-    { path: '/faqs', label: t('faqs') },
-    { path: '/about', label: t('about') }
+    { path: '/', label: t('nav.home') },
+    { path: '/announcements', label: t('nav.announcements') },
+    { path: '/faqs', label: t('nav.faqs') },
+    { path: '/about', label: t('nav.about') }
   ];
 
   return (
@@ -26,21 +26,14 @@ export const Footer: React.FC = () => {
                 alt="BDC"
                 className="h-8 w-auto brightness-0 invert"
               />
-              <span className="ml-2 text-xl font-bold">
-                {language === 'ar' ? 'بنك القاهرة' : 'BDC'}
-              </span>
+              <span className="ml-2 text-xl font-bold">{t('footer.brandName')}</span>
             </div>
-            <p className="text-white/80 text-sm">
-              {language === 'ar' 
-                ? 'شريككم الموثوق في التطوير العقاري وتحقيق أحلامكم السكنية.'
-                : 'Your trusted partner in real estate development and achieving your residential dreams.'
-              }
-            </p>
+            <p className="text-white/80 text-sm">{t('footer.tagline')}</p>
           </div>
 
           {/* Site Map */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('siteMap')}</h3>
+            <h3 className="text-lg font-semibold">{t('footer.siteMap')}</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.path}>
@@ -57,12 +50,12 @@ export const Footer: React.FC = () => {
 
           {/* Contact Us */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('contactUs')}</h3>
+            <h3 className="text-lg font-semibold">{t('footer.contactUs')}</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3 rtl:space-x-reverse">
                 <Phone className="h-4 w-4 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium">{t('hotline')}</p>
+                  <p className="text-sm font-medium">{t('footer.hotline')}</p>
                   <p className="text-white/80 text-sm">19977</p>
                 </div>
               </div>
@@ -70,12 +63,7 @@ export const Footer: React.FC = () => {
               <div className="flex items-center space-x-3 rtl:space-x-reverse">
                 <Phone className="h-4 w-4 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium">
-                    {language === 'ar' 
-                      ? 'قسم المنفذ والأمين'
-                      : 'Executor & Trustee Dept.'
-                    }
-                  </p>
+                  <p className="text-sm font-medium">{t('footer.executorDept')}</p>
                   <p className="text-white/80 text-sm">+20 2 2770 8888</p>
                 </div>
               </div>
@@ -91,22 +79,10 @@ export const Footer: React.FC = () => {
 
           {/* Additional Info */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">
-              {language === 'ar' ? 'معلومات إضافية' : 'Additional Info'}
-            </h3>
+            <h3 className="text-lg font-semibold">{t('footer.additionalInfoTitle')}</h3>
             <div className="space-y-2">
-              <p className="text-white/80 text-sm">
-                {language === 'ar' 
-                  ? 'ساعات العمل: الأحد - الخميس'
-                  : 'Working Hours: Sunday - Thursday'
-                }
-              </p>
-              <p className="text-white/80 text-sm">
-                {language === 'ar' 
-                  ? '9:00 ص - 3:00 م'
-                  : '9:00 AM - 3:00 PM'
-                }
-              </p>
+              <p className="text-white/80 text-sm">{t('footer.workingHoursDays')}</p>
+              <p className="text-white/80 text-sm">{t('footer.workingHoursTime')}</p>
             </div>
           </div>
         </div>
@@ -115,20 +91,20 @@ export const Footer: React.FC = () => {
         <div className="border-t border-white/20 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-white/80 text-sm">
-              {t('copyright')}
+              {t('footer.copyright')}
             </p>
             <div className="flex space-x-4 rtl:space-x-reverse">
               <Link
                 to="/privacy"
                 className="text-white/80 hover:text-white transition-colors text-sm"
               >
-                {language === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
+                {t('footer.privacyPolicy')}
               </Link>
               <Link
                 to="/terms"
                 className="text-white/80 hover:text-white transition-colors text-sm"
               >
-                {language === 'ar' ? 'الشروط والأحكام' : 'Terms & Conditions'}
+                {t('common.termsAndConditions')}
               </Link>
             </div>
           </div>

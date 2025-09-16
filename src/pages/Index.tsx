@@ -6,74 +6,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ResponsiveCarousel } from '@/components/Carousel';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import { ArrowRight, ArrowLeft, Calendar, MapPin, Home, Download } from 'lucide-react';
-const heroBuilding = '/assets/hero-building.jpg';
-const announcement1 = '/assets/announcement-1.jpg';
-const project1 = '/assets/project-1.jpg';
 
 const Index = () => {
   const { language, t } = useLanguage();
 
-  // Mock data for announcements carousel
-  const announcements = [
-    {
-      id: '1',
-      image: announcement1,
-      title: t('announcements.dream.title'),
-      description: t('announcements.dream.description'),
-      link: '/announcements/1'
-    },
-    {
-      id: '2',  
-      image: announcement1,
-      title: t('announcements.corniche.title'),
-      description: t('announcements.corniche.description'),
-      link: '/announcements/2'
-    }
-  ];
-
-  // Mock data for projects
-  const projects = [
-    {
-      id: '1',
-      image: project1,
-      name: t('projects.goldenPalm.name'),
-      type: t('projects.types.residential'),
-      description: t('projects.goldenPalm.description'),
-      displayStartDate: '2024-01-15',
-      displayEndDate: '2024-12-31',
-      unitsAvailable: 250,
-      link: '/projects/1'
-    },
-    {
-      id: '2',
-      image: project1,
-      name: t('projects.oasis.name'),
-      type: t('projects.types.mixed'),
-      description: t('projects.oasis.description'),
-      displayStartDate: '2024-02-01',
-      displayEndDate: '2024-11-30',
-      unitsAvailable: 180,
-      link: '/projects/2'
-    }
-  ];
-
-  // Mock data for ads
-  const ads = [
-    {
-      id: '1',
-      title: t('ads.downPayment.title'),
-      image: project1,
-      order: 1,
-      link: '/projects/special-offers'
-    },
-    {
-      id: '2',
-      title: t('ads.investment.title'),
-      image: announcement1,
-      order: 2,
-      link: '/projects/investment'
-    }
-  ];
+  const announcements = t('announcementsPage.list').slice(0, 2); // Show first 2 on homepage
+  const projects = t('projects.list');
+  const ads = t('ads.list');
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
@@ -85,7 +24,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t('announcements.sectionTitle')}
+              {t('announcementsPage.sectionTitle')}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -143,7 +82,9 @@ const Index = () => {
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {t('projects.display.dateRange').replace('{start}', project.displayStartDate).replace('{end}', project.displayEndDate)}
+                        {t('projects.display.dateRange')
+                          .replace('{start}', project.displayStartDate)
+                          .replace('{end}', project.displayEndDate)}
                       </span>
                     </div>
                     
@@ -207,7 +148,7 @@ const Index = () => {
                   <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Button className="bg-white text-bdc-orange hover:bg-white/90">
-                      {t('viewDetails')}
+                      {t('common.viewDetails')}
                     </Button>
                   </div>
                 </div>

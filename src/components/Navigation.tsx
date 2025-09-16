@@ -18,11 +18,11 @@ export const Navigation: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
-    { path: '/', label: t('home') },
-    { path: '/announcements', label: t('announcements') },
-    { path: '/faqs', label: t('faqs') },
-    { path: '/about', label: t('about') },
-    { path: '/my-reservations', label: t('myReservations') }
+    { path: '/', label: t('nav.home') },
+    { path: '/announcements', label: t('nav.announcements') },
+    { path: '/faqs', label: t('nav.faqs') },
+    { path: '/about', label: t('nav.about') },
+    { path: '/my-reservations', label: t('nav.myReservations') }
   ];
 
   return (
@@ -70,14 +70,14 @@ export const Navigation: React.FC = () => {
               className="flex items-center space-x-1 rtl:space-x-reverse"
             >
               <Globe className="h-4 w-4" />
-              <span>{language === 'en' ? 'عربي' : 'English'}</span>
+              <span>{t('nav.languageToggle')}</span>
             </Button>
 
             {/* Auth Buttons */}
             {isLoggedIn ? (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Button variant="outline" size="sm">
-                  {t('resetPassword')}
+                  {t('nav.resetPassword')}
                 </Button>
                 <Button
                   variant="default"
@@ -85,14 +85,14 @@ export const Navigation: React.FC = () => {
                   onClick={() => setIsLoggedIn(false)}
                   className="bg-gradient-primary hover:opacity-90"
                 >
-                  {t('logout')}
+                  {t('nav.logout')}
                 </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Link to="/login">
                   <Button variant="outline" size="sm">
-                    {t('login')}
+                    {t('nav.login')}
                   </Button>
                 </Link>
                 <Link to="/register">
@@ -101,7 +101,7 @@ export const Navigation: React.FC = () => {
                     size="sm"
                     className="bg-gradient-primary hover:opacity-90"
                   >
-                    {t('register')}
+                    {t('nav.register')}
                   </Button>
                 </Link>
               </div>
@@ -154,7 +154,7 @@ export const Navigation: React.FC = () => {
               {isLoggedIn ? (
                 <>
                   <Button variant="outline" size="sm" className="w-full">
-                    {t('resetPassword')}
+                    {t('nav.resetPassword')}
                   </Button>
                   <Button
                     variant="default"
@@ -162,14 +162,14 @@ export const Navigation: React.FC = () => {
                     onClick={() => setIsLoggedIn(false)}
                     className="w-full bg-gradient-primary hover:opacity-90"
                   >
-                    {t('logout')}
+                    {t('nav.logout')}
                   </Button>
                 </>
               ) : (
                 <>
                   <Link to="/login" className="block">
                     <Button variant="outline" size="sm" className="w-full">
-                      {t('login')}
+                      {t('nav.login')}
                     </Button>
                   </Link>
                   <Link to="/register" className="block">
@@ -178,7 +178,7 @@ export const Navigation: React.FC = () => {
                       size="sm"
                       className="w-full bg-gradient-primary hover:opacity-90"
                     >
-                      {t('register')}
+                      {t('nav.register')}
                     </Button>
                   </Link>
                 </>

@@ -67,7 +67,7 @@ export const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
                         size="sm"
                         className="w-full group-hover:bg-gradient-primary group-hover:text-white group-hover:border-transparent transition-all duration-300"
                       >
-                        {t('viewDetails')}
+                        {t('common.viewDetails')}
                         {language === 'ar' ? (
                           <ArrowLeft className="ml-2 h-4 w-4" />
                         ) : (

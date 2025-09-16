@@ -9,22 +9,18 @@ export const translations = {
 export type TranslationKey = keyof typeof en;
 export type Language = 'en' | 'ar';
 
-export function getTranslation(lang: Language, key: string): string {
+export function getTranslation(lang: Language, key: string): any {
   const keys = key.split('.');
-  let current: any = translations[lang];
-  
+  // Use `unknown` instead of `any` for type safety.
+  let current: unknown = translations[lang];
+
   for (const k of keys) {
-    if (current[k] === undefined) {
+    if (typeof current !== 'object' || current === null || !(k in current)) {
       console.warn(`Translation missing for key: ${key} in language: ${lang}`);
       return key;
     }
-    current = current[k];
+    current = (current as Record<string, unknown>)[k];
   }
-  
-  if (typeof current !== 'string') {
-    console.error(`Translation key "${key}" in language "${lang}" points to an object instead of a string`);
-    return key;
-  }
-  
+
   return current;
 }

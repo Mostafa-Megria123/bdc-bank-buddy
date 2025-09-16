@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/useLanguage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Building, Users, Award, Phone, Mail, MapPin } from 'lucide-react';
 

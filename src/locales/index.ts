@@ -11,7 +11,7 @@ export type Language = 'en' | 'ar';
 
 export function getTranslation(lang: Language, key: string): unknown {
   const keys = key.split('.');
-  // Use `unknown` instead of `any` for type safety.
+  // Return type is unknown because translations can be string, array or object depending on the key.
   let current: unknown = translations[lang];
 
   for (const k of keys) {
@@ -19,7 +19,7 @@ export function getTranslation(lang: Language, key: string): unknown {
       console.warn(`Translation missing for key: ${key} in language: ${lang}`);
       return key;
     }
-    current = (current as Record<string, unknown>)[k];
+  current = (current as Record<string, unknown>)[k];
   }
 
   return current;

@@ -55,7 +55,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
+          <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
             <ScrollToTop />
             <div className="min-h-screen flex flex-col">
               <Navigation />

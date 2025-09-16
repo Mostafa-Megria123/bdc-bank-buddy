@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import About from "./pages/About";
 import FAQs from "./pages/FAQs";
 import Announcements from "./pages/Announcements";
+import Projects from "./pages/Projects";
 import MyReservations from "./pages/MyReservations";
 import ProjectDetail from "./pages/ProjectDetail";
 import NotFound from "./pages/NotFound";
@@ -68,6 +69,7 @@ const App = () => (
                   <Route path="/about" element={<About />} />
                   <Route path="/faqs" element={<FAQs />} />
                   <Route path="/announcements" element={<Announcements />} />
+                  <Route path="/projects" element={<Projects />} />
                   <Route
                     path="/announcements/:id"
                     element={<AnnouncementDetailsWrapper />}

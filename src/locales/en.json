@@ -4,6 +4,7 @@
     "announcements": "Announcements",
     "faqs": "FAQs",
     "about": "About",
+  "projects": "Projects",
     "myReservations": "My Reservations",
     "login": "Login",
     "register": "Register",
@@ -77,6 +78,7 @@
   },
   "projects": {
     "sectionTitle": "Latest Projects",
+  "sectionSubtitle": "Explore our current and upcoming real estate projects.",
     "list": [
       {
         "id": "1",
@@ -104,6 +106,11 @@
     "display": {
       "dateRange": "Display from {start} to {end}",
       "unitsAvailable": "{count} units available"
+    }
+    ,
+    "cta": {
+      "title": "Interested in a Project?",
+      "subtitle": "Contact our team to learn more about available units and offers."
     }
   },
   "common": {

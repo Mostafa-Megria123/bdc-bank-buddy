@@ -2,6 +2,7 @@
   "nav": {
     "home": "الرئيسية",
     "announcements": "الإعلانات",
+  "projects": "المشاريع",
     "faqs": "الأسئلة الشائعة",
     "about": "حولنا",
     "myReservations": "طلبات الحجز",
@@ -77,6 +78,7 @@
   },
   "projects": {
     "sectionTitle": "أحدث المشاريع",
+  "sectionSubtitle": "استكشف مشاريعنا الحالية والمستقبلية.",
     "list": [
       {
         "id": "1",
@@ -104,6 +106,11 @@
     "display": {
       "dateRange": "العرض من {start} إلى {end}",
       "unitsAvailable": "{count} وحدة متاحة"
+    }
+    ,
+    "cta": {
+      "title": "مهتم بمشروع؟",
+      "subtitle": "تواصل مع فريقنا لمعرفة المزيد عن الوحدات المتاحة والعروض."
     }
   },
   "common": {

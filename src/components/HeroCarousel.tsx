@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/useLanguage';
+import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 const heroBuilding = '/assets/hero-building.jpg';
 const announcement1 = '/assets/announcement-1.jpg';
@@ -64,17 +65,19 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
           {tString('hero.welcomeSubtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-          <Button 
-            size="lg" 
-            className="bg-white text-bdc-orange hover:bg-white/90 shadow-brand text-lg px-8 py-4 group"
-          >
-            {tString('hero.exploreProjects')}
-            {language === 'ar' ? (
-              <ArrowLeft className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            ) : (
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            )}
-          </Button>
+          <Link to="/projects" className="w-full sm:w-auto">
+            <Button 
+              size="lg" 
+              className="bg-white text-bdc-orange hover:bg-white/90 shadow-brand text-lg px-8 py-4 group"
+            >
+              {tString('hero.exploreProjects')}
+              {language === 'ar' ? (
+                <ArrowLeft className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              ) : (
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              )}
+            </Button>
+          </Link>
           <Button 
             variant="outline" 
             size="lg"

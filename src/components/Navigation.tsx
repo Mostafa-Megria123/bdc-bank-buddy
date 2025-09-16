@@ -20,6 +20,7 @@ export const Navigation: React.FC = () => {
   const navItems = [
     { path: '/', label: String(t('nav.home')) },
     { path: '/announcements', label: String(t('nav.announcements')) },
+  { path: '/projects', label: String(t('nav.projects') || 'Projects') },
     { path: '/faqs', label: String(t('nav.faqs')) },
     { path: '/about', label: String(t('nav.about')) },
     { path: '/my-reservations', label: String(t('nav.myReservations')) }

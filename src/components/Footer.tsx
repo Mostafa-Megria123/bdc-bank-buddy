@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Phone, Mail, MapPin } from 'lucide-react';
-const bdcLogo = '/assets/bdc-logo.png';
+const bdcLogo = '/assets/bdc_logo_transparent.png';
 
 export const Footer: React.FC = () => {
   const { language, t } = useLanguage();
@@ -24,9 +24,8 @@ export const Footer: React.FC = () => {
               <img
                 src={bdcLogo}
                 alt="BDC"
-                className="h-8 w-auto brightness-0 invert"
+                className="h-8 w-auto"
               />
-              <span className="ml-2 text-xl font-bold">{String(t('footer.brandName'))}</span>
             </div>
             <p className="text-white/80 text-sm">{String(t('footer.tagline'))}</p>
           </div>

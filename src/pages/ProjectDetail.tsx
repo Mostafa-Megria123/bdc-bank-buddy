@@ -144,9 +144,9 @@ const ProjectDetail: React.FC = () => {
       {/* Header */}
       <div className="bg-white shadow-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link to="/" className="inline-flex items-center text-primary hover:text-primary/80 transition-colors">
+          <Link to="/projects" className="inline-flex items-center text-primary hover:text-primary/80 transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
-            {language === 'ar' ? 'العودة للرئيسية' : 'Back to Home'}
+            {language === 'ar' ? 'العودة للمشاريع' : 'Back to Projects'}
           </Link>
         </div>
       </div>

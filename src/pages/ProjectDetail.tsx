@@ -59,6 +59,14 @@ const ProjectDetail: React.FC = () => {
         { id: 'C101', type: language === 'ar' ? 'محل تجاري' : 'Commercial', area: '80 m²', bedrooms: 0, bathrooms: 1, price: '1,800,000', status: 'available' },
         { id: 'C102', type: language === 'ar' ? 'محل تجاري' : 'Commercial', area: '120 m²', bedrooms: 0, bathrooms: 2, price: '2,400,000', status: 'reserved' },
       ]
+      ,
+      '3': [
+        { id: 'S101', type: language === 'ar' ? 'شقة' : 'Apartment', area: '100 m²', bedrooms: 2, bathrooms: 2, price: '1,700,000', status: 'available' },
+        { id: 'S102', type: language === 'ar' ? 'شقة' : 'Apartment', area: '130 m²', bedrooms: 3, bathrooms: 2, price: '2,000,000', status: 'reserved' },
+        { id: 'S201', type: language === 'ar' ? 'دوبلكس' : 'Duplex', area: '210 m²', bedrooms: 4, bathrooms: 3, price: '3,100,000', status: 'available' },
+        { id: 'S202', type: language === 'ar' ? 'دوبلكس' : 'Duplex', area: '240 m²', bedrooms: 4, bathrooms: 4, price: '3,500,000', status: 'sold' },
+        { id: 'V401', type: language === 'ar' ? 'فيلا' : 'Villa', area: '360 m²', bedrooms: 5, bathrooms: 4, price: '4,300,000', status: 'available' }
+      ]
     };
     
     return unitsData[projectId as keyof typeof unitsData] || unitsData['1'];
@@ -130,6 +138,38 @@ const ProjectDetail: React.FC = () => {
               { type: 'Apartments', area: '120-200 sqm', price: '1.8-3.2M EGP' },
               { type: 'Penthouses', area: '250-350 sqm', price: '3.8-5.5M EGP' },
               { type: 'Commercial Units', area: '50-150 sqm', price: '1.2-2.8M EGP' }
+            ]
+      }
+      ,
+      '3': {
+        id: '3',
+        name: language === 'ar' ? 'الإقامة الساحلية' : 'Seaside Residence',
+        type: language === 'ar' ? 'سكني' : 'Residential',
+        description: language === 'ar'
+          ? 'مشروع سكني عصري يقع في منطقة ساحلية بتصميم أنيق ومرافق فاخرة.'
+          : 'Modern seaside residential project with elegant design and premium amenities.',
+        longDescription: language === 'ar'
+          ? 'تقدم الإقامة الساحلية تجربة سكنية مميزة بالقرب من البحر مع شواطئ خاصة ومساحات خضراء ومرافق عائلية.'
+          : 'Seaside Residence offers a unique living experience close to the sea with private beaches, green areas, and family-friendly amenities.',
+        images: [project1, heroBuilding, project1],
+        displayStartDate: '2024-03-01',
+        displayEndDate: '2024-10-31',
+        unitsAvailable: 120,
+        totalUnits: 140,
+        location: language === 'ar' ? 'الساحل الشمالي' : 'North Coast',
+        area: '20 فدان / 20 Acres',
+        priceRange: language === 'ar' ? '1.2 - 3.8 مليون جنيه' : '1.2 - 3.8 Million EGP',
+        features: language === 'ar'
+          ? ['شواطئ خاصة', 'مسبح بانورامي', 'مساحات خضراء', 'مركز ترفيهي', 'أمن وحراسة']
+          : ['Private Beaches', 'Panoramic Pool', 'Green Areas', 'Recreation Center', 'Security'],
+        unitTypes: language === 'ar'
+          ? [
+              { type: 'شقق', area: '80-140 م²', price: '1.2-2.5 مليون جنيه' },
+              { type: 'بنتهاوس', area: '180-260 م²', price: '2.8-3.8 مليون جنيه' }
+            ]
+          : [
+              { type: 'Apartments', area: '80-140 sqm', price: '1.2-2.5M EGP' },
+              { type: 'Penthouses', area: '180-260 sqm', price: '2.8-3.8M EGP' }
             ]
       }
     };

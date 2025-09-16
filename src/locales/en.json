@@ -16,7 +16,8 @@
     "welcomeTitle": "Welcome to BDC Real Estate",
     "welcomeSubtitle": "Discover your dream property with BDC Real Estate",
     "exploreProjects": "Explore Our Projects",
-    "learnMore": "Learn More"
+  "learnMore": "Learn More",
+  "viewProjectButton": "View Project"
   },
   "announcementsPage": {
     "sectionTitle": "Latest Announcements",
@@ -101,6 +102,18 @@
         "displayEndDate": "2024-11-30",
         "unitsAvailable": 180,
         "link": "/projects/2"
+      }
+      ,
+      {
+        "id": "3",
+        "image": "/assets/project-1.jpg",
+        "name": "Seaside Residence",
+        "type": "Residential",
+        "description": "Coastal living with modern amenities and stunning sea views.",
+        "displayStartDate": "2024-03-01",
+        "displayEndDate": "2024-12-31",
+        "unitsAvailable": 120,
+        "link": "/projects/3"
       }
     ],
     "display": {

@@ -2,7 +2,7 @@
   "nav": {
     "home": "الرئيسية",
     "announcements": "الإعلانات",
-  "projects": "المشاريع",
+    "projects": "المشاريع",
     "faqs": "الأسئلة الشائعة",
     "about": "حولنا",
     "myReservations": "طلبات الحجز",
@@ -13,10 +13,11 @@
     "languageToggle": "English"
   },
   "hero": {
-    "welcomeTitle": "مرحباً بكم في بنك القاهره للتنمية العقارية",
-    "welcomeSubtitle": "اكتشف منزل أحلامك مع بنك القاهره للتنمية العقارية",
+    "welcomeTitle": "مرحباً بكم في بنك القاهرة للتنمية العقارية",
+    "welcomeSubtitle": "اكتشف منزل أحلامك مع بنك القاهرة للتنمية العقارية",
     "exploreProjects": "استكشف مشاريعنا",
-    "learnMore": "اعرف أكثر"
+  "learnMore": "اعرف أكثر",
+  "viewProjectButton": "عرض المشروع"
   },
   "announcementsPage": {
     "sectionTitle": "أحدث الإعلانات",
@@ -78,7 +79,7 @@
   },
   "projects": {
     "sectionTitle": "أحدث المشاريع",
-  "sectionSubtitle": "استكشف مشاريعنا الحالية والمستقبلية.",
+    "sectionSubtitle": "استكشف مشاريعنا الحالية والمستقبلية.",
     "list": [
       {
         "id": "1",
@@ -102,12 +103,23 @@
         "unitsAvailable": 180,
         "link": "/projects/2"
       }
+      ,
+      {
+        "id": "3",
+        "image": "/assets/project-1.jpg",
+        "name": "الإقامة الساحلية",
+        "type": "سكني",
+        "description": "معيشة ساحلية مع مرافق حديثة وإطلالات بحرية خلابة.",
+        "displayStartDate": "2024-03-01",
+        "displayEndDate": "2024-12-31",
+        "unitsAvailable": 120,
+        "link": "/projects/3"
+      }
     ],
     "display": {
       "dateRange": "العرض من {start} إلى {end}",
       "unitsAvailable": "{count} وحدة متاحة"
-    }
-    ,
+    },
     "cta": {
       "title": "مهتم بمشروع؟",
       "subtitle": "تواصل مع فريقنا لمعرفة المزيد عن الوحدات المتاحة والعروض."
@@ -151,7 +163,7 @@
     "siteMap": "خريطة الموقع",
     "contactUs": "اتصل بنا",
     "hotline": "الخط الساخن",
-    "copyright": "© 2024 بي دي سي. جميع الحقوق محفوظة.",
+    "copyright": "© 2024 بنك القاهرة. جميع الحقوق محفوظة.",
     "brandName": "بنك القاهرة",
     "tagline": "شريككم الموثوق في التطوير العقاري وتحقيق أحلامكم السكنية.",
     "executorDept": "قسم المنفذ والأمين",

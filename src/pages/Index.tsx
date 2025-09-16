@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ResponsiveCarousel, type CarouselItem } from '@/components/Carousel';
+import { type CarouselItem } from '@/components/Carousel';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import { ArrowRight, ArrowLeft, Calendar, MapPin, Home, Download } from 'lucide-react';
 
@@ -55,13 +55,43 @@ const Index = () => {
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
           
-          <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent animate-pulse"></div>
-            <ResponsiveCarousel 
-              items={announcements}
-              className="animate-fade-in hover-scale"
-            />
-          </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent animate-pulse" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
+                {announcements.map((a, index) => (
+                  <Card 
+                    key={a.id}
+                    className="overflow-hidden hover:shadow-brand transition-all duration-500 group animate-fade-in"
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                  >
+                    <div className="relative overflow-hidden h-48">
+                      <img src={a.image} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                    <CardContent className="p-6">
+                      <h3 className="text-lg font-semibold text-[#6d6f74] mb-2 line-clamp-2">{a.title}</h3>
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{a.description}</p>
+                      {a.link && (
+                        <Link to={String(a.link)} className="w-full block">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="w-full group-hover:bg-gradient-primary group-hover:text-white group-hover:border-transparent transition-all duration-300"
+                          >
+                            {String(t('common.viewDetails'))}
+                            {language === 'ar' ? (
+                              <ArrowLeft className="ml-2 h-4 w-4" />
+                            ) : (
+                              <ArrowRight className="ml-2 h-4 w-4" />
+                            )}
+                          </Button>
+                        </Link>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
         </div>
       </section>
 

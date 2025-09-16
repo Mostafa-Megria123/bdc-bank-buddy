@@ -124,10 +124,10 @@ export const AnnouncementDetails: React.FC = () => {
       <div className="min-h-screen bg-gradient-subtle flex items-center justify-center">
         <Card className="p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">
-            {t('announcementDetails.notFound')}
+            {String(t('announcementDetails.notFound'))}
           </h2>
           <Button onClick={() => navigate('/announcements')}>
-            {t('announcementDetails.backToAnnouncements')}
+            {String(t('announcementDetails.backToAnnouncements'))}
           </Button>
         </Card>
       </div>
@@ -137,7 +137,7 @@ export const AnnouncementDetails: React.FC = () => {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: t(announcement.titleKey),
+        title: String(t(announcement.titleKey)),
         url: window.location.href
       });
     }
@@ -150,7 +150,7 @@ export const AnnouncementDetails: React.FC = () => {
         <div className="w-full h-full bg-muted/20">
           <img
             src={announcement.image}
-            alt={t(announcement.titleKey)}
+            alt={String(t(announcement.titleKey))}
             className="w-full h-full object-cover animate-fade-in"
             onError={(e) => {
               console.log('Image failed to load:', announcement.image);
@@ -173,12 +173,12 @@ export const AnnouncementDetails: React.FC = () => {
             {language === 'ar' ? (
               <>
                 <ArrowRight className="mr-2 h-4 w-4" />
-                {t('announcementDetails.backToAnnouncements')}
+                {String(t('announcementDetails.backToAnnouncements'))}
               </>
             ) : (
               <>
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                {t('announcementDetails.backToAnnouncements')}
+                {String(t('announcementDetails.backToAnnouncements'))}
               </>
             )}
           </Button>
@@ -200,7 +200,7 @@ export const AnnouncementDetails: React.FC = () => {
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-wrap items-center gap-4 mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="bg-primary px-4 py-2 rounded-full text-sm font-medium">
-                {t(announcement.categoryKey)}
+                {String(t(announcement.categoryKey))}
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="h-4 w-4" />
@@ -208,20 +208,20 @@ export const AnnouncementDetails: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <MapPin className="h-4 w-4" />
-                {t(announcement.locationKey)}
+                {String(t(announcement.locationKey))}
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <User className="h-4 w-4" />
-                {t(announcement.authorKey)}
+                {String(t(announcement.authorKey))}
               </div>
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              {t(announcement.titleKey)}
+              {String(t(announcement.titleKey))}
             </h1>
             
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl animate-fade-in" style={{ animationDelay: '0.6s' }}>
-              {t(announcement.descriptionKey)}
+              {String(t(announcement.descriptionKey))}
             </p>
           </div>
         </div>
@@ -247,14 +247,14 @@ export const AnnouncementDetails: React.FC = () => {
               {announcement.gallery && announcement.gallery.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-3xl font-bold mb-8 text-foreground">
-                    {t('announcementDetails.gallery')}
+                    {String(t('announcementDetails.gallery'))}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {announcement.gallery.map((image, idx) => (
                       <div key={idx} className="group overflow-hidden rounded-xl bg-muted/20">
                         <img
                           src={image}
-                          alt={`${t('announcementDetails.galleryImage')} ${idx + 1}`}
+                          alt={`${String(t('announcementDetails.galleryImage'))} ${idx + 1}`}
                           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
                           onError={(e) => {
                             console.log('Gallery image failed to load:', image);
@@ -274,7 +274,7 @@ export const AnnouncementDetails: React.FC = () => {
               {announcement.downloadLinks && announcement.downloadLinks.length > 0 && (
                 <div className="bg-muted/50 rounded-xl p-8">
                   <h2 className="text-2xl font-bold mb-6 text-foreground">
-                    {t('announcementDetails.downloads')}
+                    {String(t('announcementDetails.downloads'))}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {announcement.downloadLinks.map((link, idx) => (
@@ -288,7 +288,7 @@ export const AnnouncementDetails: React.FC = () => {
                           <Download className="h-5 w-5 mr-3" />
                           <div className="text-left">
                             <div className="font-semibold">
-                              {t(link.labelKey)}
+                              {String(t(link.labelKey))}
                             </div>
                           </div>
                         </a>
@@ -308,24 +308,24 @@ export const AnnouncementDetails: React.FC = () => {
           <Card className="border-0 bg-gradient-primary text-white overflow-hidden animate-fade-in">
             <CardContent className="p-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                {t('announcementDetails.ctaTitle')}
+                {String(t('announcementDetails.ctaTitle'))}
               </h2>
               <p className="text-xl text-white/90 mb-8">
-                {t('announcementDetails.ctaSubtitle')}
+                {String(t('announcementDetails.ctaSubtitle'))}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   variant="outline" 
                   className="bg-white text-primary border-white hover:bg-white/90 px-8 py-3 hover-scale"
                 >
-                  {t('announcementDetails.contactUs')}
+                  {String(t('announcementDetails.contactUs'))}
                 </Button>
                 <Button 
                   variant="outline" 
                   className="bg-transparent border-white text-white hover:bg-white/10 px-8 py-3 hover-scale"
                   onClick={() => navigate('/announcements')}
                 >
-                  {t('announcementDetails.moreAnnouncements')}
+                  {String(t('announcementDetails.moreAnnouncements'))}
                 </Button>
               </div>
             </CardContent>

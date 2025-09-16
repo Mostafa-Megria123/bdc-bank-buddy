@@ -50,7 +50,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t('announcementsPage.sectionTitle')}
+              {String(t('announcementsPage.sectionTitle'))}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -70,7 +70,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t('projects.sectionTitle')}
+              {String(t('projects.sectionTitle'))}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -108,7 +108,7 @@ const Index = () => {
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {t('projects.display.dateRange')
+                        {String(t('projects.display.dateRange'))
                           .replace('{start}', project.displayStartDate)
                           .replace('{end}', project.displayEndDate)}
                       </span>
@@ -117,7 +117,7 @@ const Index = () => {
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Home className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {t('projects.display.unitsAvailable').replace('{count}', project.unitsAvailable.toString())}
+                        {String(t('projects.display.unitsAvailable')).replace('{count}', project.unitsAvailable.toString())}
                       </span>
                     </div>
                   </div>
@@ -127,7 +127,7 @@ const Index = () => {
                       <Button 
                         className="w-full bg-gradient-primary hover:opacity-90"
                       >
-                        {t('common.viewDetails')}
+                        {String(t('common.viewDetails'))}
                         {language === 'ar' ? (
                           <ArrowLeft className="ml-2 h-4 w-4" />
                         ) : (
@@ -138,7 +138,7 @@ const Index = () => {
                     
                     <Button variant="outline" className="flex-1">
                       <Download className="mr-2 h-4 w-4" />
-                      {t('common.termsAndConditions')}
+                      {String(t('common.termsAndConditions'))}
                     </Button>
                   </div>
                 </CardContent>
@@ -153,7 +153,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t('ads.sectionTitle')}
+              {String(t('ads.sectionTitle'))}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -174,7 +174,7 @@ const Index = () => {
                   <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Button className="bg-white text-bdc-orange hover:bg-white/90">
-                      {t('common.viewDetails')}
+                      {String(t('common.viewDetails'))}
                     </Button>
                   </div>
                 </div>

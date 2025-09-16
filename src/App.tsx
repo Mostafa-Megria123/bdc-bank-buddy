@@ -42,7 +42,7 @@ function AnnouncementDetailsWrapper() {
   // The `t` function returns the key if not found.
   // We check if the result is an object to confirm it was found.
   if (typeof announcementText !== 'object' || announcementText === null) {
-    return <div className="p-8 text-center">{t('announcementDetails.notFound')}</div>;
+    return <div className="p-8 text-center">{String(t('announcementDetails.notFound'))}</div>;
   }
 
   return <AnnouncementDetails />;

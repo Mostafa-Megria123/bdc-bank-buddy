@@ -23,6 +23,7 @@ export const Navigation: React.FC = () => {
     { path: '/faqs', label: t('nav.faqs') },
     { path: '/about', label: t('nav.about') },
     { path: '/my-reservations', label: t('nav.myReservations') }
+    
   ];
 
   return (

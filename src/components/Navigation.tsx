@@ -18,12 +18,11 @@ export const Navigation: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
-    { path: '/', label: t('nav.home') },
-    { path: '/announcements', label: t('nav.announcements') },
-    { path: '/faqs', label: t('nav.faqs') },
-    { path: '/about', label: t('nav.about') },
-    { path: '/my-reservations', label: t('nav.myReservations') }
-    
+    { path: '/', label: String(t('nav.home')) },
+    { path: '/announcements', label: String(t('nav.announcements')) },
+    { path: '/faqs', label: String(t('nav.faqs')) },
+    { path: '/about', label: String(t('nav.about')) },
+    { path: '/my-reservations', label: String(t('nav.myReservations')) }
   ];
 
   return (

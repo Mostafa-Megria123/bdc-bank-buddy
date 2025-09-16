@@ -3,16 +3,42 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ResponsiveCarousel } from '@/components/Carousel';
+import { ResponsiveCarousel, type CarouselItem } from '@/components/Carousel';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import { ArrowRight, ArrowLeft, Calendar, MapPin, Home, Download } from 'lucide-react';
+
+interface Project {
+  id: string;
+  image: string;
+  name: string;
+  type: string;
+  description: string;
+  displayStartDate: string;
+  displayEndDate: string;
+  unitsAvailable: number;
+  link: string;
+}
+
+interface Ad {
+  id: string;
+  title: string;
+  image: string;
+  link: string;
+}
 
 const Index = () => {
   const { language, t } = useLanguage();
 
-  const announcements = t('announcementsPage.list').slice(0, 2); // Show first 2 on homepage
-  const projects = t('projects.list');
-  const ads = t('ads.list');
+  const rawAnnouncements = t('announcementsPage.list');
+  const announcements: CarouselItem[] = Array.isArray(rawAnnouncements)
+    ? (rawAnnouncements.slice(0, 2) as unknown as CarouselItem[])
+    : [];
+
+  const rawProjects = t('projects.list');
+  const projects: Project[] = Array.isArray(rawProjects) ? (rawProjects as unknown as Project[]) : [];
+
+  const rawAds = t('ads.list');
+  const ads: Ad[] = Array.isArray(rawAds) ? (rawAds as unknown as Ad[]) : [];
 
   return (
     <div className="min-h-screen bg-gradient-subtle">

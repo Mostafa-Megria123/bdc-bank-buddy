@@ -37,15 +37,15 @@ function ScrollToTop() {
 function AnnouncementDetailsWrapper() {
   const { t } = useLanguage();
   const { id } = useParams();
-  const announcement = t(`announcementDetails.details.${id}`);
+  const announcementText = t(`announcementDetails.details.${id}`);
 
   // The `t` function returns the key if not found.
   // We check if the result is an object to confirm it was found.
-  if (typeof announcement !== 'object' || announcement === null) {
+  if (typeof announcementText !== 'object' || announcementText === null) {
     return <div className="p-8 text-center">{t('announcementDetails.notFound')}</div>;
   }
 
-  return <AnnouncementDetails announcement={announcement} />;
+  return <AnnouncementDetails />;
 }
 
 const App = () => (

@@ -112,19 +112,12 @@ const announcementsData: Announcement[] = [
   }
 ];
 
-interface AnnouncementDetailsProps {
-  announcement?: Announcement;
-}
-
-export const AnnouncementDetails: React.FC<AnnouncementDetailsProps> = ({ 
-  announcement: propAnnouncement 
-}) => {
+export const AnnouncementDetails: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { language, t } = useLanguage();
   
-  // Find announcement by ID if not provided as prop
-  const announcement = propAnnouncement || announcementsData.find(a => a.id === id);
+  const announcement = announcementsData.find(a => a.id === id);
   
   if (!announcement) {
     return (
@@ -241,7 +234,7 @@ export const AnnouncementDetails: React.FC<AnnouncementDetailsProps> = ({
             <CardContent className="p-12">
               {/* Article Content */}
               <div className="prose prose-lg max-w-none mb-12">
-                {t(announcement.contentKey)
+                {String(t(announcement.contentKey))
                   .split('\n\n')
                   .map((paragraph, idx) => (
                     <p key={idx} className="mb-6 leading-relaxed text-foreground">

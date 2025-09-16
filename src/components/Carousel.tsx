@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-interface CarouselItem {
+export interface CarouselItem {
   id: string;
   image: string;
   title: string;

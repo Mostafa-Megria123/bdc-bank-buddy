@@ -5,9 +5,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, ArrowLeft, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+interface AnnouncementGridItem {
+  id: string;
+  image: string;
+  title: string;
+  description: string;
+  publishDate: string;
+  link: string;
+}
+
 const Announcements = () => {
   const { language, t } = useLanguage();
-  const announcements = t('announcementsPage.list');
+  const announcementsData = t('announcementsPage.list');
+  const announcements: AnnouncementGridItem[] = Array.isArray(announcementsData) ? (announcementsData as unknown as AnnouncementGridItem[]) : [];
 
   return (
     <div className="min-h-screen bg-gradient-subtle">

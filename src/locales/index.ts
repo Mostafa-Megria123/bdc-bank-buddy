@@ -9,7 +9,7 @@ export const translations = {
 export type TranslationKey = keyof typeof en;
 export type Language = 'en' | 'ar';
 
-export function getTranslation(lang: Language, key: string): any {
+export function getTranslation(lang: Language, key: string): unknown {
   const keys = key.split('.');
   // Use `unknown` instead of `any` for type safety.
   let current: unknown = translations[lang];

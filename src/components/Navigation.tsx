@@ -23,7 +23,6 @@ export const Navigation: React.FC = () => {
     { path: '/faqs', label: t('nav.faqs') },
     { path: '/about', label: t('nav.about') },
     { path: '/my-reservations', label: t('nav.myReservations') }
-    
   ];
 
   return (
@@ -71,14 +70,14 @@ export const Navigation: React.FC = () => {
               className="flex items-center space-x-1 rtl:space-x-reverse"
             >
               <Globe className="h-4 w-4" />
-              <span>{t('nav.languageToggle')}</span>
+              <span>{String(t('nav.languageToggle'))}</span>
             </Button>
 
             {/* Auth Buttons */}
             {isLoggedIn ? (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Button variant="outline" size="sm">
-                  {t('nav.resetPassword')}
+                  {String(t('nav.resetPassword'))}
                 </Button>
                 <Button
                   variant="default"
@@ -86,14 +85,14 @@ export const Navigation: React.FC = () => {
                   onClick={() => setIsLoggedIn(false)}
                   className="bg-gradient-primary hover:opacity-90"
                 >
-                  {t('nav.logout')}
+                  {String(t('nav.logout'))}
                 </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Link to="/login">
                   <Button variant="outline" size="sm">
-                    {t('nav.login')}
+                    {String(t('nav.login'))}
                   </Button>
                 </Link>
                 <Link to="/register">
@@ -102,7 +101,7 @@ export const Navigation: React.FC = () => {
                     size="sm"
                     className="bg-gradient-primary hover:opacity-90"
                   >
-                    {t('nav.register')}
+                    {String(t('nav.register'))}
                   </Button>
                 </Link>
               </div>
@@ -155,7 +154,7 @@ export const Navigation: React.FC = () => {
               {isLoggedIn ? (
                 <>
                   <Button variant="outline" size="sm" className="w-full">
-                    {t('nav.resetPassword')}
+                    {String(t('nav.resetPassword'))}
                   </Button>
                   <Button
                     variant="default"
@@ -163,14 +162,14 @@ export const Navigation: React.FC = () => {
                     onClick={() => setIsLoggedIn(false)}
                     className="w-full bg-gradient-primary hover:opacity-90"
                   >
-                    {t('nav.logout')}
+                    {String(t('nav.logout'))}
                   </Button>
                 </>
               ) : (
                 <>
                   <Link to="/login" className="block">
                     <Button variant="outline" size="sm" className="w-full">
-                      {t('nav.login')}
+                      {String(t('nav.login'))}
                     </Button>
                   </Link>
                   <Link to="/register" className="block">
@@ -179,7 +178,7 @@ export const Navigation: React.FC = () => {
                       size="sm"
                       className="w-full bg-gradient-primary hover:opacity-90"
                     >
-                      {t('nav.register')}
+                      {String(t('nav.register'))}
                     </Button>
                   </Link>
                 </>

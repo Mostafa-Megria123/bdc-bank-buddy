@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { LanguageContext } from './LanguageContextCore';
-import type { LanguageContextType } from './types';
+import { LanguageContextType } from './types.ts';
 
 // Re-exported hook to keep LanguageContext file focused on the provider only.
 export function useLanguage(): LanguageContextType {

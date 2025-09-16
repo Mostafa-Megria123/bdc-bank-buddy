@@ -9,13 +9,25 @@ import { ArrowLeft, Calendar, MapPin, Home, Download, Phone, Mail, Users, Buildi
 const project1 = '/assets/project-1.jpg';
 const heroBuilding = '/assets/hero-building.jpg';
 
-const ProjectDetail = () => {
+type UnitStatus = 'available' | 'reserved' | 'sold';
+
+interface Unit {
+  id: string;
+  type: string;
+  area: string;
+  bedrooms: number;
+  bathrooms: number;
+  price: string;
+  status: UnitStatus;
+}
+
+const ProjectDetail: React.FC = () => {
   const { id } = useParams();
   const { language, t } = useLanguage();
-  const [selectedUnit, setSelectedUnit] = React.useState<any>(null);
+  const [selectedUnit, setSelectedUnit] = React.useState<Unit | null>(null);
   const [isReservationModalOpen, setIsReservationModalOpen] = React.useState(false);
 
-  const handleReserveUnit = (unit: any) => {
+  const handleReserveUnit = (unit: Unit) => {
     setSelectedUnit(unit);
     setIsReservationModalOpen(true);
   };
@@ -27,8 +39,8 @@ const ProjectDetail = () => {
 
   // Mock project data based on ID
   // Mock units data for each project
-  const getUnitsData = (projectId: string) => {
-    const unitsData = {
+  const getUnitsData = (projectId: string): Unit[] => {
+    const unitsData: Record<string, Unit[]> = {
       '1': [
         { id: 'A101', type: language === 'ar' ? 'شقة' : 'Apartment', area: '120 m²', bedrooms: 2, bathrooms: 2, price: '1,850,000', status: 'available' },
         { id: 'A102', type: language === 'ar' ? 'شقة' : 'Apartment', area: '140 m²', bedrooms: 3, bathrooms: 2, price: '2,100,000', status: 'reserved' },

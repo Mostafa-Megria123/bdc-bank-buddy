@@ -11,9 +11,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Calendar, Filter, Upload, Download, CreditCard, RefreshCw } from 'lucide-react';
 
 const MyReservations = () => {
-  const { language } = useLanguage();
+  const { language, t, tString } = useLanguage();
   const [filters, setFilters] = useState({
-    project: '',
+  project: '',
     status: '',
     dateFrom: '',
     dateTo: ''
@@ -24,124 +24,124 @@ const MyReservations = () => {
     {
       id: '1',
       formNo: 'RES-2025-001',
-      project: language === 'ar' ? 'مشروع النخيل الذهبي' : 'Golden Palm Project',
+  project: tString('myReservations.sampleProjects.0'),
       status: 'New',
-      statusText: language === 'ar' ? 'جديد' : 'New',
+  statusText: tString('myReservations.statuses.New'),
       modified: '2025-01-15',
-      governorate: language === 'ar' ? 'القاهرة' : 'Cairo',
-      city: language === 'ar' ? 'القاهرة الجديدة' : 'New Cairo',
-      area: language === 'ar' ? 'التجمع الخامس' : 'Fifth Settlement',
-      neighborhood: language === 'ar' ? 'الحي الأول' : 'First District',
+  governorate: tString('myReservations.locations.cairo'),
+  city: tString('myReservations.locations.newCairo'),
+  area: tString('myReservations.locations.fifthSettlement'),
+  neighborhood: tString('myReservations.locations.firstDistrict'),
       mougawra: '12',
       buildingNo: 'A1',
       unitNo: '301',
       floorNo: '3',
-      floorType: language === 'ar' ? 'متكرر' : 'Repeated',
+  floorType: tString('myReservations.floorTypes.repeated'),
       paymentAttachments: null,
-      unitType: language === 'ar' ? '3 غرف + 2 حمام' : '3 BR + 2 Bath',
+  unitType: tString('myReservations.unitTypes.3br2bath'),
       price: '2,500,000 EGP',
       deposit: '250,000 EGP'
     },
     {
       id: '2',
       formNo: 'RES-2025-002',
-      project: language === 'ar' ? 'كمبوند الواحة' : 'Oasis Compound',
+  project: tString('myReservations.sampleProjects.1'),
       status: 'Payment data entered',
-      statusText: language === 'ar' ? 'تم إدخال بيانات الدفع' : 'Payment data entered',
+  statusText: tString('myReservations.statuses.PaymentDataEntered'),
       modified: '2025-01-10',
-      governorate: language === 'ar' ? 'الجيزة' : 'Giza',
-      city: language === 'ar' ? '6 أكتوبر' : '6th of October',
-      area: language === 'ar' ? 'الشيخ زايد' : 'Sheikh Zayed',
-      neighborhood: language === 'ar' ? 'الحي السابع' : 'Seventh District',
+  governorate: tString('myReservations.locations.giza'),
+  city: tString('myReservations.locations.sixOctober'),
+  area: tString('myReservations.locations.sheikhZayed'),
+  neighborhood: tString('myReservations.locations.seventhDistrict'),
       mougawra: '8',
       buildingNo: 'B2',
       unitNo: '205',
       floorNo: '2',
-      floorType: language === 'ar' ? 'متكرر' : 'Repeated',
+  floorType: tString('myReservations.floorTypes.repeated'),
       paymentAttachments: ['payment_receipt.pdf'],
-      unitType: language === 'ar' ? '2 غرفة + 1 حمام' : '2 BR + 1 Bath',
+  unitType: tString('myReservations.unitTypes.2br1bath'),
       price: '1,800,000 EGP',
       deposit: '180,000 EGP'
     },
     {
       id: '3',
       formNo: 'RES-2025-003',
-      project: language === 'ar' ? 'مشروع الكورنيش' : 'Corniche Project',
+  project: tString('myReservations.sampleProjects.2'),
       status: 'Approved',
-      statusText: language === 'ar' ? 'مقبول' : 'Approved',
+  statusText: tString('myReservations.statuses.Approved'),
       modified: '2025-01-05',
-      governorate: language === 'ar' ? 'القاهرة' : 'Cairo',
-      city: language === 'ar' ? 'مصر الجديدة' : 'Heliopolis',
-      area: language === 'ar' ? 'النزهة' : 'El Nozha',
-      neighborhood: language === 'ar' ? 'الحي الثالث' : 'Third District',
+  governorate: tString('myReservations.locations.cairo'),
+  city: tString('myReservations.locations.heliopolis'),
+  area: tString('myReservations.locations.elNozha'),
+  neighborhood: tString('myReservations.locations.thirdDistrict'),
       mougawra: '15',
       buildingNo: 'C3',
       unitNo: '102',
       floorNo: '1',
-      floorType: language === 'ar' ? 'أرضي' : 'Ground',
+  floorType: tString('myReservations.floorTypes.ground'),
       paymentAttachments: ['payment_receipt.pdf', 'bank_transfer.jpg'],
-      unitType: language === 'ar' ? '4 غرف + 3 حمام' : '4 BR + 3 Bath',
+  unitType: tString('myReservations.unitTypes.4br3bath'),
       price: '3,200,000 EGP',
       deposit: '320,000 EGP'
     },
     {
       id: '4',
       formNo: 'RES-2025-004',
-      project: language === 'ar' ? 'مشروع السكن المتميز' : 'Premium Living Project',
+  project: tString('myReservations.sampleProjects.3'),
       status: 'Rejected',
-      statusText: language === 'ar' ? 'مرفوض' : 'Rejected',
+  statusText: tString('myReservations.statuses.Rejected'),
       modified: '2024-12-28',
-      governorate: language === 'ar' ? 'الإسكندرية' : 'Alexandria',
-      city: language === 'ar' ? 'الإسكندرية' : 'Alexandria',
-      area: language === 'ar' ? 'سيدي جابر' : 'Sidi Gaber',
-      neighborhood: language === 'ar' ? 'الحي الثاني' : 'Second District',
+  governorate: tString('myReservations.locations.alexandria'),
+  city: tString('myReservations.locations.alexandria'),
+  area: tString('myReservations.locations.sidiGaber'),
+  neighborhood: tString('myReservations.locations.secondDistrict'),
       mougawra: '5',
       buildingNo: 'D1',
       unitNo: '405',
       floorNo: '4',
-      floorType: language === 'ar' ? 'متكرر' : 'Repeated',
+  floorType: tString('myReservations.floorTypes.repeated'),
       paymentAttachments: ['rejected_payment.pdf'],
-      unitType: language === 'ar' ? '1 غرفة + 1 حمام' : '1 BR + 1 Bath',
+  unitType: tString('myReservations.unitTypes.1br1bath'),
       price: '1,200,000 EGP',
       deposit: '120,000 EGP'
     },
     {
       id: '5',
       formNo: 'RES-2025-005',
-      project: language === 'ar' ? 'منتجع البحر الأحمر' : 'Red Sea Resort',
+  project: tString('myReservations.sampleProjects.4'),
       status: 'Payment data entered',
-      statusText: language === 'ar' ? 'تم إدخال بيانات الدفع' : 'Payment data entered',
+  statusText: tString('myReservations.statuses.PaymentDataEntered'),
       modified: '2025-01-01',
-      governorate: language === 'ar' ? 'البحر الأحمر' : 'Red Sea',
-      city: language === 'ar' ? 'الغردقة' : 'Hurghada',
-      area: language === 'ar' ? 'السقالة' : 'Sekalla',
-      neighborhood: language === 'ar' ? 'الحي السياحي' : 'Tourist District',
+  governorate: tString('myReservations.locations.redSea'),
+  city: tString('myReservations.locations.hurghada'),
+  area: tString('myReservations.locations.sekalla'),
+  neighborhood: tString('myReservations.locations.touristDistrict'),
       mougawra: '20',
       buildingNo: 'E5',
       unitNo: '108',
       floorNo: '1',
-      floorType: language === 'ar' ? 'أرضي' : 'Ground',
+  floorType: tString('myReservations.floorTypes.ground'),
       paymentAttachments: ['bank_receipt.pdf', 'transfer_proof.jpg'],
-      unitType: language === 'ar' ? '2 غرفة + 2 حمام' : '2 BR + 2 Bath',
+  unitType: tString('myReservations.unitTypes.2br2bath'),
       price: '2,800,000 EGP',
       deposit: '280,000 EGP'
     }
   ];
 
   const projects = [
-    language === 'ar' ? 'مشروع النخيل الذهبي' : 'Golden Palm Project',
-    language === 'ar' ? 'كمبوند الواحة' : 'Oasis Compound',
-    language === 'ar' ? 'مشروع الكورنيش' : 'Corniche Project',
-    language === 'ar' ? 'مشروع السكن المتميز' : 'Premium Living Project',
-    language === 'ar' ? 'منتجع البحر الأحمر' : 'Red Sea Resort'
+  tString('myReservations.sampleProjects.0'),
+  tString('myReservations.sampleProjects.1'),
+  tString('myReservations.sampleProjects.2'),
+  tString('myReservations.sampleProjects.3'),
+  tString('myReservations.sampleProjects.4')
   ];
 
   const statuses = [
-    { value: 'New', label: language === 'ar' ? 'جديد' : 'New' },
-    { value: 'Payment data entered', label: language === 'ar' ? 'تم إدخال بيانات الدفع' : 'Payment data entered' },
-    { value: 'Approved', label: language === 'ar' ? 'مقبول' : 'Approved' },
-    { value: 'Rejected', label: language === 'ar' ? 'مرفوض' : 'Rejected' },
-    { value: 'Payment Refund Requested', label: language === 'ar' ? 'طلب استرداد الدفع' : 'Payment Refund Requested' }
+  { value: 'New', label: tString('myReservations.statuses.New') },
+  { value: 'Payment data entered', label: tString('myReservations.statuses.PaymentDataEntered') },
+  { value: 'Approved', label: tString('myReservations.statuses.Approved') },
+  { value: 'Rejected', label: tString('myReservations.statuses.Rejected') },
+  { value: 'Payment Refund Requested', label: tString('myReservations.statuses.PaymentRefundRequested') }
   ];
 
   const getStatusColor = (status: string) => {
@@ -167,49 +167,49 @@ const MyReservations = () => {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button size="sm" className="bg-primary hover:bg-primary/90">
+            <Button size="sm" className="bg-primary hover:bg-primary/90">
             <CreditCard className="h-4 w-4 mr-1" />
             {reservation.status === 'New' 
-              ? (language === 'ar' ? 'إضافة بيانات الدفع' : 'Add Payment Data')
-              : (language === 'ar' ? 'تعديل بيانات الدفع' : 'Edit Payment Data')
+              ? tString('myReservations.paymentDialog.addPayment')
+              : tString('myReservations.paymentDialog.editPayment')
             }
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {language === 'ar' ? 'بيانات الدفع' : 'Payment Data'}
+              {tString('myReservations.paymentDialog.title')}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="deposit">
-                {language === 'ar' ? 'العربون (جنيه مصري)' : 'Deposit (EGP)'} *
+                <Label htmlFor="deposit">
+                {tString('myReservations.paymentDialog.depositLabel')} *
               </Label>
               <Input
                 id="deposit"
                 type="number"
                 value={paymentData.deposit}
                 onChange={(e) => setPaymentData({...paymentData, deposit: e.target.value})}
-                placeholder={language === 'ar' ? 'أدخل المبلغ' : 'Enter amount'}
+                placeholder={tString('myReservations.paymentDialog.depositPlaceholder')}
               />
             </div>
             <div>
-              <Label>{language === 'ar' ? 'طريقة الدفع' : 'Payment Method'} *</Label>
+              <Label>{tString('myReservations.paymentDialog.paymentMethodLabel')} *</Label>
               <Select value={paymentData.paymentMethod} onValueChange={(value) => setPaymentData({...paymentData, paymentMethod: value})}>
                 <SelectTrigger>
-                  <SelectValue placeholder={language === 'ar' ? 'اختر طريقة الدفع' : 'Select payment method'} />
+                  <SelectValue placeholder={tString('myReservations.paymentDialog.selectPaymentMethodPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cash">{language === 'ar' ? 'نقداً' : 'Cash'}</SelectItem>
-                  <SelectItem value="domestic">{language === 'ar' ? 'تحويل محلي' : 'Domestic Transfer'}</SelectItem>
-                  <SelectItem value="international">{language === 'ar' ? 'تحويل دولي' : 'International Transfer'}</SelectItem>
+                  <SelectItem value="cash">{tString('myReservations.paymentDialog.methods.cash')}</SelectItem>
+                  <SelectItem value="domestic">{tString('myReservations.paymentDialog.methods.domestic')}</SelectItem>
+                  <SelectItem value="international">{tString('myReservations.paymentDialog.methods.international')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
               <Label htmlFor="paymentDate">
-                {language === 'ar' ? 'تاريخ الدفع' : 'Payment Date'}
+                {tString('myReservations.paymentDialog.paymentDate')}
               </Label>
               <Input
                 id="paymentDate"
@@ -220,18 +220,18 @@ const MyReservations = () => {
             </div>
             <div>
               <Label htmlFor="serialNo">
-                {language === 'ar' ? 'رقم العملية' : 'Serial Number'}
+                {tString('myReservations.paymentDialog.serialNumber')}
               </Label>
               <Input
                 id="serialNo"
                 value={paymentData.serialNo}
                 onChange={(e) => setPaymentData({...paymentData, serialNo: e.target.value})}
-                placeholder={language === 'ar' ? 'أدخل رقم العملية' : 'Enter serial number'}
+                placeholder={tString('myReservations.paymentDialog.serialPlaceholder')}
               />
             </div>
             <div>
               <Label htmlFor="attachment">
-                {language === 'ar' ? 'مرفقات الدفع (PDF, JPG, JPEG)' : 'Payment Attachments (PDF, JPG, JPEG)'} *
+                {tString('myReservations.paymentDialog.attachmentsLabel')} *
               </Label>
               <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
                 <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
@@ -243,7 +243,7 @@ const MyReservations = () => {
                   className="hidden"
                 />
                 <Label htmlFor="attachment" className="cursor-pointer text-sm text-primary hover:underline">
-                  {language === 'ar' ? 'اضغط لرفع الملف' : 'Click to upload file'}
+                  {tString('myReservations.paymentDialog.clickToUpload')}
                 </Label>
                 {paymentData.attachment && (
                   <p className="mt-2 text-sm text-foreground">{paymentData.attachment.name}</p>
@@ -251,7 +251,7 @@ const MyReservations = () => {
               </div>
             </div>
             <Button className="w-full bg-primary hover:bg-primary/90">
-              {language === 'ar' ? 'حفظ' : 'Save'}
+              {tString('myReservations.paymentDialog.save')}
             </Button>
           </div>
         </DialogContent>
@@ -266,13 +266,10 @@ const MyReservations = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-              {language === 'ar' ? 'طلبات الحجز الخاصة بي' : 'My Reservation Requests'}
+              {tString('myReservations.pageTitle')}
             </h1>
             <p className="text-xl text-muted-foreground animate-fade-in">
-              {language === 'ar' 
-                ? 'تتبع وإدارة جميع طلبات الحجز الخاصة بك'
-                : 'Track and manage all your reservation requests'
-              }
+              {tString('myReservations.pageSubtitle')}
             </p>
           </div>
 
@@ -281,16 +278,16 @@ const MyReservations = () => {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Filter className="h-5 w-5 mr-2" />
-                {language === 'ar' ? 'تصفية النتائج' : 'Filter Results'}
+                {tString('myReservations.filterTitle')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <Label>{language === 'ar' ? 'المشروع' : 'Project'}</Label>
+                  <Label>{tString('myReservations.filters.projectLabel')}</Label>
                   <Select value={filters.project} onValueChange={(value) => setFilters({...filters, project: value})}>
                     <SelectTrigger>
-                      <SelectValue placeholder={language === 'ar' ? 'جميع المشاريع' : 'All Projects'} />
+                      <SelectValue placeholder={tString('myReservations.filters.allProjects')} />
                     </SelectTrigger>
                     <SelectContent>
                       {projects.map((project) => (
@@ -300,10 +297,10 @@ const MyReservations = () => {
                   </Select>
                 </div>
                 <div>
-                  <Label>{language === 'ar' ? 'حالة الطلب' : 'Form Status'}</Label>
+                  <Label>{tString('myReservations.filters.statusLabel')}</Label>
                   <Select value={filters.status} onValueChange={(value) => setFilters({...filters, status: value})}>
                     <SelectTrigger>
-                      <SelectValue placeholder={language === 'ar' ? 'جميع الحالات' : 'All Statuses'} />
+                      <SelectValue placeholder={tString('myReservations.filters.allStatuses')} />
                     </SelectTrigger>
                     <SelectContent>
                       {statuses.map((status) => (
@@ -313,7 +310,7 @@ const MyReservations = () => {
                   </Select>
                 </div>
                 <div>
-                  <Label>{language === 'ar' ? 'من تاريخ' : 'Date From'}</Label>
+                  <Label>{tString('myReservations.filters.dateFrom')}</Label>
                   <Input
                     type="date"
                     value={filters.dateFrom}
@@ -321,7 +318,7 @@ const MyReservations = () => {
                   />
                 </div>
                 <div>
-                  <Label>{language === 'ar' ? 'إلى تاريخ' : 'Date To'}</Label>
+                  <Label>{tString('myReservations.filters.dateTo')}</Label>
                   <Input
                     type="date"
                     value={filters.dateTo}
@@ -339,16 +336,16 @@ const MyReservations = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'ar' ? 'المشروع' : 'Project'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'رقم الطلب' : 'Form No'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'الحالة' : 'Status'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'نوع الوحدة' : 'Unit Type'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'السعر' : 'Price'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'آخر تعديل' : 'Modified'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'المدينة' : 'City'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'رقم الوحدة' : 'Unit No'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'المرفقات' : 'Attachments'}</TableHead>
-                      <TableHead>{language === 'ar' ? 'الإجراءات' : 'Actions'}</TableHead>
+                      <TableHead>{tString('myReservations.table.project')}</TableHead>
+                      <TableHead>{tString('myReservations.table.formNo')}</TableHead>
+                      <TableHead>{tString('myReservations.table.status')}</TableHead>
+                      <TableHead>{tString('myReservations.table.unitType')}</TableHead>
+                      <TableHead>{tString('myReservations.table.price')}</TableHead>
+                      <TableHead>{tString('myReservations.table.modified')}</TableHead>
+                      <TableHead>{tString('myReservations.table.city')}</TableHead>
+                      <TableHead>{tString('myReservations.table.unitNo')}</TableHead>
+                      <TableHead>{tString('myReservations.table.attachments')}</TableHead>
+                      <TableHead>{tString('myReservations.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -386,8 +383,8 @@ const MyReservations = () => {
                               ))}
                             </div>
                           ) : (
-                            <span className="text-muted-foreground text-sm">
-                              {language === 'ar' ? 'لا يوجد' : 'None'}
+                              <span className="text-muted-foreground text-sm">
+                              {tString('myReservations.none')}
                             </span>
                           )}
                         </TableCell>
@@ -399,7 +396,7 @@ const MyReservations = () => {
                             {reservation.status === 'Rejected' && (
                               <Button size="sm" variant="outline" className="border-red-200 text-red-700 hover:bg-red-50">
                                 <RefreshCw className="h-4 w-4 mr-1" />
-                                {language === 'ar' ? 'طلب استرداد' : 'Request Refund'}
+                                {tString('myReservations.requestRefund')}
                               </Button>
                             )}
                           </div>

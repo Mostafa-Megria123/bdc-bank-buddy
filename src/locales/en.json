@@ -277,4 +277,98 @@
   "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}",
   "dialogDescription": "Fill in the reservation details and proceed to confirm your booking."
   }
+
+  ,
+  "myReservations": {
+    "pageTitle": "My Reservation Requests",
+    "pageSubtitle": "Track and manage all your reservation requests",
+    "filterTitle": "Filter Results",
+    "filters": {
+      "projectLabel": "Project",
+      "allProjects": "All Projects",
+      "statusLabel": "Form Status",
+      "allStatuses": "All Statuses",
+      "dateFrom": "Date From",
+      "dateTo": "Date To"
+    },
+    "table": {
+      "project": "Project",
+      "formNo": "Form No",
+      "status": "Status",
+      "unitType": "Unit Type",
+      "price": "Price",
+      "modified": "Modified",
+      "city": "City",
+      "unitNo": "Unit No",
+      "attachments": "Attachments",
+      "actions": "Actions"
+    },
+    "paymentDialog": {
+      "addPayment": "Add Payment Data",
+      "editPayment": "Edit Payment Data",
+      "title": "Payment Data",
+      "depositLabel": "Deposit (EGP)",
+      "depositPlaceholder": "Enter amount",
+      "paymentMethodLabel": "Payment Method",
+      "selectPaymentMethodPlaceholder": "Select payment method",
+      "methods": {
+        "cash": "Cash",
+        "domestic": "Domestic Transfer",
+        "international": "International Transfer"
+      },
+      "paymentDate": "Payment Date",
+      "serialNumber": "Serial Number",
+      "serialPlaceholder": "Enter serial number",
+      "attachmentsLabel": "Payment Attachments (PDF, JPG, JPEG)",
+      "clickToUpload": "Click to upload file",
+      "save": "Save"
+    },
+    "sampleProjects": [
+      "Golden Palm Project",
+      "Oasis Compound",
+      "Corniche Project",
+      "Premium Living Project",
+      "Red Sea Resort"
+    ],
+    "statuses": {
+      "New": "New",
+      "PaymentDataEntered": "Payment data entered",
+      "Approved": "Approved",
+      "Rejected": "Rejected",
+      "PaymentRefundRequested": "Payment Refund Requested"
+    },
+    "locations": {
+      "cairo": "Cairo",
+      "newCairo": "New Cairo",
+      "fifthSettlement": "Fifth Settlement",
+  "firstDistrict": "First District",
+  "thirdDistrict": "Third District",
+      "giza": "Giza",
+      "sixOctober": "6th of October",
+      "sheikhZayed": "Sheikh Zayed",
+      "seventhDistrict": "Seventh District",
+      "heliopolis": "Heliopolis",
+      "elNozha": "El Nozha",
+      "alexandria": "Alexandria",
+      "sidiGaber": "Sidi Gaber",
+      "secondDistrict": "Second District",
+      "redSea": "Red Sea",
+      "hurghada": "Hurghada",
+      "sekalla": "Sekalla",
+      "touristDistrict": "Tourist District"
+    },
+    "unitTypes": {
+      "3br2bath": "3 BR + 2 Bath",
+      "2br1bath": "2 BR + 1 Bath",
+      "4br3bath": "4 BR + 3 Bath",
+      "1br1bath": "1 BR + 1 Bath",
+      "2br2bath": "2 BR + 2 Bath"
+    },
+    "floorTypes": {
+      "repeated": "Repeated",
+      "ground": "Ground"
+    },
+    "none": "None",
+    "requestRefund": "Request Refund"
+  }
 }

@@ -277,4 +277,98 @@
   "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}",
   "dialogDescription": "املأ تفاصيل الحجز ثم تابع لتأكيد الحجز."
   }
+
+  ,
+  "myReservations": {
+    "pageTitle": "طلبات الحجز الخاصة بي",
+    "pageSubtitle": "تتبع وإدارة جميع طلبات الحجز الخاصة بك",
+    "filterTitle": "تصفية النتائج",
+    "filters": {
+      "projectLabel": "المشروع",
+      "allProjects": "جميع المشاريع",
+      "statusLabel": "حالة الطلب",
+      "allStatuses": "جميع الحالات",
+      "dateFrom": "من تاريخ",
+      "dateTo": "إلى تاريخ"
+    },
+    "table": {
+      "project": "المشروع",
+      "formNo": "رقم الطلب",
+      "status": "الحالة",
+      "unitType": "نوع الوحدة",
+      "price": "السعر",
+      "modified": "آخر تعديل",
+      "city": "المدينة",
+      "unitNo": "رقم الوحدة",
+      "attachments": "المرفقات",
+      "actions": "الإجراءات"
+    },
+    "paymentDialog": {
+      "addPayment": "إضافة بيانات الدفع",
+      "editPayment": "تعديل بيانات الدفع",
+      "title": "بيانات الدفع",
+      "depositLabel": "العربون (جنيه مصري)",
+      "depositPlaceholder": "أدخل المبلغ",
+      "paymentMethodLabel": "طريقة الدفع",
+      "selectPaymentMethodPlaceholder": "اختر طريقة الدفع",
+      "methods": {
+        "cash": "نقداً",
+        "domestic": "تحويل محلي",
+        "international": "تحويل دولي"
+      },
+      "paymentDate": "تاريخ الدفع",
+      "serialNumber": "رقم العملية",
+      "serialPlaceholder": "أدخل رقم العملية",
+      "attachmentsLabel": "مرفقات الدفع (PDF, JPG, JPEG)",
+      "clickToUpload": "اضغط لرفع الملف",
+      "save": "حفظ"
+    },
+    "sampleProjects": [
+      "مشروع النخيل الذهبي",
+      "كمبوند الواحة",
+      "مشروع الكورنيش",
+      "مشروع السكن المتميز",
+      "منتجع البحر الأحمر"
+    ],
+    "statuses": {
+      "New": "جديد",
+      "PaymentDataEntered": "تم إدخال بيانات الدفع",
+      "Approved": "مقبول",
+      "Rejected": "مرفوض",
+      "PaymentRefundRequested": "طلب استرداد الدفع"
+    },
+    "locations": {
+      "cairo": "القاهرة",
+      "newCairo": "القاهرة الجديدة",
+      "fifthSettlement": "التجمع الخامس",
+  "firstDistrict": "الحي الأول",
+  "thirdDistrict": "الحي الثالث",
+      "giza": "الجيزة",
+      "sixOctober": "6 أكتوبر",
+      "sheikhZayed": "الشيخ زايد",
+      "seventhDistrict": "الحي السابع",
+      "heliopolis": "مصر الجديدة",
+      "elNozha": "النزهة",
+      "alexandria": "الإسكندرية",
+      "sidiGaber": "سيدي جابر",
+      "secondDistrict": "الحي الثاني",
+      "redSea": "البحر الأحمر",
+      "hurghada": "الغردقة",
+      "sekalla": "السقالة",
+      "touristDistrict": "الحي السياحي"
+    },
+    "unitTypes": {
+      "3br2bath": "3 غرف + 2 حمام",
+      "2br1bath": "2 غرفة + 1 حمام",
+      "4br3bath": "4 غرف + 3 حمام",
+      "1br1bath": "1 غرفة + 1 حمام",
+      "2br2bath": "2 غرفة + 2 حمام"
+    },
+    "floorTypes": {
+      "repeated": "متكرر",
+      "ground": "أرضي"
+    },
+    "none": "لا يوجد",
+    "requestRefund": "طلب استرداد"
+  }
 }

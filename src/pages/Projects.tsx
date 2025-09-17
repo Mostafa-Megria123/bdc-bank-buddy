@@ -18,7 +18,7 @@ interface ProjectItem {
 }
 
 const Projects: React.FC = () => {
-  const { language, t } = useLanguage();
+  const { language, t, tString } = useLanguage();
 
   const rawProjects = t('projects.list');
   const projects: ProjectItem[] = Array.isArray(rawProjects) ? (rawProjects as unknown as ProjectItem[]) : [];
@@ -31,10 +31,10 @@ const Projects: React.FC = () => {
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-              {String(t('projects.sectionTitle'))}
+              {tString('projects.sectionTitle')}
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              {String(t('projects.sectionSubtitle'))}
+              {tString('projects.sectionSubtitle')}
             </p>
           </div>
         </div>
@@ -85,7 +85,7 @@ const Projects: React.FC = () => {
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {String(t('projects.display.dateRange'))
+                        {tString('projects.display.dateRange')
                           .replace('{start}', project.displayStartDate)
                           .replace('{end}', project.displayEndDate)}
                       </span>
@@ -94,7 +94,7 @@ const Projects: React.FC = () => {
                     <div className="flex items-center">
                       <Home className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {String(t('projects.display.unitsAvailable')).replace('{count}', project.unitsAvailable.toString())}
+                        {tString('projects.display.unitsAvailable').replace('{count}', project.unitsAvailable.toString())}
                       </span>
                     </div>
                   </div>
@@ -103,7 +103,7 @@ const Projects: React.FC = () => {
                     <Link to={project.link} className="flex-1">
                       <Button className="w-full bg-gradient-primary hover:shadow-brand transition-all duration-500 text-lg py-6 story-link group/button">
                         <span className="flex items-center justify-center">
-                          {String(t('common.viewDetails'))}
+                          {tString('common.viewDetails')}
                           {language === 'ar' ? (
                             <ArrowLeft className="mr-3 h-5 w-5 group-hover/button:-translate-x-1 transition-transform duration-300" />
                           ) : (
@@ -115,7 +115,7 @@ const Projects: React.FC = () => {
 
                     <Button variant="outline" className="flex-1">
                       <Download className="mr-2 h-4 w-4" />
-                      {String(t('common.termsAndConditions'))}
+                      {tString('common.termsAndConditions')}
                     </Button>
                   </div>
                 </CardContent>
@@ -134,19 +134,19 @@ const Projects: React.FC = () => {
               <div className="absolute inset-0 bg-[url('/placeholder.svg')] bg-cover bg-center opacity-10" />
               <div className="relative text-center text-white">
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  {String(t('projects.cta.title'))}
+                  {tString('projects.cta.title')}
                 </h2>
                 <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
-                  {String(t('projects.cta.subtitle'))}
+                  {tString('projects.cta.subtitle')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
                   <input
                     type="email"
-                    placeholder={String(t('common.enterYourEmail'))}
+                    placeholder={tString('common.enterYourEmail')}
                     className="flex-1 px-6 py-4 rounded-xl text-foreground bg-background/95 backdrop-blur-md border-0 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 text-lg"
                   />
                   <Button className="bg-background text-primary hover:bg-background/90 px-8 py-4 font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale">
-                    {String(t('common.subscribe'))}
+                    {tString('common.subscribe')}
                   </Button>
                 </div>
               </div>

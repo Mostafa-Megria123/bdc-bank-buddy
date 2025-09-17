@@ -27,7 +27,7 @@ interface Ad {
 }
 
 const Index = () => {
-  const { language, t } = useLanguage();
+  const { language, t, tString } = useLanguage();
 
   const rawAnnouncements = t('announcementsPage.list');
   const announcements: CarouselItem[] = Array.isArray(rawAnnouncements)
@@ -50,7 +50,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {String(t('announcementsPage.sectionTitle'))}
+              {tString('announcementsPage.sectionTitle')}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -78,7 +78,7 @@ const Index = () => {
                             size="sm"
                             className="w-full group-hover:bg-gradient-primary group-hover:text-white group-hover:border-transparent transition-all duration-300"
                           >
-                            {String(t('common.viewDetails'))}
+                            {tString('common.viewDetails')}
                             {language === 'ar' ? (
                               <ArrowLeft className="ml-2 h-4 w-4" />
                             ) : (
@@ -100,7 +100,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {String(t('projects.sectionTitle'))}
+              {tString('projects.sectionTitle')}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -138,7 +138,7 @@ const Index = () => {
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {String(t('projects.display.dateRange'))
+                        {tString('projects.display.dateRange')
                           .replace('{start}', project.displayStartDate)
                           .replace('{end}', project.displayEndDate)}
                       </span>
@@ -147,7 +147,7 @@ const Index = () => {
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Home className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span>
-                        {String(t('projects.display.unitsAvailable')).replace('{count}', project.unitsAvailable.toString())}
+                        {tString('projects.display.unitsAvailable').replace('{count}', project.unitsAvailable.toString())}
                       </span>
                     </div>
                   </div>
@@ -157,7 +157,7 @@ const Index = () => {
                       <Button 
                         className="w-full bg-gradient-primary hover:opacity-90"
                       >
-                        {String(t('common.viewDetails'))}
+                        {tString('common.viewDetails')}
                         {language === 'ar' ? (
                           <ArrowLeft className="ml-2 h-4 w-4" />
                         ) : (
@@ -168,7 +168,7 @@ const Index = () => {
                     
                     <Button variant="outline" className="flex-1">
                       <Download className="mr-2 h-4 w-4" />
-                      {String(t('common.termsAndConditions'))}
+                      {tString('common.termsAndConditions')}
                     </Button>
                   </div>
                 </CardContent>
@@ -183,7 +183,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {String(t('ads.sectionTitle'))}
+              {tString('ads.sectionTitle')}
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
           </div>
@@ -204,7 +204,7 @@ const Index = () => {
                   <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Button className="bg-white text-bdc-orange hover:bg-white/90">
-                      {String(t('common.viewDetails'))}
+                      {tString('common.viewDetails')}
                     </Button>
                   </div>
                 </div>

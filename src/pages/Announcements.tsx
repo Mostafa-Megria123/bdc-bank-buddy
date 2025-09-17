@@ -15,7 +15,7 @@ interface AnnouncementGridItem {
 }
 
 const Announcements = () => {
-  const { language, t } = useLanguage();
+  const { language, t, tString } = useLanguage();
   const announcementsData = t('announcementsPage.list');
   const announcements: AnnouncementGridItem[] = Array.isArray(announcementsData) ? (announcementsData as unknown as AnnouncementGridItem[]) : [];
 
@@ -27,10 +27,10 @@ const Announcements = () => {
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-              {String(t('announcementsPage.sectionTitle'))}
+              {tString('announcementsPage.sectionTitle')}
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              {String(t('announcementsPage.sectionSubtitle'))}
+              {tString('announcementsPage.sectionSubtitle')}
             </p>
           </div>
         </div>
@@ -82,7 +82,7 @@ const Announcements = () => {
                       className="w-full bg-gradient-primary hover:shadow-brand transition-all duration-500 text-lg py-6 story-link group/button"
                     >
                       <span className="flex items-center justify-center">
-                        {String(t('common.readMore'))}
+                        {tString('common.readMore')}
                         {language === 'ar' ? (
                           <ArrowLeft className="mr-3 h-5 w-5 group-hover/button:-translate-x-1 transition-transform duration-300" />
                         ) : (
@@ -107,19 +107,19 @@ const Announcements = () => {
               <div className="absolute inset-0 bg-[url('/placeholder.svg')] bg-cover bg-center opacity-10" />
               <div className="relative text-center text-white">
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                {String(t('announcementsPage.cta.title'))}
+                {tString('announcementsPage.cta.title')}
                 </h2>
                 <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
-                {String(t('announcementsPage.cta.subtitle'))}
+                {tString('announcementsPage.cta.subtitle')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
                   <input
                     type="email"
-                  placeholder={String(t('common.enterYourEmail'))}
+                  placeholder={tString('common.enterYourEmail')}
                     className="flex-1 px-6 py-4 rounded-xl text-foreground bg-background/95 backdrop-blur-md border-0 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 text-lg"
                   />
                   <Button className="bg-background text-primary hover:bg-background/90 px-8 py-4 font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale">
-                  {String(t('common.subscribe'))}
+                  {tString('common.subscribe')}
                   </Button>
                 </div>
               </div>

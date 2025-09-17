@@ -89,7 +89,7 @@ const About = () => {
               const IconComponent = feature.icon;
               return (
                 <Card 
-                  key={index} 
+                  key={feature.title}
                   className="text-center p-8 hover:shadow-brand transition-all duration-300 group animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
@@ -190,7 +190,7 @@ const About = () => {
               const IconComponent = contact.icon;
               return (
                 <Card 
-                  key={index} 
+                  key={contact.title}
                   className="text-center p-6 hover:shadow-brand transition-all duration-300 group animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >

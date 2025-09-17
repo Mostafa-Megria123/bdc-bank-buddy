@@ -115,7 +115,7 @@ const announcementsData: Announcement[] = [
 export const AnnouncementDetails: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { language, t, tString } = useLanguage();
+  const { language, tString } = useLanguage();
   
   const announcement = announcementsData.find(a => a.id === id);
   
@@ -235,8 +235,8 @@ export const AnnouncementDetails: React.FC = () => {
               <div className="prose prose-lg max-w-none mb-12">
                 {tString(announcement.contentKey)
                   .split('\n\n')
-                  .map((paragraph, idx) => (
-                    <p key={idx} className="mb-6 leading-relaxed text-foreground">
+                  .map((paragraph) => (
+                    <p key={paragraph} className="mb-6 leading-relaxed text-foreground">
                       {paragraph}
                     </p>
                   ))}
@@ -249,11 +249,11 @@ export const AnnouncementDetails: React.FC = () => {
                     {tString('announcementDetails.gallery')}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {announcement.gallery.map((image, idx) => (
-                      <div key={idx} className="group overflow-hidden rounded-xl bg-muted/20">
+                    {announcement.gallery.map((image, index) => (
+                      <div key={`${image}-${index}`} className="group overflow-hidden rounded-xl bg-muted/20">
                         <img
                           src={image}
-                          alt={`${tString('announcementDetails.galleryImage')} ${idx + 1}`}
+                          alt={`${tString('announcementDetails.galleryImage')} ${index + 1}`}
                           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
                           onError={(e) => {
                             if (process.env.NODE_ENV !== 'production') {
@@ -275,9 +275,9 @@ export const AnnouncementDetails: React.FC = () => {
                     {tString('announcementDetails.downloads')}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {announcement.downloadLinks.map((link, idx) => (
+                    {announcement.downloadLinks.map((link) => (
                       <Button
-                        key={idx}
+                        key={link.labelKey}
                         variant="outline"
                         asChild
                         className="justify-start h-auto p-6 hover-scale"

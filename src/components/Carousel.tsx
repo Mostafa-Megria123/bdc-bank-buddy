@@ -34,7 +34,7 @@ export const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
   autoPlay = true,
   showOverlay = false,
 }) => {
-  const { language, t } = useLanguage();
+  const { language, tString } = useLanguage();
 
   return (
     <div className={`relative ${className}`}>
@@ -72,7 +72,7 @@ export const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
                           size="sm"
                           className="w-full group-hover:bg-gradient-primary group-hover:text-white group-hover:border-transparent transition-all duration-300"
                         >
-                          {String(t('common.viewDetails'))}
+                          {tString('common.viewDetails')}
                           {language === 'ar' ? (
                             <ArrowLeft className="ml-2 h-4 w-4" />
                           ) : (
@@ -95,9 +95,9 @@ export const ResponsiveCarousel: React.FC<ResponsiveCarouselProps> = ({
       {/* Mobile Navigation Dots */}
       <div className="flex justify-center mt-4 md:hidden">
         <div className="flex space-x-2">
-          {items.slice(0, 5).map((_, index) => (
+          {items.slice(0, 5).map((item) => (
             <div
-              key={index}
+              key={item.id}
               className="w-2 h-2 rounded-full bg-muted hover:bg-primary transition-colors cursor-pointer"
             />
           ))}

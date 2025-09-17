@@ -71,10 +71,6 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     setCurrentSlide((prev) => (prev - 1 + backgroundImages.length) % backgroundImages.length);
   };
 
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
-
   return (
   <section className="relative h-[91vh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -135,7 +131,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
           <div className="text-sm font-semibold text-[#6d6f74] line-clamp-1">{currentSlideObj.name}</div>
           <Link to={currentSlideObj.link}>
             <Button size="sm" className="whitespace-nowrap">
-              {tString('hero.viewProjectButton') || String(t('common.viewDetails'))}
+              {tString('hero.viewProjectButton') || tString('common.viewDetails')}
               {language === 'ar' ? (
                 <ArrowLeft className="ml-2 h-4 w-4" />
               ) : (

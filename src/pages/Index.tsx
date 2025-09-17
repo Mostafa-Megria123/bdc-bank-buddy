@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { type CarouselItem } from '@/components/Carousel';
 import { HeroCarousel } from '@/components/HeroCarousel';
-import { ArrowRight, ArrowLeft, Calendar, MapPin, Home, Download } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Calendar, Home, Download } from 'lucide-react';
 
 interface Project {
   id: string;

@@ -8,7 +8,7 @@ const bdcLogo = '/assets/bdc-logo.png';
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // This would come from auth context
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, tString } = useLanguage();
   const location = useLocation();
 
   const toggleLanguage = () => {
@@ -18,12 +18,12 @@ export const Navigation: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
-    { path: '/', label: String(t('nav.home')) },
-    { path: '/announcements', label: String(t('nav.announcements')) },
-  { path: '/projects', label: String(t('nav.projects') || 'Projects') },
-    { path: '/faqs', label: String(t('nav.faqs')) },
-    { path: '/about', label: String(t('nav.about')) },
-    { path: '/my-reservations', label: String(t('nav.myReservations')) }
+    { path: '/', label: tString('nav.home') },
+    { path: '/announcements', label: tString('nav.announcements') },
+    { path: '/projects', label: tString('nav.projects') || 'Projects' },
+    { path: '/faqs', label: tString('nav.faqs') },
+    { path: '/about', label: tString('nav.about') },
+    { path: '/my-reservations', label: tString('nav.myReservations') }
   ];
 
   return (
@@ -37,9 +37,6 @@ export const Navigation: React.FC = () => {
               alt="BDC"
               className="h-8 w-auto hover:opacity-80 transition-opacity"
             />
-            <span className="ml-2 text-xl font-bold text-foreground">
-              {/* {language === 'ar' ? 'بنك القاهرة' : 'BDC'} */}
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -49,11 +46,10 @@ export const Navigation: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive(item.path)
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive(item.path)
                       ? 'bg-gradient-primary text-white'
                       : 'text-secondary hover:text-primary hover:bg-muted'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </Link>
@@ -71,14 +67,14 @@ export const Navigation: React.FC = () => {
               className="flex items-center space-x-1 rtl:space-x-reverse"
             >
               <Globe className="h-4 w-4" />
-              <span>{String(t('nav.languageToggle'))}</span>
+              <span>{tString('nav.languageToggle')}</span>
             </Button>
 
             {/* Auth Buttons */}
             {isLoggedIn ? (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Button variant="outline" size="sm">
-                  {String(t('nav.resetPassword'))}
+                  {tString('nav.resetPassword')}
                 </Button>
                 <Button
                   variant="default"
@@ -86,14 +82,14 @@ export const Navigation: React.FC = () => {
                   onClick={() => setIsLoggedIn(false)}
                   className="bg-gradient-primary hover:opacity-90"
                 >
-                  {String(t('nav.logout'))}
+                  {tString('nav.logout')}
                 </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Link to="/login">
                   <Button variant="outline" size="sm">
-                    {String(t('nav.login'))}
+                    {tString('nav.login')}
                   </Button>
                 </Link>
                 <Link to="/register">
@@ -102,7 +98,7 @@ export const Navigation: React.FC = () => {
                     size="sm"
                     className="bg-gradient-primary hover:opacity-90"
                   >
-                    {String(t('nav.register'))}
+                    {tString('nav.register')}
                   </Button>
                 </Link>
               </div>
@@ -139,23 +135,22 @@ export const Navigation: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                    isActive(item.path)
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${isActive(item.path)
                       ? 'bg-gradient-primary text-white'
                       : 'text-secondary hover:text-primary hover:bg-muted'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
-            
+
             {/* Mobile Auth Buttons */}
             <div className="px-4 py-3 border-t space-y-2">
               {isLoggedIn ? (
                 <>
                   <Button variant="outline" size="sm" className="w-full">
-                    {String(t('nav.resetPassword'))}
+                    {tString('nav.resetPassword')}
                   </Button>
                   <Button
                     variant="default"
@@ -163,14 +158,14 @@ export const Navigation: React.FC = () => {
                     onClick={() => setIsLoggedIn(false)}
                     className="w-full bg-gradient-primary hover:opacity-90"
                   >
-                    {String(t('nav.logout'))}
+                    {tString('nav.logout')}
                   </Button>
                 </>
               ) : (
                 <>
                   <Link to="/login" className="block">
                     <Button variant="outline" size="sm" className="w-full">
-                      {String(t('nav.login'))}
+                      {tString('nav.login')}
                     </Button>
                   </Link>
                   <Link to="/register" className="block">
@@ -179,7 +174,7 @@ export const Navigation: React.FC = () => {
                       size="sm"
                       className="w-full bg-gradient-primary hover:opacity-90"
                     >
-                      {String(t('nav.register'))}
+                      {tString('nav.register')}
                     </Button>
                   </Link>
                 </>

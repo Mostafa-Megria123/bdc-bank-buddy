@@ -23,7 +23,7 @@ interface Unit {
 
 const ProjectDetail: React.FC = () => {
   const { id } = useParams();
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const [selectedUnit, setSelectedUnit] = React.useState<Unit | null>(null);
   const [isReservationModalOpen, setIsReservationModalOpen] = React.useState(false);
 
@@ -233,8 +233,8 @@ const ProjectDetail: React.FC = () => {
                   {language === 'ar' ? 'المميزات والمرافق' : 'Features & Amenities'}
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {project.features.map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-2 rtl:space-x-reverse">
+                  {project.features.map((feature) => (
+                    <div key={feature} className="flex items-center space-x-2 rtl:space-x-reverse">
                       <div className="w-2 h-2 bg-gradient-primary rounded-full" />
                       <span className="text-sm text-muted-foreground">{feature}</span>
                     </div>
@@ -388,7 +388,7 @@ const ProjectDetail: React.FC = () => {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {project.images.map((image, index) => (
-                    <div key={index} className="relative overflow-hidden rounded-lg group">
+                    <div key={`${image}-${index}`} className="relative overflow-hidden rounded-lg group">
                       <img
                         src={image}
                         alt={`${project.name} ${index + 1}`}

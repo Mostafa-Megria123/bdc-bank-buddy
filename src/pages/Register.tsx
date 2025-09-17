@@ -398,8 +398,8 @@ const Register = () => {
                           <SelectValue placeholder={language === 'ar' ? 'اختر الحالة' : 'Select status'} />
                         </SelectTrigger>
                         <SelectContent>
-                          {maritalStatuses.map((status, index) => (
-                            <SelectItem key={index} value={status}>{status}</SelectItem>
+                          {maritalStatuses.map((status) => (
+                            <SelectItem key={status} value={status}>{status}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>

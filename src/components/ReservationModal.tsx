@@ -33,7 +33,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   unit,
   projectName
 }) => {
-  const { language, t, tString } = useLanguage();
+  const { language, tString } = useLanguage();
   const { toast } = useToast();
   const [step, setStep] = useState(1); // 1: Unit Details, 2: Personal Info, 3: Payment
   const [isProcessing, setIsProcessing] = useState(false);
@@ -86,8 +86,8 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
       setStep(prev => Math.min(prev + 1, 3));
     } else {
       toast({
-    title: String(t('reservation.errorTitle')),
-    description: String(t('reservation.errorDesc')),
+    title: tString('reservation.errorTitle'),
+    description: tString('reservation.errorDesc'),
         variant: 'destructive'
       });
     }
@@ -106,8 +106,8 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
     // Mock payment success
     const bookingId = Math.random().toString(36).substr(2, 9).toUpperCase();
     toast({
-      title: String(t('reservation.successTitle')),
-      description: String(t('reservation.successDescription')).replace('{unitId}', unit.id).replace('{bookingId}', bookingId),
+      title: tString('reservation.successTitle'),
+      description: tString('reservation.successDescription').replace('{unitId}', unit.id).replace('{bookingId}', bookingId),
     });
     
     setIsProcessing(false);
@@ -148,10 +148,10 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-foreground">
-            {String(t('reservation.title'))}
+            {tString('reservation.title')}
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
-            {String(t('reservation.dialogDescription'))}
+            {tString('reservation.dialogDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -161,28 +161,28 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             <Card className="sticky top-0">
               <CardHeader>
                   <CardTitle className="text-lg">
-                  {String(t('reservation.unitSummary'))}
+                  {tString('reservation.unitSummary')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <Home className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{String(t('reservation.unitId'))}</span>
+                    <span className="font-medium">{tString('reservation.unitId')}</span>
                     <span>{unit.id}</span>
                   </div>
                   
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{String(t('reservation.project'))}</span>
+                    <span className="font-medium">{tString('reservation.project')}</span>
                     <span className="text-sm">{projectName}</span>
                   </div>
                   
                   <div className="space-y-1">
-                    <p><strong>{String(t('reservation.type'))}</strong> {unit.type}</p>
-                    <p><strong>{String(t('reservation.area'))}</strong> {unit.area}</p>
-                    <p><strong>{String(t('reservation.bedrooms'))}</strong> {unit.bedrooms}</p>
-                    <p><strong>{String(t('reservation.bathrooms'))}</strong> {unit.bathrooms}</p>
+                    <p><strong>{tString('reservation.type')}</strong> {unit.type}</p>
+                    <p><strong>{tString('reservation.area')}</strong> {unit.area}</p>
+                    <p><strong>{tString('reservation.bedrooms')}</strong> {unit.bedrooms}</p>
+                    <p><strong>{tString('reservation.bathrooms')}</strong> {unit.bathrooms}</p>
                   </div>
                 </div>
                 
@@ -190,22 +190,22 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">{String(t('reservation.unitPrice'))}</span>
+                    <span className="font-medium">{tString('reservation.unitPrice')}</span>
                     <span className="text-xl font-bold text-primary">{unit.price}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">{String(t('reservation.reservationFee'))}</span>
+                    <span className="text-sm text-muted-foreground">{tString('reservation.reservationFee')}</span>
                     <span className="text-sm">50,000 {language === 'ar' ? 'ج.م' : 'EGP'}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between items-center text-lg font-bold">
-                    <span>{String(t('reservation.dueNow'))}</span>
+                    <span>{tString('reservation.dueNow')}</span>
                     <span className="text-primary">50,000 {language === 'ar' ? 'ج.م' : 'EGP'}</span>
                   </div>
                 </div>
                 
                   <Badge variant="outline" className="w-full justify-center">
-                  {String(t('reservation.available'))}
+                  {tString('reservation.available')}
                 </Badge>
               </CardContent>
             </Card>
@@ -237,13 +237,13 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
-                    {String(t('reservation.detailsTitle'))}
+                    {tString('reservation.detailsTitle')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="reservationDate">
-                      {String(t('reservation.preferredDate'))}
+                      {tString('reservation.preferredDate')}
                     </Label>
                     <Input
                       id="reservationDate"
@@ -256,12 +256,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   
                   <div className="space-y-2">
                     <Label htmlFor="notes">
-                      {String(t('reservation.additionalNotes'))}
+                      {tString('reservation.additionalNotes')}
                     </Label>
                     <textarea
                       id="notes"
                       className="w-full min-h-[100px] p-3 border border-input bg-background rounded-md"
-                      placeholder={String(t('reservation.notesPlaceholder'))}
+                      placeholder={tString('reservation.notesPlaceholder')}
                       value={reservationDetails.notes}
                       onChange={(e) => handleReservationDetailsChange('notes', e.target.value)}
                     />
@@ -276,13 +276,13 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                     <User className="h-5 w-5" />
-                    {String(t('reservation.personalInfo'))}
+                    {tString('reservation.personalInfo')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="fullName">{String(t('reservation.fullName'))} *</Label>
+                      <Label htmlFor="fullName">{tString('reservation.fullName')} *</Label>
                       <Input
                         id="fullName"
                         value={personalInfo.fullName}
@@ -292,7 +292,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="nationalId">{String(t('reservation.nationalId'))} *</Label>
+                      <Label htmlFor="nationalId">{tString('reservation.nationalId')} *</Label>
                       <Input
                         id="nationalId"
                         value={personalInfo.nationalId}
@@ -304,7 +304,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email">{String(t('reservation.email'))} *</Label>
+                      <Label htmlFor="email">{tString('reservation.email')} *</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -319,7 +319,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="phone">{String(t('reservation.phoneNumber'))} *</Label>
+                      <Label htmlFor="phone">{tString('reservation.phoneNumber')} *</Label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -342,7 +342,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5" />
-                    {String(t('reservation.paymentInfo'))}
+                    {tString('reservation.paymentInfo')}
                   </CardTitle>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Lock className="h-4 w-4" />
@@ -402,9 +402,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   <div className="bg-muted/30 p-4 rounded-lg">
                     <div className="flex items-center gap-2 text-sm">
                       <Lock className="h-4 w-4 text-green-600" />
-                      <span className="text-green-600 font-medium">{String(t('reservation.securePayment'))}</span>
+                      <span className="text-green-600 font-medium">{tString('reservation.securePayment')}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">{String(t('reservation.securePaymentDesc'))}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{tString('reservation.securePaymentDesc')}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -417,7 +417,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 onClick={step === 1 ? onClose : prevStep}
                 disabled={isProcessing}
               >
-                {step === 1 ? String(t('reservation.cancel')) : String(t('reservation.previous'))}
+                {step === 1 ? tString('reservation.cancel') : tString('reservation.previous')}
               </Button>
               
               <Button
@@ -428,12 +428,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 {isProcessing ? (
                     <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    {String(t('reservation.processing'))}
+                    {tString('reservation.processing')}
                   </div>
                 ) : step === 3 ? (
-                  String(t('reservation.completePayment'))
+                  tString('reservation.completePayment')
                 ) : (
-                  String(t('reservation.next'))
+                  tString('reservation.next')
                 )}
               </Button>
             </div>

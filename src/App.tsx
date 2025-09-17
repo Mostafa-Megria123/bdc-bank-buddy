@@ -19,21 +19,10 @@ import MyReservations from "./pages/MyReservations";
 import ProjectDetail from "./pages/ProjectDetail";
 import NotFound from "./pages/NotFound";
 import { AnnouncementDetails } from "@/components/AnnouncementDetails";
-import { useParams, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
-
-// Scroll to top component
-function ScrollToTop() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
 
 // Wrapper to fetch announcement by ID from params
 function AnnouncementDetailsWrapper() {

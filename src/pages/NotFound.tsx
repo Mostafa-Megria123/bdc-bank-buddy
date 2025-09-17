@@ -5,10 +5,11 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
+    // This console.error is useful for development but should not be in production
+    // as `location.pathname` could contain sensitive information.
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(`404 Error: User attempted to access non-existent route: ${location.pathname}`);
+    }
   }, [location.pathname]);
 
   return (

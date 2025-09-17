@@ -153,11 +153,10 @@ export const AnnouncementDetails: React.FC = () => {
             alt={String(t(announcement.titleKey))}
             className="w-full h-full object-cover animate-fade-in"
             onError={(e) => {
-              console.log('Image failed to load:', announcement.image);
+              if (process.env.NODE_ENV !== 'production') {
+                console.log('Image failed to load:', announcement.image);
+              }
               e.currentTarget.src = '/placeholder.svg';
-            }}
-            onLoad={() => {
-              console.log('Image loaded successfully:', announcement.image);
             }}
           />
         </div>
@@ -257,11 +256,10 @@ export const AnnouncementDetails: React.FC = () => {
                           alt={`${String(t('announcementDetails.galleryImage'))} ${idx + 1}`}
                           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
                           onError={(e) => {
-                            console.log('Gallery image failed to load:', image);
+                            if (process.env.NODE_ENV !== 'production') {
+                              console.log('Gallery image failed to load:', image);
+                            }
                             e.currentTarget.src = '/placeholder.svg';
-                          }}
-                          onLoad={() => {
-                            console.log('Gallery image loaded:', image);
                           }}
                         />
                       </div>

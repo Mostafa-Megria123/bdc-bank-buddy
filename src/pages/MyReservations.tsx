@@ -128,6 +128,37 @@ const MyReservations = () => {
     }
   ];
 
+  // Apply filters to reservations
+  const filteredReservations = reservations.filter((r) => {
+    // Project filter (exact match when selected)
+    if (filters.project && filters.project !== r.project) return false;
+
+    // Status filter (statuses array uses 'value' strings; we compare against reservation.status)
+    if (filters.status) {
+      // Allow matching by exact value or localized label
+      const statusNormalized = String(filters.status).toLowerCase();
+      const reservationStatus = String(r.status).toLowerCase();
+      const reservationStatusLabel = String(r.statusText).toLowerCase();
+      if (statusNormalized !== reservationStatus && statusNormalized !== reservationStatusLabel) return false;
+    }
+
+    // Date filters (compare ISO dates)
+    if (filters.dateFrom) {
+      const from = new Date(filters.dateFrom);
+      const modifiedDate = new Date(r.modified);
+      if (isNaN(from.getTime()) || modifiedDate < from) return false;
+    }
+    if (filters.dateTo) {
+      const to = new Date(filters.dateTo);
+      const modifiedDate = new Date(r.modified);
+      // include the end date by setting time to end of day
+      to.setHours(23, 59, 59, 999);
+      if (isNaN(to.getTime()) || modifiedDate > to) return false;
+    }
+
+    return true;
+  });
+
   const projects = [
   tString('myReservations.sampleProjects.0'),
   tString('myReservations.sampleProjects.1'),
@@ -349,7 +380,7 @@ const MyReservations = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reservations.map((reservation, index) => (
+                    {filteredReservations.map((reservation, index) => (
                       <TableRow 
                         key={reservation.id}
                         className="animate-fade-in hover:bg-muted/50 transition-colors duration-300"

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -150,6 +150,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             <DialogTitle className="text-2xl font-bold text-foreground">
             {String(t('reservation.title'))}
           </DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">
+            {String(t('reservation.dialogDescription'))}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

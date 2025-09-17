@@ -274,6 +274,7 @@
     "errorTitle": "Error",
     "errorDesc": "Please fill all required fields",
     "successTitle": "Reservation Successful!",
-    "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}"
+  "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}",
+  "dialogDescription": "Fill in the reservation details and proceed to confirm your booking."
   }
 }

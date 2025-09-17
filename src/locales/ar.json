@@ -274,6 +274,7 @@
     "errorTitle": "خطأ",
     "errorDesc": "يرجى ملء جميع الحقول المطلوبة",
     "successTitle": "تم الحجز بنجاح!",
-    "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}"
+  "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}",
+  "dialogDescription": "املأ تفاصيل الحجز ثم تابع لتأكيد الحجز."
   }
 }

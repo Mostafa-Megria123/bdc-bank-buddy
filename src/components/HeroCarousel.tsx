@@ -116,7 +116,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         {/* If the current slide is a project, show its title/description below the welcome text */}
         {currentSlideObj && currentSlideObj.type === 'project' && (
           <div className="mt-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{currentSlideObj.name}</h2>
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">{currentSlideObj.name}</h2>
             {(() => {
               // slides: [hero, ...projectSlides] so project translation index = slideIndex - 1
               const slideIndex = slides.indexOf(currentSlideObj);

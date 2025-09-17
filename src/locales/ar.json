@@ -239,4 +239,41 @@
       }
     }
   }
+
+  ,
+  "reservation": {
+    "title": "حجز الوحدة",
+    "unitSummary": "ملخص الوحدة",
+    "unitId": "رقم الوحدة:",
+    "project": "المشروع:",
+    "type": "النوع:",
+    "area": "المساحة:",
+    "bedrooms": "الغرف:",
+    "bathrooms": "الحمامات:",
+    "unitPrice": "سعر الوحدة:",
+    "reservationFee": "رسوم الحجز:",
+    "available": "متاح للحجز",
+    "dueNow": "المطلوب الآن:",
+    "detailsTitle": "تفاصيل الحجز",
+    "preferredDate": "تاريخ الحجز المفضل",
+    "additionalNotes": "ملاحظات إضافية (اختياري)",
+    "notesPlaceholder": "أي متطلبات خاصة أو ملاحظات...",
+    "personalInfo": "المعلومات الشخصية",
+    "fullName": "الاسم الكامل",
+    "nationalId": "الرقم القومي",
+    "email": "البريد الإلكتروني",
+    "phoneNumber": "رقم الهاتف",
+    "paymentInfo": "معلومات الدفع",
+    "securePayment": "الدفع الآمن",
+    "securePaymentDesc": "جميع المعاملات مشفرة ومؤمنة بنظام SSL 256-bit",
+    "cancel": "إلغاء",
+    "previous": "السابق",
+    "next": "التالي",
+    "processing": "جاري المعالجة...",
+    "completePayment": "إتمام الدفع",
+    "errorTitle": "خطأ",
+    "errorDesc": "يرجى ملء جميع الحقول المطلوبة",
+    "successTitle": "تم الحجز بنجاح!",
+    "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}"
+  }
 }

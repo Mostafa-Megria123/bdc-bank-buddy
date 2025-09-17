@@ -33,7 +33,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   unit,
   projectName
 }) => {
-  const { language } = useLanguage();
+  const { language, t, tString } = useLanguage();
   const { toast } = useToast();
   const [step, setStep] = useState(1); // 1: Unit Details, 2: Personal Info, 3: Payment
   const [isProcessing, setIsProcessing] = useState(false);
@@ -82,12 +82,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   };
 
   const nextStep = () => {
-    if (validateStep(step)) {
+  if (validateStep(step)) {
       setStep(prev => Math.min(prev + 1, 3));
     } else {
       toast({
-        title: language === 'ar' ? 'خطأ' : 'Error',
-        description: language === 'ar' ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill all required fields',
+    title: String(t('reservation.errorTitle')),
+    description: String(t('reservation.errorDesc')),
         variant: 'destructive'
       });
     }
@@ -104,11 +104,10 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
     await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Mock payment success
+    const bookingId = Math.random().toString(36).substr(2, 9).toUpperCase();
     toast({
-      title: language === 'ar' ? 'تم الحجز بنجاح!' : 'Reservation Successful!',
-      description: language === 'ar' 
-        ? `تم حجز الوحدة ${unit.id} بنجاح. رقم الحجز: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`
-        : `Unit ${unit.id} reserved successfully. Booking ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+      title: String(t('reservation.successTitle')),
+      description: String(t('reservation.successDescription')).replace('{unitId}', unit.id).replace('{bookingId}', bookingId),
     });
     
     setIsProcessing(false);
@@ -148,8 +147,8 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-foreground">
-            {language === 'ar' ? 'حجز الوحدة' : 'Unit Reservation'}
+            <DialogTitle className="text-2xl font-bold text-foreground">
+            {String(t('reservation.title'))}
           </DialogTitle>
         </DialogHeader>
 
@@ -158,29 +157,29 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
           <div className="lg:col-span-1">
             <Card className="sticky top-0">
               <CardHeader>
-                <CardTitle className="text-lg">
-                  {language === 'ar' ? 'ملخص الوحدة' : 'Unit Summary'}
+                  <CardTitle className="text-lg">
+                  {String(t('reservation.unitSummary'))}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <Home className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{language === 'ar' ? 'رقم الوحدة:' : 'Unit ID:'}</span>
+                    <span className="font-medium">{String(t('reservation.unitId'))}</span>
                     <span>{unit.id}</span>
                   </div>
                   
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{language === 'ar' ? 'المشروع:' : 'Project:'}</span>
+                    <span className="font-medium">{String(t('reservation.project'))}</span>
                     <span className="text-sm">{projectName}</span>
                   </div>
                   
                   <div className="space-y-1">
-                    <p><strong>{language === 'ar' ? 'النوع:' : 'Type:'}</strong> {unit.type}</p>
-                    <p><strong>{language === 'ar' ? 'المساحة:' : 'Area:'}</strong> {unit.area}</p>
-                    <p><strong>{language === 'ar' ? 'الغرف:' : 'Bedrooms:'}</strong> {unit.bedrooms}</p>
-                    <p><strong>{language === 'ar' ? 'الحمامات:' : 'Bathrooms:'}</strong> {unit.bathrooms}</p>
+                    <p><strong>{String(t('reservation.type'))}</strong> {unit.type}</p>
+                    <p><strong>{String(t('reservation.area'))}</strong> {unit.area}</p>
+                    <p><strong>{String(t('reservation.bedrooms'))}</strong> {unit.bedrooms}</p>
+                    <p><strong>{String(t('reservation.bathrooms'))}</strong> {unit.bathrooms}</p>
                   </div>
                 </div>
                 
@@ -188,22 +187,22 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">{language === 'ar' ? 'سعر الوحدة:' : 'Unit Price:'}</span>
+                    <span className="font-medium">{String(t('reservation.unitPrice'))}</span>
                     <span className="text-xl font-bold text-primary">{unit.price}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">{language === 'ar' ? 'رسوم الحجز:' : 'Reservation Fee:'}</span>
+                    <span className="text-sm text-muted-foreground">{String(t('reservation.reservationFee'))}</span>
                     <span className="text-sm">50,000 {language === 'ar' ? 'ج.م' : 'EGP'}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between items-center text-lg font-bold">
-                    <span>{language === 'ar' ? 'المطلوب الآن:' : 'Due Now:'}</span>
+                    <span>{String(t('reservation.dueNow'))}</span>
                     <span className="text-primary">50,000 {language === 'ar' ? 'ج.م' : 'EGP'}</span>
                   </div>
                 </div>
                 
-                <Badge variant="outline" className="w-full justify-center">
-                  {language === 'ar' ? 'متاح للحجز' : 'Available for Reservation'}
+                  <Badge variant="outline" className="w-full justify-center">
+                  {String(t('reservation.available'))}
                 </Badge>
               </CardContent>
             </Card>
@@ -233,15 +232,15 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             {step === 1 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
-                    {language === 'ar' ? 'تفاصيل الحجز' : 'Reservation Details'}
+                    {String(t('reservation.detailsTitle'))}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="reservationDate">
-                      {language === 'ar' ? 'تاريخ الحجز المفضل' : 'Preferred Reservation Date'}
+                      {String(t('reservation.preferredDate'))}
                     </Label>
                     <Input
                       id="reservationDate"
@@ -254,12 +253,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   
                   <div className="space-y-2">
                     <Label htmlFor="notes">
-                      {language === 'ar' ? 'ملاحظات إضافية (اختياري)' : 'Additional Notes (Optional)'}
+                      {String(t('reservation.additionalNotes'))}
                     </Label>
                     <textarea
                       id="notes"
                       className="w-full min-h-[100px] p-3 border border-input bg-background rounded-md"
-                      placeholder={language === 'ar' ? 'أي متطلبات خاصة أو ملاحظات...' : 'Any special requirements or notes...'}
+                      placeholder={String(t('reservation.notesPlaceholder'))}
                       value={reservationDetails.notes}
                       onChange={(e) => handleReservationDetailsChange('notes', e.target.value)}
                     />
@@ -272,15 +271,15 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             {step === 2 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2">
                     <User className="h-5 w-5" />
-                    {language === 'ar' ? 'المعلومات الشخصية' : 'Personal Information'}
+                    {String(t('reservation.personalInfo'))}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="fullName">{language === 'ar' ? 'الاسم الكامل' : 'Full Name'} *</Label>
+                      <Label htmlFor="fullName">{String(t('reservation.fullName'))} *</Label>
                       <Input
                         id="fullName"
                         value={personalInfo.fullName}
@@ -290,7 +289,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="nationalId">{language === 'ar' ? 'الرقم القومي' : 'National ID'} *</Label>
+                      <Label htmlFor="nationalId">{String(t('reservation.nationalId'))} *</Label>
                       <Input
                         id="nationalId"
                         value={personalInfo.nationalId}
@@ -302,7 +301,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email">{language === 'ar' ? 'البريد الإلكتروني' : 'Email'} *</Label>
+                      <Label htmlFor="email">{String(t('reservation.email'))} *</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -317,7 +316,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="phone">{language === 'ar' ? 'رقم الهاتف' : 'Phone Number'} *</Label>
+                      <Label htmlFor="phone">{String(t('reservation.phoneNumber'))} *</Label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -338,9 +337,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             {step === 3 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5" />
-                    {language === 'ar' ? 'معلومات الدفع' : 'Payment Information'}
+                    {String(t('reservation.paymentInfo'))}
                   </CardTitle>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Lock className="h-4 w-4" />
@@ -400,16 +399,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   <div className="bg-muted/30 p-4 rounded-lg">
                     <div className="flex items-center gap-2 text-sm">
                       <Lock className="h-4 w-4 text-green-600" />
-                      <span className="text-green-600 font-medium">
-                        {language === 'ar' ? 'الدفع الآمن' : 'Secure Payment'}
-                      </span>
+                      <span className="text-green-600 font-medium">{String(t('reservation.securePayment'))}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {language === 'ar' 
-                        ? 'جميع المعاملات مشفرة ومؤمنة بنظام SSL 256-bit'
-                        : 'All transactions are encrypted and secured with 256-bit SSL'
-                      }
-                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">{String(t('reservation.securePaymentDesc'))}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -417,15 +409,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-6">
-              <Button
+                <Button
                 variant="outline"
                 onClick={step === 1 ? onClose : prevStep}
                 disabled={isProcessing}
               >
-                {step === 1 
-                  ? (language === 'ar' ? 'إلغاء' : 'Cancel')
-                  : (language === 'ar' ? 'السابق' : 'Previous')
-                }
+                {step === 1 ? String(t('reservation.cancel')) : String(t('reservation.previous'))}
               </Button>
               
               <Button
@@ -434,14 +423,14 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 className="bg-gradient-primary hover:opacity-90"
               >
                 {isProcessing ? (
-                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    {language === 'ar' ? 'جاري المعالجة...' : 'Processing...'}
+                    {String(t('reservation.processing'))}
                   </div>
                 ) : step === 3 ? (
-                  language === 'ar' ? 'إتمام الدفع' : 'Complete Payment'
+                  String(t('reservation.completePayment'))
                 ) : (
-                  language === 'ar' ? 'التالي' : 'Next'
+                  String(t('reservation.next'))
                 )}
               </Button>
             </div>

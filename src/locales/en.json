@@ -240,4 +240,40 @@
       }
     }
   }
+  ,
+  "reservation": {
+    "title": "Unit Reservation",
+    "unitSummary": "Unit Summary",
+    "unitId": "Unit ID:",
+    "project": "Project:",
+    "type": "Type:",
+    "area": "Area:",
+    "bedrooms": "Bedrooms:",
+    "bathrooms": "Bathrooms:",
+    "unitPrice": "Unit Price:",
+    "reservationFee": "Reservation Fee:",
+    "available": "Available for Reservation",
+    "dueNow": "Due Now:",
+    "detailsTitle": "Reservation Details",
+    "preferredDate": "Preferred Reservation Date",
+    "additionalNotes": "Additional Notes (Optional)",
+    "notesPlaceholder": "Any special requirements or notes...",
+    "personalInfo": "Personal Information",
+    "fullName": "Full Name",
+    "nationalId": "National ID",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "paymentInfo": "Payment Information",
+    "securePayment": "Secure Payment",
+    "securePaymentDesc": "All transactions are encrypted and secured with 256-bit SSL",
+    "cancel": "Cancel",
+    "previous": "Previous",
+    "next": "Next",
+    "processing": "Processing...",
+    "completePayment": "Complete Payment",
+    "errorTitle": "Error",
+    "errorDesc": "Please fill all required fields",
+    "successTitle": "Reservation Successful!",
+    "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}"
+  }
 }

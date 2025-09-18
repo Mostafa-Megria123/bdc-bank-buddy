@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
-  base: "/bdc-bank-buddy/",
+  // base: "/bdc-bank-buddy/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

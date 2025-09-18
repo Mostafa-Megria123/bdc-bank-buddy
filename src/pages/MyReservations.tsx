@@ -143,13 +143,19 @@ const PaymentDialog = ({ reservation, tString }: PaymentDialogProps) => {
 
 const MyReservations = () => {
   const { tString } = useLanguage();
-  const [filters, setFilters] = useState({
+
+  const initialFilters = {
     project: '',
     status: '',
     dateFrom: '',
     dateTo: ''
-  });
+  };
 
+  const [filters, setFilters] = useState(initialFilters);
+
+  const handleResetFilters = () => {
+    setFilters(initialFilters);
+  };
   // Mock reservation data
   const reservations: Reservation[] = [
     {
@@ -321,7 +327,7 @@ const MyReservations = () => {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-screen-2xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
               {tString('myReservations.pageTitle')}
@@ -340,7 +346,7 @@ const MyReservations = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
                 <div>
                   <Label>{tString('myReservations.filters.projectLabel')}</Label>
                   <Select value={filters.project} onValueChange={(value) => setFilters({ ...filters, project: value })}>
@@ -382,6 +388,12 @@ const MyReservations = () => {
                     value={filters.dateTo}
                     onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
                   />
+                </div>
+                <div className="lg:col-span-1">
+                  <Button onClick={handleResetFilters} variant="outline" className="w-full">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    {tString('myReservations.filters.reset')}
+                  </Button>
                 </div>
               </div>
             </CardContent>

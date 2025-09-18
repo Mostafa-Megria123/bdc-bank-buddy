@@ -289,7 +289,8 @@
       "statusLabel": "Form Status",
       "allStatuses": "All Statuses",
       "dateFrom": "Date From",
-      "dateTo": "Date To"
+      "dateTo": "Date To",
+      "reset": "Reset Filters"
     },
     "table": {
       "project": "Project",

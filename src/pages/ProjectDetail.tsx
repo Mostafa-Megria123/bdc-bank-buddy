@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/ui/loadingSpinner';
 import { ReservationModal } from '@/components/ReservationModal';
-import { ArrowLeft, Calendar, MapPin, Home, Download, Phone, Mail, Users, Building } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Home, Download, Phone, Mail, Users, Building, Share2 } from 'lucide-react';
 const project1 = '/assets/project-1.jpg';
 const heroBuilding = '/assets/hero-building.jpg';
 
@@ -240,6 +240,17 @@ const ProjectDetail: React.FC = () => {
     setSelectedUnit(null);
   };
 
+  const handleShare = () => {
+    if (navigator.share && project) {
+      navigator.share({
+        title: project.name,
+        text: project.description,
+        url: window.location.href,
+      })
+        .catch((error) => console.error('Error sharing project', error));
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-subtle">
@@ -338,10 +349,10 @@ const ProjectDetail: React.FC = () => {
                 <div className="space-y-4">
                   {project.units.map((unit) => (
                     <Card key={unit.id} className={`border-2 transition-all duration-300 hover:shadow-brand ${unit.status === 'reserved'
-                        ? 'border-destructive/30 bg-destructive/5'
-                        : unit.status === 'sold'
-                          ? 'border-muted bg-muted/20'
-                          : 'border-primary/30 hover:border-primary/50 cursor-pointer'
+                      ? 'border-destructive/30 bg-destructive/5'
+                      : unit.status === 'sold'
+                        ? 'border-muted bg-muted/20'
+                        : 'border-primary/30 hover:border-primary/50 cursor-pointer'
                       }`}>
                       <CardContent className="p-4">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -553,6 +564,13 @@ const ProjectDetail: React.FC = () => {
                     <Mail className="mr-2 h-4 w-4" />
                     {language === 'ar' ? 'طلب معلومات' : 'Request Info'}
                   </Button>
+
+                  {navigator.share && (
+                    <Button variant="outline" className="w-full" onClick={handleShare}>
+                      <Share2 className="mr-2 h-4 w-4" />
+                      {language === 'ar' ? 'مشاركة المشروع' : 'Share Project'}
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>

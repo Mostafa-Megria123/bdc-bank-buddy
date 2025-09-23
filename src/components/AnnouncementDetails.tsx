@@ -16,7 +16,6 @@ type Announcement = {
   titleKey: string;
   descriptionKey: string;
   publishDate: string;
-  image: string;
   contentKey: string;
   authorKey: string;
   categoryKey: string;
@@ -32,7 +31,6 @@ const announcementsData: Announcement[] = [
     titleKey: 'announcementDetails.details.1.title',
     descriptionKey: 'announcementDetails.details.1.description',
     publishDate: '2024-01-15',
-    image: heroBuilding,
     contentKey: 'announcementDetails.details.1.content',
     authorKey: 'announcementDetails.details.1.author',
     categoryKey: 'announcementDetails.details.1.category',
@@ -48,7 +46,6 @@ const announcementsData: Announcement[] = [
     titleKey: 'announcementDetails.details.2.title',
     descriptionKey: 'announcementDetails.details.2.description',
     publishDate: '2024-01-10',
-    image: project1,
     contentKey: 'announcementDetails.details.2.content',
     authorKey: 'announcementDetails.details.2.author',
     categoryKey: 'announcementDetails.details.2.category',
@@ -64,7 +61,6 @@ const announcementsData: Announcement[] = [
     titleKey: 'announcementDetails.details.3.title',
     descriptionKey: 'announcementDetails.details.3.description',
     publishDate: '2024-01-05',
-    image: announcement1,
     contentKey: 'announcementDetails.details.3.content',
     authorKey: 'announcementDetails.details.3.author',
     categoryKey: 'announcementDetails.details.3.category',
@@ -77,7 +73,6 @@ const announcementsData: Announcement[] = [
     titleKey: 'announcementDetails.details.4.title',
     descriptionKey: 'announcementDetails.details.4.description',
     publishDate: '2023-12-28',
-    image: announcement1,
     contentKey: 'announcementDetails.details.4.content',
     authorKey: 'announcementDetails.details.4.author',
     categoryKey: 'announcementDetails.details.4.category',
@@ -90,7 +85,6 @@ const announcementsData: Announcement[] = [
     titleKey: 'announcementDetails.details.5.title',
     descriptionKey: 'announcementDetails.details.5.description',
     publishDate: '2023-12-20',
-    image: announcement1,
     contentKey: 'announcementDetails.details.5.content',
     authorKey: 'announcementDetails.details.5.author',
     categoryKey: 'announcementDetails.details.5.category',
@@ -103,7 +97,6 @@ const announcementsData: Announcement[] = [
     titleKey: 'announcementDetails.details.6.title',
     descriptionKey: 'announcementDetails.details.6.description',
     publishDate: '2023-12-15',
-    image: announcement1,
     contentKey: 'announcementDetails.details.6.content',
     authorKey: 'announcementDetails.details.6.author',
     categoryKey: 'announcementDetails.details.6.category',
@@ -158,12 +151,12 @@ export const AnnouncementDetails: React.FC = () => {
       <section className="relative h-[70vh] overflow-hidden">
         <div className="w-full h-full bg-muted/20">
           <img
-            src={announcement.image}
+            src={announcement.gallery?.[0] || '/placeholder.svg'}
             alt={tString(announcement.titleKey)}
             className="w-full h-full object-cover animate-fade-in"
             onError={(e) => {
               if (process.env.NODE_ENV !== 'production') {
-                console.log('Image failed to load:', announcement.image);
+                console.log('Image failed to load:', announcement.gallery?.[0]);
               }
               e.currentTarget.src = '/placeholder.svg';
             }}

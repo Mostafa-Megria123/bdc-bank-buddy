@@ -2,8 +2,9 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
-import { useLanguage } from '@/contexts/useLanguage';
-import { ArrowLeft, ArrowRight, Calendar, MapPin, User, Share2, Download } from 'lucide-react';
+import { useLanguage } from "@/contexts/useLanguage";
+import { ArrowLeft, ArrowRight, Calendar, MapPin, User, Share2, Download, Search } from 'lucide-react';
+import { Lightbox } from '@/components/ui/lightBox';
 
 // Import images properly
 const announcement1 = '/assets/announcement-1.jpg';
@@ -116,7 +117,9 @@ export const AnnouncementDetails: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { language, tString } = useLanguage();
-  
+  const [lightboxOpen, setLightboxOpen] = React.useState(false);
+  const [lightboxStartIndex, setLightboxStartIndex] = React.useState(0);
+
   const announcement = announcementsData.find(a => a.id === id);
   
   if (!announcement) {
@@ -138,9 +141,15 @@ export const AnnouncementDetails: React.FC = () => {
     if (navigator.share) {
       navigator.share({
         title: tString(announcement.titleKey),
+        text: tString(announcement.descriptionKey),
         url: window.location.href
       });
     }
+  };
+
+  const openLightbox = (index: number) => {
+    setLightboxStartIndex(index);
+    setLightboxOpen(true);
   };
 
   return (
@@ -183,17 +192,6 @@ export const AnnouncementDetails: React.FC = () => {
           </Button>
         </div>
 
-        {/* Share Button */}
-        <div className="absolute top-8 right-8 z-10">
-          <Button
-            variant="outline"
-            onClick={handleShare}
-            className="bg-background/90 backdrop-blur-md border-border/50 hover:bg-background hover-scale"
-          >
-            <Share2 className="h-4 w-4" />
-          </Button>
-        </div>
-        
         {/* Hero Content */}
         <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
           <div className="max-w-4xl mx-auto">
@@ -250,32 +248,36 @@ export const AnnouncementDetails: React.FC = () => {
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {announcement.gallery.map((image, index) => (
-                      <div key={`${image}-${index}`} className="group overflow-hidden rounded-xl bg-muted/20">
+                      <div
+                        key={`${image}-${index}`}
+                        className="group overflow-hidden rounded-xl bg-muted/20 cursor-pointer relative"
+                        onClick={() => openLightbox(index)}
+                      >
                         <img
                           src={image}
                           alt={`${tString('announcementDetails.galleryImage')} ${index + 1}`}
                           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
                           onError={(e) => {
-                            if (process.env.NODE_ENV !== 'production') {
-                              console.log('Gallery image failed to load:', image);
-                            }
                             e.currentTarget.src = '/placeholder.svg';
                           }}
                         />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Search className="h-8 w-8 text-white" />
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Download Links */}
-              {announcement.downloadLinks && announcement.downloadLinks.length > 0 && (
+              {/* Actions Section */}
+              {(announcement.downloadLinks && announcement.downloadLinks.length > 0 || navigator.share) && (
                 <div className="bg-muted/50 rounded-xl p-8">
                   <h2 className="text-2xl font-bold mb-6 text-foreground">
-                    {tString('announcementDetails.downloads')}
+                    {tString('announcementDetails.actions')}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {announcement.downloadLinks.map((link) => (
+                    {announcement.downloadLinks?.map((link) => (
                       <Button
                         key={link.labelKey}
                         variant="outline"
@@ -292,6 +294,20 @@ export const AnnouncementDetails: React.FC = () => {
                         </a>
                       </Button>
                     ))}
+                    {navigator.share && (
+                      <Button
+                        variant="outline"
+                        onClick={handleShare}
+                        className="justify-start h-auto p-6 hover-scale"
+                      >
+                        <Share2 className="h-5 w-5 mr-3" />
+                        <div className="text-left">
+                          <div className="font-semibold">
+                            {tString('announcementDetails.shareAction')}
+                          </div>
+                        </div>
+                      </Button>
+                    )}
                   </div>
                 </div>
               )}
@@ -330,6 +346,15 @@ export const AnnouncementDetails: React.FC = () => {
           </Card>
         </div>
       </section>
+
+      {lightboxOpen && (
+        <Lightbox
+          images={announcement.gallery || []}
+          startIndex={lightboxStartIndex}
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   );
 };

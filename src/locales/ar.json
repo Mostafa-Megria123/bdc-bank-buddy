@@ -16,8 +16,8 @@
     "welcomeTitle": "مرحباً بكم في بنك القاهرة للتنمية العقارية",
     "welcomeSubtitle": "اكتشف منزل أحلامك مع بنك القاهرة للتنمية العقارية",
     "exploreProjects": "استكشف مشاريعنا",
-  "learnMore": "اعرف أكثر",
-  "viewProjectButton": "عرض المشروع"
+    "learnMore": "اعرف أكثر",
+    "viewProjectButton": "عرض المشروع"
   },
   "announcementsPage": {
     "sectionTitle": "أحدث الإعلانات",
@@ -102,8 +102,7 @@
         "displayEndDate": "2024-11-30",
         "unitsAvailable": 180,
         "link": "/projects/2"
-      }
-      ,
+      },
       {
         "id": "3",
         "image": "/assets/project-1.jpg",
@@ -178,6 +177,8 @@
     "gallery": "معرض الصور",
     "galleryImage": "صورة المعرض",
     "downloads": "التحميلات",
+    "actions": "الإجراءات",
+    "shareAction": "مشاركة الإعلان",
     "ctaTitle": "مهتم بهذا المشروع؟",
     "ctaSubtitle": "تواصل معنا الآن للحصول على مزيد من المعلومات والعروض الخاصة",
     "contactUs": "اتصل بنا",
@@ -238,9 +239,7 @@
         "priceList": "قائمة الأسعار"
       }
     }
-  }
-
-  ,
+  },
   "reservation": {
     "title": "حجز الوحدة",
     "unitSummary": "ملخص الوحدة",
@@ -274,11 +273,9 @@
     "errorTitle": "خطأ",
     "errorDesc": "يرجى ملء جميع الحقول المطلوبة",
     "successTitle": "تم الحجز بنجاح!",
-  "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}",
-  "dialogDescription": "املأ تفاصيل الحجز ثم تابع لتأكيد الحجز."
-  }
-
-  ,
+    "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}",
+    "dialogDescription": "املأ تفاصيل الحجز ثم تابع لتأكيد الحجز."
+  },
   "myReservations": {
     "pageTitle": "طلبات الحجز الخاصة بي",
     "pageSubtitle": "تتبع وإدارة جميع طلبات الحجز الخاصة بك",
@@ -289,8 +286,7 @@
       "statusLabel": "حالة الطلب",
       "allStatuses": "جميع الحالات",
       "dateFrom": "من تاريخ",
-      "dateTo": "إلى تاريخ",
-      "reset": "إعادة تعيين الفلاتر"
+      "dateTo": "إلى تاريخ"
     },
     "table": {
       "project": "المشروع",
@@ -342,8 +338,8 @@
       "cairo": "القاهرة",
       "newCairo": "القاهرة الجديدة",
       "fifthSettlement": "التجمع الخامس",
-  "firstDistrict": "الحي الأول",
-  "thirdDistrict": "الحي الثالث",
+      "firstDistrict": "الحي الأول",
+      "thirdDistrict": "الحي الثالث",
       "giza": "الجيزة",
       "sixOctober": "6 أكتوبر",
       "sheikhZayed": "الشيخ زايد",

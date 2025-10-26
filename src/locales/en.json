@@ -25,7 +25,7 @@
     "list": [
       {
         "id": "1",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "New Dream Residential Project Announcement",
         "description": "Distinguished residential project offering luxury housing units at competitive prices in the heart of New Cairo.",
         "publishDate": "2024-01-15",
@@ -33,7 +33,7 @@
       },
       {
         "id": "2",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "Corniche Project Reservations Now Open",
         "description": "Start your journey to perfect living with residential units directly overlooking the Nile.",
         "publishDate": "2024-01-10",
@@ -41,7 +41,7 @@
       },
       {
         "id": "3",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "Special Offers on Our Newest Projects",
         "description": "Don't miss out on our limited-time special offers for new residential and commercial units.",
         "publishDate": "2024-01-05",
@@ -49,7 +49,7 @@
       },
       {
         "id": "4",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "Opening of Our New Branch in the Capital",
         "description": "We are pleased to announce the opening of our new branch to better serve our clients in the administrative capital.",
         "publishDate": "2023-12-28",
@@ -57,7 +57,7 @@
       },
       {
         "id": "5",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "Free Real Estate Investment Workshop",
         "description": "Join our free workshop to learn about the best real estate investment strategies from industry experts.",
         "publishDate": "2023-12-20",
@@ -65,7 +65,7 @@
       },
       {
         "id": "6",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "Discover Our New Mobile Application",
         "description": "Manage your properties and reservations easily with our new mobile app, now available on all platforms.",
         "publishDate": "2023-12-15",
@@ -83,7 +83,7 @@
     "list": [
       {
         "id": "1",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "name": "Golden Palm Project",
         "type": "Residential",
         "description": "Luxury residential complex featuring apartments, duplexes and villas with vast green spaces.",
@@ -94,7 +94,7 @@
       },
       {
         "id": "2",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "name": "Oasis Compound",
         "type": "Residential & Commercial",
         "description": "Integrated project combining residential units and commercial spaces in a strategic location.",
@@ -106,7 +106,7 @@
       ,
       {
         "id": "3",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "name": "Seaside Residence",
         "type": "Residential",
         "description": "Coastal living with modern amenities and stunning sea views.",
@@ -149,13 +149,13 @@
       {
         "id": "1",
         "title": "Special Down Payment Offers",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "link": "/projects/special-offers"
       },
       {
         "id": "2",
         "title": "Golden Investment Opportunity",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "link": "/projects/investment"
       }
     ]

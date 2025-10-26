@@ -20,7 +20,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ className, size 
       {...props}
     >
       <img
-        src="/favicon.ico"
+        src="assets/favicon.ico"
         alt="Loading..."
         className={cn('animate-spin', sizeClasses[size])}
       />

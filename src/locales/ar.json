@@ -25,7 +25,7 @@
     "list": [
       {
         "id": "1",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "إعلان مشروع الأحلام السكني الجديد",
         "description": "مشروع سكني متميز يوفر وحدات سكنية فاخرة بأسعار تنافسية في قلب القاهرة الجديدة.",
         "publishDate": "2024-01-15",
@@ -33,7 +33,7 @@
       },
       {
         "id": "2",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "بدء الحجز لمشروع الكورنيش",
         "description": "ابدأ رحلتك نحو الحياة المثالية مع وحدات سكنية تطل على النيل مباشرة.",
         "publishDate": "2024-01-10",
@@ -41,7 +41,7 @@
       },
       {
         "id": "3",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "عروض خاصة على أحدث مشاريعنا",
         "description": "لا تفوتوا عروضنا الخاصة لفترة محدودة على الوحدات السكنية والتجارية الجديدة.",
         "publishDate": "2024-01-05",
@@ -49,7 +49,7 @@
       },
       {
         "id": "4",
-        "image": "/assets_ar/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "افتتاح فرعنا الجديد في العاصمة",
         "description": "يسرنا الإعلان عن افتتاح فرعنا الجديد لخدمة عملائنا بشكل أفضل في العاصمة الإدارية.",
         "publishDate": "2023-12-28",
@@ -57,7 +57,7 @@
       },
       {
         "id": "5",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "ورشة عمل مجانية عن الاستثمار العقاري",
         "description": "انضموا إلى ورشة عملنا المجانية لتعلم أفضل استراتيجيات الاستثمار العقاري من خبراء الصناعة.",
         "publishDate": "2023-12-20",
@@ -65,7 +65,7 @@
       },
       {
         "id": "6",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "title": "اكتشفوا تطبيقنا الجديد للهاتف المحمول",
         "description": "أدِر عقاراتك وحجوزاتك بسهولة مع تطبيقنا الجديد، متوفر الآن على جميع المنصات.",
         "publishDate": "2023-12-15",
@@ -83,7 +83,7 @@
     "list": [
       {
         "id": "1",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "name": "مشروع النخيل الذهبي",
         "type": "سكني",
         "description": "مجمع سكني فاخر يضم شقق ودوبلكس وفيلات مع مساحات خضراء واسعة.",
@@ -94,7 +94,7 @@
       },
       {
         "id": "2",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "name": "كمبوند الواحة",
         "type": "سكني وتجاري",
         "description": "مشروع متكامل يجمع بين الوحدات السكنية والمساحات التجارية في موقع استراتيجي.",
@@ -105,7 +105,7 @@
       },
       {
         "id": "3",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "name": "الإقامة الساحلية",
         "type": "سكني",
         "description": "معيشة ساحلية مع مرافق حديثة وإطلالات بحرية خلابة.",
@@ -147,13 +147,13 @@
       {
         "id": "1",
         "title": "عروض خاصة للدفع المقدم",
-        "image": "/assets/project-1.jpg",
+        "image": "assets/project-1.jpg",
         "link": "/projects/special-offers"
       },
       {
         "id": "2",
         "title": "فرصة استثمارية ذهبية",
-        "image": "/assets/announcement-1.jpg",
+        "image": "assets/announcement-1.jpg",
         "link": "/projects/investment"
       }
     ]

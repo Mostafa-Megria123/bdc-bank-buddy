@@ -7,9 +7,9 @@ import { ArrowLeft, ArrowRight, Calendar, MapPin, User, Share2, Download, Search
 import { Lightbox } from '@/components/ui/lightBox';
 
 // Import images properly
-const announcement1 = '/assets/announcement-1.jpg';
-const heroBuilding = '/assets/hero-building.jpg';
-const project1 = '/assets/project-1.jpg';
+import announcement1 from '@/assets/announcement-1.jpg';
+import heroBuilding from '@/assets/hero-building.jpg';
+import project1 from '@/assets/project-1.jpg';
 
 type Announcement = {
   id: string;
@@ -114,7 +114,7 @@ export const AnnouncementDetails: React.FC = () => {
   const [lightboxStartIndex, setLightboxStartIndex] = React.useState(0);
 
   const announcement = announcementsData.find(a => a.id === id);
-  
+
   if (!announcement) {
     return (
       <div className="min-h-screen bg-gradient-subtle flex items-center justify-center">
@@ -163,7 +163,7 @@ export const AnnouncementDetails: React.FC = () => {
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent" />
-        
+
         {/* Back Button */}
         <div className="absolute top-8 left-8 z-10">
           <Button
@@ -205,11 +205,11 @@ export const AnnouncementDetails: React.FC = () => {
                 {tString(announcement.authorKey)}
               </div>
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '0.4s' }}>
               {tString(announcement.titleKey)}
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl animate-fade-in" style={{ animationDelay: '0.6s' }}>
               {tString(announcement.descriptionKey)}
             </p>
@@ -321,14 +321,14 @@ export const AnnouncementDetails: React.FC = () => {
                 {tString('announcementDetails.ctaSubtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="bg-white text-primary border-white hover:bg-white/90 px-8 py-3 hover-scale"
                 >
                   {tString('announcementDetails.contactUs')}
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="bg-transparent border-white text-white hover:bg-white/10 px-8 py-3 hover-scale"
                   onClick={() => navigate('/announcements')}
                 >

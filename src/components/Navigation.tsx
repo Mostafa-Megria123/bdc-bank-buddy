@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/useLanguage';
 import { Menu, X, Globe } from 'lucide-react';
-const bdcLogo = '/assets/bdc-logo.png';
+import bdcLogo from '@/assets/bdc-logo.png';
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

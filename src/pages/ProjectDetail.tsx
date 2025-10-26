@@ -8,8 +8,8 @@ import { LoadingSpinner } from '@/components/ui/loadingSpinner';
 import { ReservationModal } from '@/components/ReservationModal';
 import { Lightbox } from '@/components/ui/lightBox';
 import { ArrowLeft, Calendar, MapPin, Home, Download, Phone, Mail, Users, Building, Share2, Search } from 'lucide-react';
-const project1 = '/assets/project-1.jpg';
-const heroBuilding = '/assets/hero-building.jpg';
+import project1 from '@/assets/project-1.jpg';
+import heroBuilding from '@/assets/hero-building.jpg';
 
 type UnitStatus = 'available' | 'reserved' | 'sold';
 

@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/useLanguage';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-const heroBuilding = '/assets/hero-building.jpg';
-const project1 = '/assets/project-1.jpg';
+import { resolveImageUrl } from '@/lib/image-resolver';
+import heroBuilding from '@/assets/hero-building.jpg';
+import project1 from '@/assets/project-1.jpg';
 
 interface HeroCarouselProps {
   autoPlay?: boolean;
@@ -41,7 +42,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     return {
       type: 'project',
       id: String(r['id'] ?? `proj-${idx}`),
-      image: String(r['image'] ?? project1),
+      image: r['image'] ? resolveImageUrl(String(r['image'])) : project1,
       name: String((r['name'] ?? r['title'] ?? tString(`projects.list.${idx}.name`)) || ''),
       link: String(r['link'] ?? `/projects/${r['id'] ?? idx}`),
     };
@@ -72,9 +73,9 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
   };
 
   return (
-  <section className="relative h-[91vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[91vh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
         style={{ backgroundImage: `url(${backgroundImages[currentSlide]})` }}
       />
@@ -93,8 +94,8 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
               <Link to="/projects" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-white text-bdc-orange hover:bg-white/90 shadow-brand text-lg px-8 py-4 group"
                 >
                   {tString('hero.exploreProjects')}
@@ -127,7 +128,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
 
       {/* Project overlay when a project slide is active */}
       {currentSlideObj && currentSlideObj.type === 'project' && (
-  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-background/80 backdrop-blur-md rounded-lg px-4 py-3 w-auto max-w-md lg:left-auto lg:right-6 lg:translate-x-0 lg:w-auto lg:max-w-none">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-background/80 backdrop-blur-md rounded-lg px-4 py-3 w-auto max-w-md lg:left-auto lg:right-6 lg:translate-x-0 lg:w-auto lg:max-w-none">
           <div className="text-sm font-semibold text-[#6d6f74] line-clamp-1">{currentSlideObj.name}</div>
           <Link to={currentSlideObj.link}>
             <Button size="sm" className="whitespace-nowrap">
@@ -143,7 +144,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       )}
 
       {/* Carousel arrow controls (bottom-left, rectangular) */}
-  <div className="absolute left-1/2 -translate-x-1/2 bottom-24 z-30 flex items-center gap-3 lg:left-6 lg:translate-x-0 lg:bottom-6">
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-24 z-30 flex items-center gap-3 lg:left-6 lg:translate-x-0 lg:bottom-6">
         <button
           aria-label={language === 'ar' ? 'السابق' : 'Previous slide'}
           onClick={prevSlide}
@@ -168,9 +169,9 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       {/* Progress Bar */}
       {autoPlay && (
         <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20">
-          <div 
+          <div
             className="h-full bg-white transition-all duration-300 ease-linear"
-            style={{ 
+            style={{
               width: `${((currentSlide + 1) / backgroundImages.length) * 100}%`,
               animation: `progressBar ${autoPlayInterval}ms linear infinite`
             }}

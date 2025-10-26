@@ -7,8 +7,10 @@ const NotFound = () => {
   useEffect(() => {
     // This console.error is useful for development but should not be in production
     // as `location.pathname` could contain sensitive information.
-    if (process.env.NODE_ENV !== 'production') {
-      console.error(`404 Error: User attempted to access non-existent route: ${location.pathname}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.error(
+        `404 Error: User attempted to access non-existent route: ${location.pathname}`
+      );
     }
   }, [location.pathname]);
 
@@ -17,7 +19,10 @@ const NotFound = () => {
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">404</h1>
         <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
+        <a
+          href="/bdc-real-estate/"
+          className="text-blue-500 hover:text-blue-700 underline"
+        >
           Return to Home
         </a>
       </div>

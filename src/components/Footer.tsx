@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/useLanguage';
 import { Phone, Mail } from 'lucide-react';
-const bdcLogo = '/assets/bdc_logo_transparent.png';
+import bdcLogo from '@/assets/bdc_logo_transparent.png';
 
 export const Footer: React.FC = () => {
   const { tString } = useLanguage();

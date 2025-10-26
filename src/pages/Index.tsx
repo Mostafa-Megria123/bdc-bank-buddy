@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { type CarouselItem } from '@/components/Carousel';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import { ArrowRight, ArrowLeft, Calendar, Home, Download } from 'lucide-react';
+import { resolveImageUrl } from '@/lib/image-resolver';
 
 interface Project {
   id: string;
@@ -65,7 +66,7 @@ const Index = () => {
                     style={{ animationDelay: `${index * 0.2}s` }}
                   >
                     <div className="relative overflow-hidden h-48">
-                      <img src={a.image} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <img src={resolveImageUrl(a.image)} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                       <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <CardContent className="p-6">
@@ -114,7 +115,7 @@ const Index = () => {
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={project.image}
+                    src={resolveImageUrl(project.image)}
                     alt={project.name}
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -197,7 +198,7 @@ const Index = () => {
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={ad.image}
+                    src={resolveImageUrl(ad.image)}
                     alt={ad.title}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
                   />

@@ -9,12 +9,10 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [
-    react(),
-    mode === 'development' &&
-    componentTagger(),
-  ].filter(Boolean),
-  // base: "/bdc-bank-buddy/",
+  plugins: [react(), mode === "development" && componentTagger()].filter(
+    Boolean
+  ),
+  base: "/bdc-real-estate/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

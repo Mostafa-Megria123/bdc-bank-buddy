@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, ArrowLeft, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { resolveImageUrl } from '@/lib/image-resolver';
 
 interface AnnouncementGridItem {
   id: string;
@@ -48,7 +49,7 @@ const Announcements = () => {
               >
                 <div className="relative overflow-hidden h-56">
                   <img
-                    src={announcement.image}
+                    src={resolveImageUrl(announcement.image)}
                     alt={announcement.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                   />

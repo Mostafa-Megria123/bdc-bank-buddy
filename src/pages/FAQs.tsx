@@ -1,96 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/useLanguage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import FaqService, { Faq } from '@/services/faq.Service';
 
 const FAQs = () => {
   const { language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
+  type DisplayFaq = { id: string; question: string; answer: string; order: number };
+  const [faqs, setFaqs] = useState<DisplayFaq[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const faqs = [
-    {
-      id: '1',
-      question: language === 'ar' 
-        ? 'كيف يمكنني حجز وحدة عقارية؟'
-        : 'How can I reserve a real estate unit?',
-      answer: language === 'ar'
-        ? 'يمكنك حجز وحدة عقارية من خلال تصفح المشاريع المتاحة على الموقع، اختيار الوحدة المناسبة، والضغط على زر "حجز". ستحتاج إلى تسجيل الدخول أولاً وإدخال بيانات الدفع خلال 24 ساعة.'
-        : 'You can reserve a real estate unit by browsing available projects on the website, selecting the suitable unit, and clicking the "Reserve" button. You will need to log in first and enter payment data within 24 hours.',
-      order: 1
-    },
-    {
-      id: '2',
-      question: language === 'ar'
-        ? 'ما هي المستندات المطلوبة للتسجيل؟'
-        : 'What documents are required for registration?',
-      answer: language === 'ar'
-        ? 'المستندات المطلوبة تشمل: صورة الرقم القومي (الوجهين)، الرقم المطبوع تحت الصورة، رقم المحمول، والبريد الإلكتروني. جميع هذه البيانات مطلوبة لإنشاء الحساب.'
-        : 'Required documents include: National ID image (both sides), printed number below the photo, mobile number, and email address. All this data is required to create an account.',
-      order: 2
-    },
-    {
-      id: '3',
-      question: language === 'ar'
-        ? 'كم من الوقت لديّ لدفع العربون؟'
-        : 'How much time do I have to pay the deposit?',
-      answer: language === 'ar'
-        ? 'لديك 24 ساعة من وقت الحجز لدفع العربون في أحد فروع بنك القاهرة للتنمية والائتمان العقاري. بعد انتهاء هذه المدة، سيتم إلغاء الحجز تلقائياً.'
-        : 'You have 24 hours from the reservation time to pay the deposit at one of BDC branches. After this period expires, the reservation will be automatically cancelled.',
-      order: 3
-    },
-    {
-      id: '4',
-      question: language === 'ar'
-        ? 'هل يمكنني تعديل بيانات الدفع؟'
-        : 'Can I modify payment data?',
-      answer: language === 'ar'
-        ? 'يمكنك تعديل بيانات الدفع في حالة طلب الإدارة لذلك فقط. ستجد زر "تعديل بيانات الدفع" في صفحة طلبات الحجز الخاصة بك عند الحاجة.'
-        : 'You can modify payment data only when requested by management. You will find the "Edit Payment Data" button on your reservation requests page when needed.',
-      order: 4
-    },
-    {
-      id: '5',
-      question: language === 'ar'
-        ? 'ماذا يحدث إذا تم رفض طلب الحجز؟'
-        : 'What happens if the reservation request is rejected?',
-      answer: language === 'ar'
-        ? 'في حالة رفض طلب الحجز، يمكنك طلب استرداد العربون من خلال الضغط على زر "طلب استرداد الدفعة" في صفحة طلبات الحجز.'
-        : 'If the reservation request is rejected, you can request a deposit refund by clicking the "Request Payment Refund" button on your reservation requests page.',
-      order: 5
-    },
-    {
-      id: '6',
-      question: language === 'ar'
-        ? 'كيف يمكنني البحث عن وحدات بمواصفات محددة؟'
-        : 'How can I search for units with specific specifications?',
-      answer: language === 'ar'
-        ? 'يمكنك استخدام معايير البحث في صفحة تفاصيل المشروع للبحث حسب المحافظة، المدينة، المنطقة، مساحة الوحدة، والسعر للعثور على الوحدة المناسبة لك.'
-        : 'You can use search criteria on the project details page to search by governorate, city, area, unit area, and price to find the unit that suits you.',
-      order: 6
-    },
-    {
-      id: '7',
-      question: language === 'ar'
-        ? 'هل يمكنني تغيير لغة الإشعارات؟'
-        : 'Can I change the notification language?',
-      answer: language === 'ar'
-        ? 'يتم اختيار لغة الإشعارات عند التسجيل ولا يمكن تغييرها لاحقاً. إذا كنت تريد تغييرها، يرجى التواصل مع خدمة العملاء.'
-        : 'Notification language is selected during registration and cannot be changed later. If you want to change it, please contact customer service.',
-      order: 7
-    },
-    {
-      id: '8',
-      question: language === 'ar'
-        ? 'كيف يمكنني استعادة كلمة المرور؟'
-        : 'How can I recover my password?',
-      answer: language === 'ar'
-        ? 'يمكنك استعادة كلمة المرور من خلال صفحة "نسيت كلمة المرور" وإدخال الرقم القومي ورقم المحمول والبريد الإلكتروني المسجلين.'
-        : 'You can recover your password through the "Forgot Password" page by entering your registered National ID, mobile number, and email address.',
-      order: 8
-    }
-  ];
+  useEffect(() => {
+    let mounted = true;
+
+    const loadFaqs = async () => {
+      try {
+        const data = await FaqService.getAll();
+        if (!mounted) return;
+
+        const mapped: DisplayFaq[] = data
+          .slice()
+          .sort((a: Faq, b: Faq) => a.order - b.order)
+          .map((d: Faq) => ({
+            id: d.id !== undefined ? String(d.id) : String(d.order),
+            question: language === 'ar' ? d.question_ar : d.question_en,
+            answer: language === 'ar' ? d.answer_ar : d.answer_en,
+            order: d.order ?? 0,
+          }));
+
+        setFaqs(mapped);
+      } catch (error) {
+        console.error('Error loading FAQs:', error);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    loadFaqs();
+
+    return () => {
+      mounted = false;
+    };
+  }, [language]);
 
   const filteredFAQs = faqs.filter(faq =>
     faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||

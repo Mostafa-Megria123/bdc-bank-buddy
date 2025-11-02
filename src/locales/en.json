@@ -4,7 +4,7 @@
     "announcements": "Announcements",
     "faqs": "FAQs",
     "about": "About",
-  "projects": "Projects",
+    "projects": "Projects",
     "myReservations": "My Reservations",
     "login": "Login",
     "register": "Register",
@@ -16,8 +16,8 @@
     "welcomeTitle": "Welcome to BDC Real Estate",
     "welcomeSubtitle": "Discover your dream property with BDC Real Estate",
     "exploreProjects": "Explore Our Projects",
-  "learnMore": "Learn More",
-  "viewProjectButton": "View Project"
+    "learnMore": "Learn More",
+    "viewProjectButton": "View Project"
   },
   "announcementsPage": {
     "sectionTitle": "Latest Announcements",
@@ -79,7 +79,7 @@
   },
   "projects": {
     "sectionTitle": "Latest Projects",
-  "sectionSubtitle": "Explore our current and upcoming real estate projects.",
+    "sectionSubtitle": "Explore our current and upcoming real estate projects.",
     "list": [
       {
         "id": "1",
@@ -102,8 +102,7 @@
         "displayEndDate": "2024-11-30",
         "unitsAvailable": 180,
         "link": "/projects/2"
-      }
-      ,
+      },
       {
         "id": "3",
         "image": "assets/project-1.jpg",
@@ -119,8 +118,7 @@
     "display": {
       "dateRange": "Display from {start} to {end}",
       "unitsAvailable": "{count} units available"
-    }
-    ,
+    },
     "cta": {
       "title": "Interested in a Project?",
       "subtitle": "Contact our team to learn more about available units and offers."
@@ -141,7 +139,9 @@
     "termsAndConditions": "Terms & Conditions",
     "readMore": "Read More",
     "enterYourEmail": "Enter your email...",
-    "subscribe": "Subscribe"
+    "subscribe": "Subscribe",
+    "hotline": "Hotline",
+    "email": "Email"
   },
   "ads": {
     "sectionTitle": "Special Offers",
@@ -241,8 +241,7 @@
         "priceList": "Price List"
       }
     }
-  }
-  ,
+  },
   "reservation": {
     "title": "Unit Reservation",
     "unitSummary": "Unit Summary",
@@ -276,11 +275,20 @@
     "errorTitle": "Error",
     "errorDesc": "Please fill all required fields",
     "successTitle": "Reservation Successful!",
-  "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}",
-  "dialogDescription": "Fill in the reservation details and proceed to confirm your booking."
-  }
+    "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}",
+    "dialogDescription": "Fill in the reservation details and proceed to confirm your booking."
+  },
+  "faqsPage": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to the most common questions about our real estate services",
+    "searchPlaceholder": "Search questions...",
+    "noResults": "No questions found matching your search",
+    "cta": {
+      "title": "Didn't find an answer to your question?",
+      "subtitle": "Our customer service team is available to help you with any additional inquiries"
+    }
+  },
 
-  ,
   "myReservations": {
     "pageTitle": "My Reservation Requests",
     "pageSubtitle": "Track and manage all your reservation requests",
@@ -344,8 +352,8 @@
       "cairo": "Cairo",
       "newCairo": "New Cairo",
       "fifthSettlement": "Fifth Settlement",
-  "firstDistrict": "First District",
-  "thirdDistrict": "Third District",
+      "firstDistrict": "First District",
+      "thirdDistrict": "Third District",
       "giza": "Giza",
       "sixOctober": "6th of October",
       "sheikhZayed": "Sheikh Zayed",

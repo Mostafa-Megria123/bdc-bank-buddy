@@ -14,27 +14,12 @@ import {
   Search,
 } from "lucide-react";
 import { Lightbox } from "@/components/ui/lightBox";
-// import { Announcement } from "@/types/announcement";
+import { Announcement } from "@/types/announcement";
 
 // Import images properly
 import announcement1 from "@/assets/announcement-1.jpg";
 import heroBuilding from "@/assets/hero-building.jpg";
 import project1 from "@/assets/project-1.jpg";
-
-export type Announcement = {
-  id: string;
-  titleKey: string;
-  descriptionKey: string;
-  publishDate: string;
-  contentKey: string;
-  authorKey: string;
-  typeKey: string;
-  categoryKey: string;
-  locationKey: string;
-  gallery?: string[];
-  projectBrochureUrl?: string;
-  floorPlansUrl?: string;
-};
 
 // Enhanced mock data for announcements
 const announcementsData: Announcement[] = [

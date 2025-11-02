@@ -191,7 +191,7 @@
         "description": "Distinguished residential project offering luxury housing units at competitive prices in the heart of New Cairo.",
         "content": "We are excited to announce the launch of our latest residential project, \"Dream Homes\", located in the prestigious area of New Cairo. This exceptional development offers a perfect blend of modern architecture, luxury amenities, and strategic location.\n\nThe project features:\n- Spacious apartments ranging from 100 to 300 square meters\n- Modern duplex units with private gardens\n- Luxury villas with swimming pools\n- 24/7 security and concierge services\n- Green spaces and recreational areas\n- Shopping center and medical facilities within the compound\n- Easy access to major highways and business districts\n\nOur commitment to quality construction and attention to detail ensures that every unit meets the highest standards of comfort and elegance. The project is designed to cater to modern families seeking a premium lifestyle in a secure and well-planned community.\n\nInvestment opportunities are available with flexible payment plans and attractive financing options. Early bird discounts are offered for the first 100 bookings.",
         "author": "BDC Development Team",
-        "category": "New Projects",
+        "type": "New Projects",
         "location": "New Cairo"
       },
       "2": {
@@ -199,7 +199,7 @@
         "description": "Start your journey to perfect living with residential units directly overlooking the Nile.",
         "content": "The prestigious Corniche project offers an unparalleled living experience with breathtaking Nile views. Located on the banks of the historic Nile River, this luxury development combines modern amenities with timeless elegance.\n\nProject highlights include:\n- Panoramic Nile views from every unit\n- Premium finishes and smart home technology\n- Private balconies and terraces\n- Infinity pool overlooking the river\n- World-class spa and fitness center\n- Gourmet restaurants and cafes\n- Marina for private boats\n- Landscaped gardens and walking paths\n\nThis exclusive project offers limited units, ensuring privacy and exclusivity for residents. Each apartment is carefully designed to maximize river views and natural light, creating a serene living environment in the heart of the city.\n\nFlexible payment plans are available with up to 7 years financing. Special launch prices are valid for a limited time only.",
         "author": "Corniche Development",
-        "category": "Luxury Projects",
+        "type": "Luxury Projects",
         "location": "Nile Corniche"
       },
       "3": {
@@ -207,7 +207,7 @@
         "description": "Don't miss out on our limited-time special offers for new residential and commercial units.",
         "content": "Take advantage of our exclusive special offers on a wide range of our newest projects. Whether you are looking for a new home or a prime commercial space, we have something for you. These offers include flexible payment plans, significant discounts, and added benefits for early buyers. Contact our sales team today to learn more and secure your unit before these limited-time offers expire.",
         "author": "BDC Marketing",
-        "category": "Special Offers",
+        "type": "Special Offers",
         "location": "All Projects"
       },
       "4": {
@@ -215,7 +215,7 @@
         "description": "We are pleased to announce the opening of our new branch to better serve our clients in the administrative capital.",
         "content": "In our continuous effort to be closer to our valued clients, we are thrilled to announce the grand opening of our new branch in the New Administrative Capital. The new branch is equipped with the latest technology and a dedicated team to provide you with the best service. Visit us to explore our projects and get personalized consultations.",
         "author": "BDC Management",
-        "category": "Corporate News",
+        "type": "Corporate News",
         "location": "New Administrative Capital"
       },
       "5": {
@@ -223,7 +223,7 @@
         "description": "Join our free workshop to learn about the best real estate investment strategies from industry experts.",
         "content": "Are you looking to make a smart investment in real estate? Join our free online workshop where top industry experts will share their insights on the current market trends, investment strategies, and how to maximize your returns. The workshop is open to everyone, from first-time buyers to seasoned investors. Register now to reserve your spot!",
         "author": "BDC Academy",
-        "category": "Events",
+        "type": "Events",
         "location": "Online"
       },
       "6": {
@@ -231,7 +231,7 @@
         "description": "Manage your properties and reservations easily with our new mobile app, now available on all platforms.",
         "content": "We are excited to launch the new BDC Real Estate mobile application, designed to give you a seamless experience in managing your properties. With the new app, you can browse our latest projects, manage your reservations, make payments, and contact customer support, all from your smartphone. Download it today from the App Store and Google Play.",
         "author": "BDC Digital",
-        "category": "Technology",
+        "type": "Technology",
         "location": "App Store / Google Play"
       },
       "downloads": {
@@ -239,6 +239,15 @@
         "floorPlans": "Floor Plans",
         "virtualTour": "Virtual Tour",
         "priceList": "Price List"
+      },
+      "categories": {
+        "residential": "Residential Unit",
+        "administrative": "Administrative Unit",
+        "garage": "Garage",
+        "commercial": "Commercial Shop",
+        "openSpace": "Open Space",
+        "car": "Car",
+        "shoppingMall": "Shopping Mall"
       }
     }
   },

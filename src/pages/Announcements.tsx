@@ -4,16 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, ArrowLeft, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { resolveImageUrl } from '@/lib/image-resolver';
-
-interface AnnouncementGridItem {
-  id: string;
-  image: string;
-  title: string;
-  description: string;
-  publishDate: string;
-  link: string;
-}
+import { resolveImageUrl } from "@/lib/image-resolver";
+import { AnnouncementGridItem } from "@/types/announcement";
 
 const Announcements = () => {
   const { language, t, tString } = useLanguage();

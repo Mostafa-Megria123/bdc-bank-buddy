@@ -5,6 +5,7 @@ import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
 import { getFileUrl } from "@/lib/utils";
 import { ReservationModal } from "@/components/ReservationModal";
+import { UnitDetailsModal } from "@/components/UnitDetailsModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,11 +28,13 @@ const ProjectDetail = () => {
   const { language, tString } = useLanguage();
   const [project, setProject] = useState<Project | null>(null);
   const [selectedUnit, setSelectedUnit] = React.useState<Unit | null>(null);
+  const [detailUnit, setDetailUnit] = React.useState<Unit | null>(null);
   const [loading, setLoading] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxStartIndex, setLightboxStartIndex] = useState(0);
   const [isReservationModalOpen, setIsReservationModalOpen] =
     React.useState(false);
+  const [isUnitDetailsModalOpen, setIsUnitDetailsModalOpen] = React.useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -52,6 +55,11 @@ const ProjectDetail = () => {
   const handleReserveUnit = (unit: Unit) => {
     setSelectedUnit(unit);
     setIsReservationModalOpen(true);
+  };
+
+  const handleUnitClick = (unit: Unit) => {
+    setDetailUnit(unit);
+    setIsUnitDetailsModalOpen(true);
   };
 
   const closeReservationModal = () => {
@@ -212,12 +220,13 @@ const ProjectDetail = () => {
                       return (
                         <Card
                           key={unit.unitNumber}
-                          className={`border-2 transition-all duration-300 hover:shadow-brand ${
+                          onClick={() => handleUnitClick(unit)}
+                          className={`border-2 transition-all duration-300 hover:shadow-brand cursor-pointer ${
                             statusEn === "Reserved"
                               ? "border-destructive/30 bg-destructive/5"
                               : statusEn === "Sold"
                               ? "border-muted bg-muted/20"
-                              : "border-primary/30 hover:border-primary/50 cursor-pointer"
+                              : "border-primary/30 hover:border-primary/50"
                           }`}>
                           <CardContent className="p-4">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -318,7 +327,10 @@ const ProjectDetail = () => {
                                   <Button
                                     size="sm"
                                     className="bg-gradient-primary hover:opacity-90 whitespace-nowrap"
-                                    onClick={() => handleReserveUnit(unit)}>
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleReserveUnit(unit);
+                                    }}>
                                     {language === "ar"
                                       ? "احجز الآن"
                                       : "Reserve Now"}
@@ -458,6 +470,12 @@ const ProjectDetail = () => {
         onClose={closeReservationModal}
         unit={selectedUnit}
         projectName={language === "ar" ? project.nameAr : project.nameEn}
+      />
+
+      <UnitDetailsModal
+        isOpen={isUnitDetailsModalOpen}
+        onClose={() => setIsUnitDetailsModalOpen(false)}
+        unit={detailUnit}
       />
 
       {lightboxOpen && (

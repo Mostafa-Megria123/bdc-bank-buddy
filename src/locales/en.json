@@ -22,56 +22,7 @@
   "announcementsPage": {
     "sectionTitle": "Latest Announcements",
     "sectionSubtitle": "Stay informed with our latest news and updates.",
-    "list": [
-      {
-        "id": "1",
-        "image": "assets/announcement-1.jpg",
-        "title": "New Dream Residential Project Announcement",
-        "description": "Distinguished residential project offering luxury housing units at competitive prices in the heart of New Cairo.",
-        "publishDate": "2024-01-15",
-        "link": "/announcements/1"
-      },
-      {
-        "id": "2",
-        "image": "assets/announcement-1.jpg",
-        "title": "Corniche Project Reservations Now Open",
-        "description": "Start your journey to perfect living with residential units directly overlooking the Nile.",
-        "publishDate": "2024-01-10",
-        "link": "/announcements/2"
-      },
-      {
-        "id": "3",
-        "image": "assets/announcement-1.jpg",
-        "title": "Special Offers on Our Newest Projects",
-        "description": "Don't miss out on our limited-time special offers for new residential and commercial units.",
-        "publishDate": "2024-01-05",
-        "link": "/announcements/3"
-      },
-      {
-        "id": "4",
-        "image": "assets/announcement-1.jpg",
-        "title": "Opening of Our New Branch in the Capital",
-        "description": "We are pleased to announce the opening of our new branch to better serve our clients in the administrative capital.",
-        "publishDate": "2023-12-28",
-        "link": "/announcements/4"
-      },
-      {
-        "id": "5",
-        "image": "assets/announcement-1.jpg",
-        "title": "Free Real Estate Investment Workshop",
-        "description": "Join our free workshop to learn about the best real estate investment strategies from industry experts.",
-        "publishDate": "2023-12-20",
-        "link": "/announcements/5"
-      },
-      {
-        "id": "6",
-        "image": "assets/announcement-1.jpg",
-        "title": "Discover Our New Mobile Application",
-        "description": "Manage your properties and reservations easily with our new mobile app, now available on all platforms.",
-        "publishDate": "2023-12-15",
-        "link": "/announcements/6"
-      }
-    ],
+    "noAnnouncements": "No announcements found at the moment.",
     "cta": {
       "title": "Stay Updated",
       "subtitle": "Subscribe to our newsletter to get the latest news and offers."
@@ -141,7 +92,8 @@
     "enterYourEmail": "Enter your email...",
     "subscribe": "Subscribe",
     "hotline": "Hotline",
-    "email": "Email"
+    "email": "Email",
+    "retry": "Retry"
   },
   "ads": {
     "sectionTitle": "Special Offers",

@@ -1,15 +1,15 @@
-// This file centralizes all environment-specific configuration
-
 export const config = {
   apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
   environment: import.meta.env.MODE, // 'development', 'production', or 'staging'
-  isDevelopment: import.meta.env.MODE === 'development',
-  isProduction: import.meta.env.MODE === 'production',
-  isStaging: import.meta.env.MODE === 'staging',
+  isDevelopment: import.meta.env.MODE === "development",
+  isProduction: import.meta.env.MODE === "production",
+  isStaging: import.meta.env.MODE === "staging",
 } as const;
 
 // API endpoints
 export const endpoints = {
   faqs: `${config.apiBaseUrl}/faqs`,
+  announcements: `${config.apiBaseUrl}/announcements`,
+  files: `${config.apiBaseUrl}/files`,
   // Add other endpoints here as needed
 } as const;

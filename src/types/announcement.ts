@@ -1,16 +1,29 @@
+import { UnitType } from "@/types/unit-type";
+import { AnnouncementCategory } from "@/types/announcement-category";
+
 export type Announcement = {
-  id: string;
-  titleKey: string;
-  descriptionKey: string;
+  id: number;
+  titleEn?: string;
+  titleAr?: string;
+  contentEn?: string;
+  contentAr?: string;
+  type?: UnitType | string;
+  category?: AnnouncementCategory | string;
   publishDate: string;
-  contentKey: string;
-  authorKey: string;
-  typeKey: string;
-  categoryKey: string;
-  locationKey: string;
-  gallery?: string[];
-  projectBrochureUrl?: string;
-  floorPlansUrl?: string;
+  expiryDate: string;
+  authorEn?: string;
+  authorAr?: string;
+  locationEn?: string;
+  locationAr?: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  gallery?: { imagePath: string }[] | null;
+  projectBrochure?: string;
+  floorPlans?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string | null;
+  updatedBy?: string | null;
 };
 
 export interface AnnouncementGridItem {

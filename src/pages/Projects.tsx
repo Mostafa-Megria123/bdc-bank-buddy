@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, ArrowLeft, Calendar, Home, Download } from "lucide-react";
 import { Link } from "react-router-dom";
-import { resolveImageUrl } from "@/lib/image-resolver";
+import { getFileUrl } from "@/lib/utils";
 
 interface ProjectItem {
   id: string;
@@ -51,11 +51,10 @@ const Projects: React.FC = () => {
               <Card
                 key={project.id}
                 className="group overflow-hidden border-0 shadow-elegant hover:shadow-elegant-lg transition-all duration-700 animate-fade-in hover-scale bg-card/80 backdrop-blur-sm"
-                style={{ animationDelay: `${index * 0.12}s` }}
-              >
+                style={{ animationDelay: `${index * 0.12}s` }}>
                 <div className="relative overflow-hidden h-56">
                   <img
-                    src={resolveImageUrl(project.image)}
+                    src={getFileUrl(project.image)}
                     alt={project.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                   />

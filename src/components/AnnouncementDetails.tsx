@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,110 +12,136 @@ import {
   Share2,
   Download,
   Search,
+  Loader2,
 } from "lucide-react";
 import { Lightbox } from "@/components/ui/lightBox";
 import { Announcement } from "@/types/announcement";
-
-// Import images properly
-import announcement1 from "@/assets/announcement-1.jpg";
-import heroBuilding from "@/assets/hero-building.jpg";
-import project1 from "@/assets/project-1.jpg";
-
-// Enhanced mock data for announcements
-const announcementsData: Announcement[] = [
-  {
-    id: "1",
-    titleKey: "announcementDetails.details.1.title",
-    descriptionKey: "announcementDetails.details.1.description",
-    publishDate: "2024-01-15",
-    contentKey: "announcementDetails.details.1.content",
-    authorKey: "announcementDetails.details.1.author",
-    typeKey: "announcementDetails.details.1.type",
-    categoryKey: "announcementDetails.details.categories.residential",
-    locationKey: "announcementDetails.details.1.location",
-    gallery: [heroBuilding, announcement1, project1],
-    projectBrochureUrl: "/path/to/brochure-1.pdf",
-    floorPlansUrl: "/path/to/floor-plans-1.pdf",
-  },
-  {
-    id: "2",
-    titleKey: "announcementDetails.details.2.title",
-    descriptionKey: "announcementDetails.details.2.description",
-    publishDate: "2024-01-10",
-    contentKey: "announcementDetails.details.2.content",
-    authorKey: "announcementDetails.details.2.author",
-    typeKey: "announcementDetails.details.2.type",
-    categoryKey: "announcementDetails.details.categories.residential",
-    locationKey: "announcementDetails.details.2.location",
-    gallery: [announcement1, project1],
-    projectBrochureUrl: "/path/to/brochure-2.pdf",
-  },
-  {
-    id: "3",
-    titleKey: "announcementDetails.details.3.title",
-    descriptionKey: "announcementDetails.details.3.description",
-    publishDate: "2024-01-05",
-    contentKey: "announcementDetails.details.3.content",
-    authorKey: "announcementDetails.details.3.author",
-    typeKey: "announcementDetails.details.3.type",
-    categoryKey: "announcementDetails.details.categories.commercial",
-    locationKey: "announcementDetails.details.3.location",
-    gallery: [announcement1, project1],
-  },
-  {
-    id: "4",
-    titleKey: "announcementDetails.details.4.title",
-    descriptionKey: "announcementDetails.details.4.description",
-    publishDate: "2023-12-28",
-    contentKey: "announcementDetails.details.4.content",
-    authorKey: "announcementDetails.details.4.author",
-    typeKey: "announcementDetails.details.4.type",
-    categoryKey: "announcementDetails.details.categories.administrative",
-    locationKey: "announcementDetails.details.4.location",
-    gallery: [announcement1, project1],
-  },
-  {
-    id: "5",
-    titleKey: "announcementDetails.details.5.title",
-    descriptionKey: "announcementDetails.details.5.description",
-    publishDate: "2023-12-20",
-    contentKey: "announcementDetails.details.5.content",
-    authorKey: "announcementDetails.details.5.author",
-    typeKey: "announcementDetails.details.5.type",
-    categoryKey: "announcementDetails.details.categories.openSpace",
-    locationKey: "announcementDetails.details.5.location",
-    gallery: [announcement1, project1],
-  },
-  {
-    id: "6",
-    titleKey: "announcementDetails.details.6.title",
-    descriptionKey: "announcementDetails.details.6.description",
-    publishDate: "2023-12-15",
-    contentKey: "announcementDetails.details.6.content",
-    authorKey: "announcementDetails.details.6.author",
-    typeKey: "announcementDetails.details.6.type",
-    categoryKey: "announcementDetails.details.categories.garage",
-    locationKey: "announcementDetails.details.6.location",
-    gallery: [announcement1, project1],
-  },
-];
+import { AnnouncementService } from "@/services/announcement-service";
+import { getFileUrl } from "@/lib/utils";
 
 export const AnnouncementDetails: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { language, tString } = useLanguage();
+  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [lightboxOpen, setLightboxOpen] = React.useState(false);
   const [lightboxStartIndex, setLightboxStartIndex] = React.useState(0);
+  const [resolvedImageUrls, setResolvedImageUrls] = useState<string[]>([]);
+  const [heroImageUrl, setHeroImageUrl] = useState<string>("/placeholder.svg");
 
-  const announcement = announcementsData.find((a) => a.id === id);
+  useEffect(() => {
+    const fetchAnnouncement = async () => {
+      try {
+        setLoading(true);
 
-  if (!announcement) {
+        if (!id) {
+          console.warn("ID is falsy:", id);
+          setError("Announcement ID not found");
+          return;
+        }
+
+        const data = await AnnouncementService.getById(Number(id));
+        setAnnouncement(data);
+
+        // Resolve hero image URL
+        if (data.gallery && data.gallery.length > 0) {
+          const heroUrl = getFileUrl(data.gallery[0].imagePath);
+          setHeroImageUrl(heroUrl);
+
+          // Resolve all gallery image URLs
+          const galleryUrls = data.gallery.map((img) =>
+            getFileUrl(img.imagePath)
+          );
+          setResolvedImageUrls(galleryUrls);
+        }
+
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch announcement:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load announcement"
+        );
+        setAnnouncement(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnnouncement();
+  }, [id]);
+
+  const getTitle = (): string => {
+    if (!announcement) return "";
+    return language === "ar"
+      ? announcement.titleAr || ""
+      : announcement.titleEn || "";
+  };
+
+  const getDescription = (): string => {
+    if (!announcement) return "";
+    return language === "ar"
+      ? announcement.descriptionAr || ""
+      : announcement.descriptionEn || "";
+  };
+
+  const getContent = (): string => {
+    if (!announcement) return "";
+    return language === "ar"
+      ? announcement.contentAr || ""
+      : announcement.contentEn || "";
+  };
+
+  const getAuthor = (): string => {
+    if (!announcement) return "";
+    return language === "ar"
+      ? announcement.authorAr || ""
+      : announcement.authorEn || "";
+  };
+
+  const getLocation = (): string => {
+    if (!announcement) return "";
+    return language === "ar"
+      ? announcement.locationAr || ""
+      : announcement.locationEn || "";
+  };
+
+  const getType = (): string => {
+    if (!announcement) return "";
+    if (typeof announcement.type === "string") {
+      return announcement.type;
+    }
+    return "";
+  };
+
+  const getCategory = (): string => {
+    if (!announcement) return "";
+    if (typeof announcement.category === "string") {
+      return announcement.category;
+    }
+    return "";
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-subtle flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">{tString("common.loading")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !announcement) {
     return (
       <div className="min-h-screen bg-gradient-subtle flex items-center justify-center">
         <Card className="p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">
             {tString("announcementDetails.notFound")}
           </h2>
+          <p className="text-muted-foreground mb-6">{error}</p>
           <Button onClick={() => navigate("/announcements")}>
             {tString("announcementDetails.backToAnnouncements")}
           </Button>
@@ -127,8 +153,8 @@ export const AnnouncementDetails: React.FC = () => {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: tString(announcement.titleKey),
-        text: tString(announcement.descriptionKey),
+        title: getTitle(),
+        text: getDescription(),
         url: window.location.href,
       });
     }
@@ -145,18 +171,26 @@ export const AnnouncementDetails: React.FC = () => {
       <section className="relative h-[70vh] overflow-hidden">
         <div className="w-full h-full bg-muted/20">
           <img
-            src={announcement.gallery?.[0] || "/placeholder.svg"}
-            alt={tString(announcement.titleKey)}
+            src={heroImageUrl}
+            alt={getTitle()}
             className="w-full h-full object-cover animate-fade-in"
             onError={(e) => {
               if (process.env.NODE_ENV !== "production") {
-                console.log("Image failed to load:", announcement.gallery?.[0]);
+                console.log("Image failed to load:", heroImageUrl);
               }
               e.currentTarget.src = "/placeholder.svg";
             }}
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent" />
+        <div
+          className="absolute inset-0 bg-gradient-to-t to-transparent"
+          style={
+            {
+              "--tw-gradient-stops":
+                "hsl(0deg 0% 4.72% / 80%), hsl(0deg 0% 0% / 40%) var(--tw-gradient-via-position), var(--tw-gradient-to)",
+            } as React.CSSProperties
+          }
+        />
 
         {/* Back Button */}
         <div className="absolute top-8 left-8 z-10">
@@ -185,10 +219,10 @@ export const AnnouncementDetails: React.FC = () => {
               className="flex flex-wrap items-center gap-4 mb-6 animate-fade-in"
               style={{ animationDelay: "0.2s" }}>
               <div className="bg-primary px-4 py-2 rounded-full text-sm font-medium capitalize">
-                {tString(announcement.typeKey)}
+                {getType()}
               </div>
               <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium capitalize">
-                {tString(announcement.categoryKey)}
+                {getCategory()}
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="h-4 w-4" />
@@ -196,24 +230,24 @@ export const AnnouncementDetails: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <MapPin className="h-4 w-4" />
-                {tString(announcement.locationKey)}
+                {getLocation()}
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <User className="h-4 w-4" />
-                {tString(announcement.authorKey)}
+                {getAuthor()}
               </div>
             </div>
 
             <h1
               className="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in"
               style={{ animationDelay: "0.4s" }}>
-              {tString(announcement.titleKey)}
+              {getTitle()}
             </h1>
 
             <p
               className="text-xl md:text-2xl text-white/90 max-w-3xl animate-fade-in"
               style={{ animationDelay: "0.6s" }}>
-              {tString(announcement.descriptionKey)}
+              {getDescription()}
             </p>
           </div>
         </div>
@@ -226,7 +260,7 @@ export const AnnouncementDetails: React.FC = () => {
             <CardContent className="p-12">
               {/* Article Content */}
               <div className="prose prose-lg max-w-none mb-12">
-                {tString(announcement.contentKey)
+                {getContent()
                   .split("\n\n")
                   .map((paragraph) => (
                     <p
@@ -238,19 +272,19 @@ export const AnnouncementDetails: React.FC = () => {
               </div>
 
               {/* Gallery Section */}
-              {announcement.gallery && announcement.gallery.length > 0 && (
+              {resolvedImageUrls.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-3xl font-bold mb-8 text-foreground">
                     {tString("announcementDetails.gallery")}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {announcement.gallery.map((image, index) => (
+                    {resolvedImageUrls.map((imageUrl, index) => (
                       <div
-                        key={`${image}-${index}`}
+                        key={`${imageUrl}-${index}`}
                         className="group overflow-hidden rounded-xl bg-muted/20 cursor-pointer relative"
                         onClick={() => openLightbox(index)}>
                         <img
-                          src={image}
+                          src={imageUrl}
                           alt={`${tString(
                             "announcementDetails.galleryImage"
                           )} ${index + 1}`}
@@ -269,21 +303,21 @@ export const AnnouncementDetails: React.FC = () => {
               )}
 
               {/* Actions Section */}
-              {(announcement.projectBrochureUrl ||
-                announcement.floorPlansUrl ||
+              {(announcement.projectBrochure ||
+                announcement.floorPlans ||
                 navigator.share) && (
                 <div className="bg-muted/50 rounded-xl p-8">
                   <h2 className="text-2xl font-bold mb-6 text-foreground">
                     {tString("announcementDetails.actions")}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {announcement.projectBrochureUrl && (
+                    {announcement.projectBrochure && (
                       <Button
                         variant="outline"
                         asChild
                         className="justify-start h-auto p-6 hover-scale">
                         <a
-                          href={announcement.projectBrochureUrl}
+                          href={getFileUrl(announcement.projectBrochure)}
                           target="_blank"
                           rel="noopener noreferrer">
                           <Download className="h-5 w-5 mr-3" />
@@ -297,13 +331,13 @@ export const AnnouncementDetails: React.FC = () => {
                         </a>
                       </Button>
                     )}
-                    {announcement.floorPlansUrl && (
+                    {announcement.floorPlans && (
                       <Button
                         variant="outline"
                         asChild
                         className="justify-start h-auto p-6 hover-scale">
                         <a
-                          href={announcement.floorPlansUrl}
+                          href={getFileUrl(announcement.floorPlans)}
                           target="_blank"
                           rel="noopener noreferrer">
                           <Download className="h-5 w-5 mr-3" />
@@ -367,9 +401,9 @@ export const AnnouncementDetails: React.FC = () => {
         </div>
       </section>
 
-      {lightboxOpen && (
+      {lightboxOpen && resolvedImageUrls.length > 0 && (
         <Lightbox
-          images={announcement.gallery || []}
+          images={resolvedImageUrls}
           startIndex={lightboxStartIndex}
           isOpen={lightboxOpen}
           onClose={() => setLightboxOpen(false)}

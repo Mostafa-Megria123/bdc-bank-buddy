@@ -13,6 +13,15 @@ export default defineConfig(({ mode }) => ({
     Boolean
   ),
   base: "/bdc-real-estate/",
+  envDir: "./env",
+  assetsInclude: [
+    "**/*.PNG",
+    "**/*.ico",
+    "**/*.jpg",
+    "**/*.JPG",
+    "**/*.gif",
+    "**/*.svg",
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

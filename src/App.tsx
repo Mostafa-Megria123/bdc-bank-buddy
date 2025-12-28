@@ -2,9 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { useLanguage } from "@/contexts/useLanguage";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -22,21 +21,6 @@ import { AnnouncementDetails } from "@/components/AnnouncementDetails";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
-
-// Wrapper to fetch announcement by ID from params
-function AnnouncementDetailsWrapper() {
-  const { t, tString } = useLanguage();
-  const { id } = useParams();
-  const announcementText = t(`announcementDetails.details.${id}`);
-
-  // The `t` function returns the key if not found.
-  // We check if the result is an object to confirm it was found.
-  if (typeof announcementText !== 'object' || announcementText === null) {
-    return <div className="p-8 text-center">{tString('announcementDetails.notFound')}</div>;
-  }
-
-  return <AnnouncementDetails />;
-}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -60,7 +44,7 @@ const App = () => (
                   <Route path="/projects" element={<Projects />} />
                   <Route
                     path="/announcements/:id"
-                    element={<AnnouncementDetailsWrapper />}
+                    element={<AnnouncementDetails />}
                   />
                   <Route path="/projects/:id" element={<ProjectDetail />} />
                   <Route path="/my-reservations" element={<MyReservations />} />

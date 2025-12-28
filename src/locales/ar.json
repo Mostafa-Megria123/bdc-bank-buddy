@@ -20,58 +20,9 @@
     "viewProjectButton": "عرض المشروع"
   },
   "announcementsPage": {
+    "noAnnouncements": "لا توجد إعلانات في الوقت الحالي.",
     "sectionTitle": "أحدث الإعلانات",
     "sectionSubtitle": "ابق على اطلاع بآخر أخبارنا وتحديثاتنا.",
-    "list": [
-      {
-        "id": "1",
-        "image": "assets/announcement-1.jpg",
-        "title": "إعلان مشروع الأحلام السكني الجديد",
-        "description": "مشروع سكني متميز يوفر وحدات سكنية فاخرة بأسعار تنافسية في قلب القاهرة الجديدة.",
-        "publishDate": "2024-01-15",
-        "link": "/announcements/1"
-      },
-      {
-        "id": "2",
-        "image": "assets/announcement-1.jpg",
-        "title": "بدء الحجز لمشروع الكورنيش",
-        "description": "ابدأ رحلتك نحو الحياة المثالية مع وحدات سكنية تطل على النيل مباشرة.",
-        "publishDate": "2024-01-10",
-        "link": "/announcements/2"
-      },
-      {
-        "id": "3",
-        "image": "assets/announcement-1.jpg",
-        "title": "عروض خاصة على أحدث مشاريعنا",
-        "description": "لا تفوتوا عروضنا الخاصة لفترة محدودة على الوحدات السكنية والتجارية الجديدة.",
-        "publishDate": "2024-01-05",
-        "link": "/announcements/3"
-      },
-      {
-        "id": "4",
-        "image": "assets/announcement-1.jpg",
-        "title": "افتتاح فرعنا الجديد في العاصمة",
-        "description": "يسرنا الإعلان عن افتتاح فرعنا الجديد لخدمة عملائنا بشكل أفضل في العاصمة الإدارية.",
-        "publishDate": "2023-12-28",
-        "link": "/announcements/4"
-      },
-      {
-        "id": "5",
-        "image": "assets/announcement-1.jpg",
-        "title": "ورشة عمل مجانية عن الاستثمار العقاري",
-        "description": "انضموا إلى ورشة عملنا المجانية لتعلم أفضل استراتيجيات الاستثمار العقاري من خبراء الصناعة.",
-        "publishDate": "2023-12-20",
-        "link": "/announcements/5"
-      },
-      {
-        "id": "6",
-        "image": "assets/announcement-1.jpg",
-        "title": "اكتشفوا تطبيقنا الجديد للهاتف المحمول",
-        "description": "أدِر عقاراتك وحجوزاتك بسهولة مع تطبيقنا الجديد، متوفر الآن على جميع المنصات.",
-        "publishDate": "2023-12-15",
-        "link": "/announcements/6"
-      }
-    ],
     "cta": {
       "title": "ابق على اطلاع",
       "subtitle": "اشترك في نشرتنا الإخبارية للحصول على آخر الأخبار والعروض."
@@ -141,7 +92,8 @@
     "enterYourEmail": "أدخل بريدك الإلكتروني...",
     "subscribe": "إشتراك",
     "hotline": "الخط الساخن",
-    "email": "البريد الإلكتروني"
+    "email": "البريد الإلكتروني",
+    "retry": "أعد المحاولة"
   },
   "ads": {
     "sectionTitle": "العروض الخاصة",

@@ -18,6 +18,8 @@ import { Lightbox } from "@/components/ui/lightBox";
 import { Announcement } from "@/types/announcement";
 import { AnnouncementService } from "@/services/announcement-service";
 import { getFileUrl } from "@/lib/utils";
+import { UnitType } from "@/types/unit-type";
+import { AnnouncementCategory } from "@/types/announcement-category";
 
 export const AnnouncementDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -109,18 +111,25 @@ export const AnnouncementDetails: React.FC = () => {
 
   const getType = (): string => {
     if (!announcement) return "";
-    if (typeof announcement.type === "string") {
-      return announcement.type;
+    if (typeof announcement.type === "object" && announcement.type !== null) {
+      const typeObj = announcement.type as UnitType;
+      return language === "ar" ? typeObj.typeAr : typeObj.typeEn;
     }
-    return "";
+    return announcement.type ? String(announcement.type) : "";
   };
 
   const getCategory = (): string => {
     if (!announcement) return "";
-    if (typeof announcement.category === "string") {
-      return announcement.category;
+    if (
+      typeof announcement.category === "object" &&
+      announcement.category !== null
+    ) {
+      const categoryObj = announcement.category as AnnouncementCategory;
+      return language === "ar"
+        ? categoryObj.categoryAr
+        : categoryObj.categoryEn;
     }
-    return "";
+    return announcement.category ? String(announcement.category) : "";
   };
 
   if (loading) {

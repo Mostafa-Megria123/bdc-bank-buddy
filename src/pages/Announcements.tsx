@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, ArrowLeft, Calendar, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, formatDate } from "@/lib/utils";
 import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
 
@@ -124,7 +124,7 @@ const Announcements = () => {
                       <div className="bg-background/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
                         <div className="flex items-center text-sm font-medium text-foreground">
                           <Calendar className="h-3 w-3 mr-2" />
-                          {announcement.publishDate}
+                          {formatDate(announcement.publishDate)}
                         </div>
                       </div>
                     </div>

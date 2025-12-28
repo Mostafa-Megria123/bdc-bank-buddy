@@ -15,3 +15,13 @@ export function getFileUrl(filePath: string): string {
   if (!filePath) return ""; // Handle cases where filePath might be null or empty
   return `${endpoints.files}/${filePath}`;
 }
+
+export function formatDate(dateString: string): string {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}

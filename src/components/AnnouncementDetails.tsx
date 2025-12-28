@@ -17,7 +17,7 @@ import {
 import { Lightbox } from "@/components/ui/lightBox";
 import { Announcement } from "@/types/announcement";
 import { AnnouncementService } from "@/services/announcement-service";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, formatDate } from "@/lib/utils";
 import { UnitType } from "@/types/unit-type";
 import { AnnouncementCategory } from "@/types/announcement-category";
 
@@ -235,7 +235,7 @@ export const AnnouncementDetails: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="h-4 w-4" />
-                {announcement.publishDate}
+                {formatDate(announcement.publishDate)}
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <MapPin className="h-4 w-4" />

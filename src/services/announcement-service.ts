@@ -5,10 +5,6 @@ import { AnnouncementCategory } from "@/types/announcement-category";
 
 const API_URL = endpoints.announcements;
 
-// Log the API URL for debugging
-console.log("AnnouncementService API_URL:", API_URL);
-console.log("API Base URL from config:", config.apiBaseUrl);
-
 // Normalize backend response to Announcement type
 const normalizeAnnouncement = (data: unknown): Announcement => {
   const obj = data as Record<string, unknown>;

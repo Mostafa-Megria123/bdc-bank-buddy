@@ -108,7 +108,18 @@
     "downloadBrochure": "Download Brochure",
     "contactSales": "Contact Sales",
     "downloadFloorPlans": "Download Floor Plans",
-    "amenities": "Amenities"
+    "amenities": "Amenities",
+    "gallery": "Gallery",
+    "units": {
+      "bedroomsSuffix": "BR",
+      "bathroomsSuffix": "BA",
+      "reserveNow": "Reserve Now",
+      "status": {
+        "available": "Available",
+        "reserved": "Reserved",
+        "sold": "Sold"
+      }
+    }
   },
   "ads": {
     "sectionTitle": "Special Offers",

@@ -291,7 +291,7 @@ const ProjectDetail = () => {
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                   <div>
                                     <p className="text-muted-foreground">
-                                      {language === "ar" ? "النوع" : "Type"}
+                                      {tString("reservation.type")}
                                     </p>
                                     <p className="font-medium text-foreground">
                                       {typeof unit.type === "object" &&
@@ -306,7 +306,7 @@ const ProjectDetail = () => {
                                   </div>
                                   <div>
                                     <p className="text-muted-foreground">
-                                      {language === "ar" ? "المساحة" : "Area"}
+                                      {tString("reservation.area")}
                                     </p>
                                     <p className="font-medium text-foreground">
                                       {unit.area}
@@ -314,22 +314,20 @@ const ProjectDetail = () => {
                                   </div>
                                   <div>
                                     <p className="text-muted-foreground">
-                                      {language === "ar" ? "الغرف" : "Bedrooms"}
+                                      {tString("reservation.bedrooms")}
                                     </p>
                                     <p className="font-medium text-foreground">
                                       {unit.bedrooms}{" "}
-                                      {language === "ar" ? "غرف" : "BR"}
+                                      {tString("projectDetails.units.bedroomsSuffix")}
                                     </p>
                                   </div>
                                   <div>
                                     <p className="text-muted-foreground">
-                                      {language === "ar"
-                                        ? "الحمامات"
-                                        : "Bathrooms"}
+                                      {tString("reservation.bathrooms")}
                                     </p>
                                     <p className="font-medium text-foreground">
                                       {unit.bathrooms}{" "}
-                                      {language === "ar" ? "حمامات" : "BA"}
+                                      {tString("projectDetails.units.bathroomsSuffix")}
                                     </p>
                                   </div>
                                 </div>
@@ -342,7 +340,7 @@ const ProjectDetail = () => {
                                     {unit.price.toLocaleString()}
                                   </p>
                                   <p className="text-sm text-muted-foreground">
-                                    {language === "ar" ? "جنيه مصري" : "EGP"}
+                                    {tString("common.currency")}
                                   </p>
                                 </div>
 
@@ -354,9 +352,7 @@ const ProjectDetail = () => {
                                       e.stopPropagation();
                                       handleReserveUnit(unit);
                                     }}>
-                                    {language === "ar"
-                                      ? "احجز الآن"
-                                      : "Reserve Now"}
+                                    {tString("projectDetails.units.reserveNow")}
                                   </Button>
                                 )}
 
@@ -366,7 +362,7 @@ const ProjectDetail = () => {
                                     size="sm"
                                     disabled
                                     className="whitespace-nowrap">
-                                    {language === "ar" ? "محجوز" : "Reserved"}
+                                    {tString("projectDetails.units.status.reserved")}
                                   </Button>
                                 )}
 
@@ -376,7 +372,7 @@ const ProjectDetail = () => {
                                     size="sm"
                                     disabled
                                     className="whitespace-nowrap">
-                                    {language === "ar" ? "مباع" : "Sold"}
+                                    {tString("projectDetails.units.status.sold")}
                                   </Button>
                                 )}
                               </div>
@@ -398,7 +394,7 @@ const ProjectDetail = () => {
                         }
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {language === "ar" ? "متاح" : "Available"}
+                        {tString("projectDetails.units.status.available")}
                       </p>
                     </div>
                     <div className="text-center">
@@ -410,7 +406,7 @@ const ProjectDetail = () => {
                         }
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {language === "ar" ? "محجوز" : "Reserved"}
+                        {tString("projectDetails.units.status.reserved")}
                       </p>
                     </div>
                     <div className="text-center">
@@ -422,7 +418,7 @@ const ProjectDetail = () => {
                         }
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {language === "ar" ? "مباع" : "Sold"}
+                        {tString("projectDetails.units.status.sold")}
                       </p>
                     </div>
                   </div>
@@ -435,7 +431,7 @@ const ProjectDetail = () => {
               <Card>
                 <CardContent className="p-6">
                   <h2 className="text-2xl font-bold text-foreground mb-4">
-                    {language === "ar" ? "معرض الصور" : "Gallery"}
+                    {tString("projectDetails.gallery")}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {galleryImages.map((image, index) => (

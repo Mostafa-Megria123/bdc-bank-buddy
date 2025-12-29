@@ -108,7 +108,18 @@
     "downloadBrochure": "تنزيل الكتيب",
     "contactSales": "تواصل مع المبيعات",
     "downloadFloorPlans": "تنزيل المخططات",
-    "amenities": "المرافق والميزات"
+    "amenities": "المرافق والميزات",
+    "gallery": "معرض الصور",
+    "units": {
+      "bedroomsSuffix": "غرف",
+      "bathroomsSuffix": "حمامات",
+      "reserveNow": "احجز الآن",
+      "status": {
+        "available": "متاح",
+        "reserved": "محجوز",
+        "sold": "مباع"
+      }
+    }
   },
   "ads": {
     "sectionTitle": "العروض الخاصة",

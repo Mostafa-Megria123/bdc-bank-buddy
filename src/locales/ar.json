@@ -169,7 +169,14 @@
     "shareAction": "مشاركة الإعلان",
     "ctaTitle": "مهتم بهذا المشروع؟",
     "ctaSubtitle": "تواصل معنا الآن للحصول على مزيد من المعلومات والعروض الخاصة",
-    "contactUs": "اتصل بنا"
+    "contactUs": "اتصل بنا",
+    "moreAnnouncements": "المزيد من الإعلانات",
+    "details": {
+      "downloads": {
+        "floorPlans": "تنزيل المخططات",
+        "projectBrochure": "تنزيل الكتيب"
+      }
+    }
   },
   "reservation": {
     "title": "حجز الوحدة",

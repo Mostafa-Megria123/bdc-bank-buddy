@@ -169,7 +169,14 @@
     "ctaSubtitle": "Contact us now for more information and special offers",
     "actions": "Actions",
     "shareAction": "Share Announcement",
-    "contactUs": "Contact Us"
+    "contactUs": "Contact Us",
+    "moreAnnouncements": "More Announcements",
+    "details": {
+      "downloads": {
+        "floorPlans": "Download Floor Plans",
+        "projectBrochure": "Download Brochure"
+      }
+    }
   },
   "reservation": {
     "title": "Unit Reservation",

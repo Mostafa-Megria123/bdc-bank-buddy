@@ -13,7 +13,9 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function getFileUrl(filePath: string): string {
   if (!filePath) return ""; // Handle cases where filePath might be null or empty
-  return `${endpoints.files}/${filePath}`;
+  // Normalize backslashes to forward slashes (for Windows paths from backend)
+  const normalizedPath = filePath.replace(/\\/g, "/");
+  return `${endpoints.files}/${normalizedPath}`;
 }
 
 export function formatDate(dateString: string): string {

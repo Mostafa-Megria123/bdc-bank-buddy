@@ -6,6 +6,8 @@ import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { getFileUrl } from "@/lib/utils";
 import heroBuilding from "@/assets/hero-building.jpg";
 import project1 from "@/assets/project-1.jpg";
+import { ProjectService } from "@/services/project-service";
+import { Project } from "@/types/project";
 
 interface HeroCarouselProps {
   autoPlay?: boolean;
@@ -18,12 +20,21 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
 }) => {
   const { language, t, tString } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
 
-  // Build slides: first slide is the hero, then announcements, then projects from translations
-  const rawProjects = t("projects.list");
-  const projects = Array.isArray(rawProjects)
-    ? (rawProjects as unknown as Array<Record<string, unknown>>)
-    : [];
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await ProjectService.getFeaturedProjects();
+        console.log("Featured projects fetched:", data);
+        setFeaturedProjects(data);
+      } catch (error) {
+        console.error("Failed to fetch featured projects:", error);
+      }
+    };
+    fetchProjects();
+  }, []);
+
   type Slide =
     | {
         type: "hero";
@@ -44,6 +55,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         id: string;
         image: string;
         name: string;
+        description: string;
         link: string;
       };
 
@@ -56,23 +68,32 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     subtitle: tString("hero.welcomeSubtitle"),
   };
 
-  // Project slides from translations
-  const projectSlides: Slide[] = projects.map((p, idx) => {
-    const r = p as Record<string, unknown>;
+  // Project slides from service data
+  const projectSlides: Slide[] = featuredProjects.map((p) => {
+    const imageUrl =
+      p.projectGallery &&
+      p.projectGallery.length > 0 &&
+      p.projectGallery[0].imagePath
+        ? getFileUrl(p.projectGallery[0].imagePath)
+        : project1;
+    
+    console.log(`Project ${p.id} image URL:`, imageUrl);
+    
     return {
       type: "project",
-      id: String(r["id"] ?? `proj-${idx}`),
-      image: r["image"] ? getFileUrl(String(r["image"])) : project1,
-      name: String(
-        (r["name"] ?? r["title"] ?? tString(`projects.list.${idx}.name`)) || ""
-      ),
-      link: String(r["link"] ?? `/projects/${r["id"] ?? idx}`),
+      id: p.id,
+      image: imageUrl,
+      name: language === "ar" ? p.nameAr : p.nameEn,
+      description: language === "ar" ? p.descriptionAr : p.descriptionEn,
+      link: `/projects/${p.id}`,
     };
   });
 
   // Slides: hero slide followed by project slides (announcement removed)
   const slides: Slide[] = [heroSlide, ...projectSlides];
   const backgroundImages = slides.map((s) => s.image);
+
+  console.log("All carousel slides background images:", backgroundImages);
 
   const currentSlideObj = slides[currentSlide] ?? null;
 
@@ -101,7 +122,14 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
-        style={{ backgroundImage: `url(${backgroundImages[currentSlide]})` }}
+        style={{ 
+          backgroundImage: `url('${backgroundImages[currentSlide]}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+        onError={(e) => {
+          console.log("Background image failed to load:", backgroundImages[currentSlide]);
+        }}
       />
       <div className="absolute inset-0 bg-gradient-overlay" />
 
@@ -139,14 +167,9 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
               {currentSlideObj.name}
             </h2>
-            {(() => {
-              // slides: [hero, ...projectSlides] so project translation index = slideIndex - 1
-              const slideIndex = slides.indexOf(currentSlideObj);
-              const projectIndex = slideIndex - 1;
-              const key = `projects.list.${projectIndex}.description`;
-              const desc = projectIndex >= 0 ? tString(key) : "";
-              return <p className="text-lg text-white/90 mb-6">{desc}</p>;
-            })()}
+            <p className="text-lg text-white/90 mb-6">
+              {currentSlideObj.description}
+            </p>
           </div>
         )}
       </div>

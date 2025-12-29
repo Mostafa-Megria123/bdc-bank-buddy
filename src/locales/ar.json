@@ -102,7 +102,11 @@
     "developer": "المطور",
     "priceRange": "نطاق السعر",
     "additionalDescription": "تفاصيل إضافية",
-    "availableUnits": "الوحدات المتاحة"
+    "availableUnits": "الوحدات المتاحة",
+    "interestedTitle": "مهتم؟",
+    "interestedDesc": "قم بتنزيل الكتيب أو اتصل بنا لمزيد من التفاصيل.",
+    "downloadBrochure": "تنزيل الكتيب",
+    "contactSales": "تواصل مع المبيعات"
   },
   "ads": {
     "sectionTitle": "العروض الخاصة",

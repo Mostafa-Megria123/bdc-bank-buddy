@@ -102,7 +102,11 @@
     "developer": "Developer",
     "priceRange": "Price Range",
     "additionalDescription": "Additional Description",
-    "availableUnits": "Available Units"
+    "availableUnits": "Available Units",
+    "interestedTitle": "Interested?",
+    "interestedDesc": "Download the brochure or contact us for more details.",
+    "downloadBrochure": "Download Brochure",
+    "contactSales": "Contact Sales"
   },
   "ads": {
     "sectionTitle": "Special Offers",

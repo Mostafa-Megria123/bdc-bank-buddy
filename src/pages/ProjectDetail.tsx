@@ -459,19 +459,19 @@ const ProjectDetail = () => {
           <div className="space-y-6">
             <Card className="bg-primary text-white">
               <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Interested?</h3>
+                <h3 className="text-xl font-bold mb-4">{tString("projectDetails.interestedTitle")}</h3>
                 <p className="mb-6 text-white/90">
-                  Download the brochure or contact us for more details.
+                  {tString("projectDetails.interestedDesc")}
                 </p>
                 <div className="space-y-3">
                   <Button variant="secondary" className="w-full">
                     <Download className="mr-2 h-4 w-4" />
-                    Download Brochure
+                    {tString("projectDetails.downloadBrochure")}
                   </Button>
                   <Button
                     variant="outline"
                     className="w-full bg-transparent border-white text-white hover:bg-white/10">
-                    Contact Sales
+                    {tString("projectDetails.contactSales")}
                   </Button>
                 </div>
               </CardContent>

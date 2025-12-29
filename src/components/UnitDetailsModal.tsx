@@ -85,7 +85,9 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                 {galleryImages.length > 1 && (
                   <div className="grid grid-cols-3 gap-2">
                     {galleryImages.slice(1, 4).map((img, idx) => (
-                      <div key={idx} className="rounded-md overflow-hidden h-20">
+                      <div
+                        key={idx}
+                        className="rounded-md overflow-hidden h-20">
                         <img
                           src={img}
                           alt={`Gallery ${idx}`}
@@ -115,7 +117,9 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                     : "secondary"
                 }
                 className={
-                  statusEn === "Available" ? "bg-green-500 hover:bg-green-600" : ""
+                  statusEn === "Available"
+                    ? "bg-green-500 hover:bg-green-600"
+                    : ""
                 }>
                 {language === "ar"
                   ? typeof unit.status === "object" && unit.status !== null

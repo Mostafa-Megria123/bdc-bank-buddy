@@ -249,7 +249,7 @@ const ProjectDetail = () => {
                               ? "border-destructive/30 bg-destructive/5"
                               : statusEn === "Sold"
                               ? "border-muted bg-muted/20"
-                              : "border-primary/30 hover:border-primary/50"
+                              : "border-primary/30 hover:border-primary/50 cursor-pointer"
                           }`}>
                           <CardContent className="p-4">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -318,7 +318,9 @@ const ProjectDetail = () => {
                                     </p>
                                     <p className="font-medium text-foreground">
                                       {unit.bedrooms}{" "}
-                                      {tString("projectDetails.units.bedroomsSuffix")}
+                                      {tString(
+                                        "projectDetails.units.bedroomsSuffix"
+                                      )}
                                     </p>
                                   </div>
                                   <div>
@@ -327,7 +329,9 @@ const ProjectDetail = () => {
                                     </p>
                                     <p className="font-medium text-foreground">
                                       {unit.bathrooms}{" "}
-                                      {tString("projectDetails.units.bathroomsSuffix")}
+                                      {tString(
+                                        "projectDetails.units.bathroomsSuffix"
+                                      )}
                                     </p>
                                   </div>
                                 </div>
@@ -362,7 +366,9 @@ const ProjectDetail = () => {
                                     size="sm"
                                     disabled
                                     className="whitespace-nowrap">
-                                    {tString("projectDetails.units.status.reserved")}
+                                    {tString(
+                                      "projectDetails.units.status.reserved"
+                                    )}
                                   </Button>
                                 )}
 
@@ -372,7 +378,9 @@ const ProjectDetail = () => {
                                     size="sm"
                                     disabled
                                     className="whitespace-nowrap">
-                                    {tString("projectDetails.units.status.sold")}
+                                    {tString(
+                                      "projectDetails.units.status.sold"
+                                    )}
                                   </Button>
                                 )}
                               </div>

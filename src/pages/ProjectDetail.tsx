@@ -6,6 +6,7 @@ import { Project } from "@/types/project";
 import { getFileUrl } from "@/lib/utils";
 import { ReservationModal } from "@/components/ReservationModal";
 import { UnitDetailsModal } from "@/components/UnitDetailsModal";
+import { ProjectLocation } from "@/components/ProjectLocation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -453,6 +454,13 @@ const ProjectDetail = () => {
                 </CardContent>
               </Card>
             )}
+
+            {/* Location Section */}
+            <ProjectLocation
+              location={project.location}
+              lat={project.locationLat}
+              lng={project.locationLng}
+            />
           </div>
 
           {/* Sidebar Actions */}

@@ -5,21 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { ArrowRight, ArrowLeft, Calendar, Home, Download } from "lucide-react";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, formatDate } from "@/lib/utils";
 import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
-
-interface Project {
-  id: string;
-  image: string;
-  name: string;
-  type: string;
-  description: string;
-  displayStartDate: string;
-  displayEndDate: string;
-  unitsAvailable: number;
-  link: string;
-}
+import { ProjectService } from "@/services/project-service";
+import { Project } from "@/types/project";
 
 interface Ad {
   id: string;
@@ -33,23 +23,23 @@ const Index = () => {
   const [latestAnnouncements, setLatestAnnouncements] = useState<
     Announcement[]
   >([]);
+  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    const fetchLatestAnnouncements = async () => {
+    const fetchData = async () => {
       try {
-        const data = await AnnouncementService.getLatest(3);
-        setLatestAnnouncements(data);
+        const [announcementsData, projectsData] = await Promise.all([
+          AnnouncementService.getLatest(3),
+          ProjectService.getFeaturedProjects(),
+        ]);
+        setLatestAnnouncements(announcementsData);
+        setFeaturedProjects(projectsData);
       } catch (error) {
-        console.error("Failed to fetch latest announcements:", error);
+        console.error("Failed to fetch data:", error);
       }
     };
-    fetchLatestAnnouncements();
+    fetchData();
   }, []);
-
-  const rawProjects = t("projects.list");
-  const projects: Project[] = Array.isArray(rawProjects)
-    ? (rawProjects as unknown as Project[])
-    : [];
 
   const rawAds = t("ads.list");
   const ads: Ad[] = Array.isArray(rawAds) ? (rawAds as unknown as Ad[]) : [];
@@ -133,74 +123,87 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
-              <Card
-                key={project.id}
-                className="overflow-hidden hover:shadow-brand transition-all duration-500 group animate-fade-in hover:scale-[1.02] hover:-translate-y-2"
-                style={{ animationDelay: `${index * 0.2}s` }}>
-                <div className="relative overflow-hidden">
-                  <img
-                    src={getFileUrl(project.image)}
-                    alt={project.name}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-primary text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {project.type}
-                    </span>
-                  </div>
-                </div>
+            {featuredProjects.map((project, index) => {
+              const name = language === "ar" ? project.nameAr : project.nameEn;
+              const description =
+                language === "ar"
+                  ? project.descriptionAr
+                  : project.descriptionEn;
+              const image = project.projectGallery?.[0]?.imagePath
+                ? getFileUrl(project.projectGallery[0].imagePath)
+                : "/placeholder.svg";
 
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold text-foreground mb-2">
-                    {project.name}
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    {project.description}
-                  </p>
-
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
-                      <span>
-                        {tString("projects.display.dateRange")
-                          .replace("{start}", project.displayStartDate)
-                          .replace("{end}", project.displayEndDate)}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Home className="h-4 w-4 mr-2 flex-shrink-0" />
-                      <span>
-                        {tString("projects.display.unitsAvailable").replace(
-                          "{count}",
-                          project.unitsAvailable.toString()
-                        )}
+              return (
+                <Card
+                  key={project.id}
+                  className="overflow-hidden hover:shadow-brand transition-all duration-500 group animate-fade-in hover:scale-[1.02] hover:-translate-y-2"
+                  style={{ animationDelay: `${index * 0.2}s` }}>
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={image}
+                      alt={name}
+                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-gradient-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {language === "ar"
+                          ? project.projectStatus.statusAr
+                          : project.projectStatus.statusEn}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Link to={project.link} className="flex-1">
-                      <Button className="w-full bg-gradient-primary hover:opacity-90">
-                        {tString("common.viewDetails")}
-                        {language === "ar" ? (
-                          <ArrowLeft className="ml-2 h-4 w-4" />
-                        ) : (
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        )}
+                  <CardContent className="p-6">
+                    <h3 className="text-2xl font-bold text-foreground mb-2">
+                      {name}
+                    </h3>
+                    <p className="text-muted-foreground mb-4 line-clamp-2">
+                      {description}
+                    </p>
+
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
+                        <span>
+                          {tString("projects.display.dateRange")
+                            .replace("{start}", formatDate(project.startDate))
+                            .replace("{end}", formatDate(project.endDate))}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Home className="h-4 w-4 mr-2 flex-shrink-0" />
+                        <span>
+                          {tString("projects.display.unitsAvailable").replace(
+                            "{count}",
+                            project.totalUnits.toString()
+                          )}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Link to={`/projects/${project.id}`} className="flex-1">
+                        <Button className="w-full bg-gradient-primary hover:opacity-90">
+                          {tString("common.viewDetails")}
+                          {language === "ar" ? (
+                            <ArrowLeft className="ml-2 h-4 w-4" />
+                          ) : (
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          )}
+                        </Button>
+                      </Link>
+
+                      <Button variant="outline" className="flex-1">
+                        <Download className="mr-2 h-4 w-4" />
+                        {tString("common.termsAndConditions")}
                       </Button>
-                    </Link>
-
-                    <Button variant="outline" className="flex-1">
-                      <Download className="mr-2 h-4 w-4" />
-                      {tString("common.termsAndConditions")}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>

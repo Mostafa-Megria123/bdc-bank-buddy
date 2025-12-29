@@ -18,6 +18,7 @@ import {
   Bath,
   CheckCircle2,
   XCircle,
+  Building2,
 } from "lucide-react";
 
 interface UnitDetailsModalProps {
@@ -173,6 +174,7 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                 <span className="font-medium">{unit.bathrooms}</span>
               </div>
               <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">
                   {language === "ar" ? "الدور" : "Floor"}:
                 </span>

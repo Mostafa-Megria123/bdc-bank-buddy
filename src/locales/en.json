@@ -93,7 +93,16 @@
     "subscribe": "Subscribe",
     "hotline": "Hotline",
     "email": "Email",
-    "retry": "Retry"
+    "retry": "Retry",
+    "currency": "EGP"
+  },
+  "projectDetails": {
+    "backToProjects": "Back to Projects",
+    "aboutProject": "About the Project",
+    "developer": "Developer",
+    "priceRange": "Price Range",
+    "additionalDescription": "Additional Description",
+    "availableUnits": "Available Units"
   },
   "ads": {
     "sectionTitle": "Special Offers",

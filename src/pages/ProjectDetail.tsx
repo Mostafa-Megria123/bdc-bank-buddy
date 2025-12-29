@@ -82,7 +82,7 @@ const ProjectDetail = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Project Not Found</h2>
           <Button onClick={() => navigate("/projects")}>
-            Back to Projects
+            {tString("projectDetails.backToProjects")}
           </Button>
         </div>
       </div>
@@ -161,7 +161,7 @@ const ProjectDetail = () => {
             ) : (
               <ArrowLeft className="mr-2 h-4 w-4" />
             )}
-            Back to Projects
+            {tString("projectDetails.backToProjects")}
           </Button>
         </div>
       </section>
@@ -173,12 +173,12 @@ const ProjectDetail = () => {
           <div className="lg:col-span-2 space-y-8">
             <Card>
               <CardContent className="p-8">
-                <h2 className="text-2xl font-bold mb-6">About the Project</h2>
+                <h2 className="text-2xl font-bold mb-6">{tString("projectDetails.aboutProject")}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div className="flex items-start gap-3">
                     <Building className="h-5 w-5 text-primary mt-1" />
                     <div>
-                      <p className="text-sm text-muted-foreground">Developer</p>
+                      <p className="text-sm text-muted-foreground">{tString("projectDetails.developer")}</p>
                       <p className="font-medium">{developer}</p>
                     </div>
                   </div>
@@ -186,12 +186,12 @@ const ProjectDetail = () => {
                     <Tag className="h-5 w-5 text-primary mt-1" />
                     <div>
                       <p className="text-sm text-muted-foreground">
-                        Price Range
+                        {tString("projectDetails.priceRange")}
                       </p>
                       <p className="font-medium">
                         {project.priceMin.toLocaleString()} -{" "}
                         {project.priceMax.toLocaleString()}{" "}
-                        {language === "ar" ? "جنيه مصري" : "EGP"}
+                        {tString("common.currency")}
                       </p>
                     </div>
                   </div>
@@ -211,7 +211,7 @@ const ProjectDetail = () => {
                 {additionalDescription && (
                   <div className="mt-8">
                     <h3 className="text-lg font-semibold mb-3">
-                      {language === "ar" ? "تفاصيل إضافية" : "Additional Description"}
+                      {tString("projectDetails.additionalDescription")}
                     </h3>
                     <p className="text-muted-foreground leading-relaxed">
                       {additionalDescription}
@@ -226,7 +226,7 @@ const ProjectDetail = () => {
               <Card>
                 <CardContent className="p-6">
                   <h2 className="text-2xl font-bold text-foreground mb-6">
-                    {language === "ar" ? "الوحدات المتاحة" : "Available Units"}
+                    {tString("projectDetails.availableUnits")}
                   </h2>
 
                   {/* Units Grid */}

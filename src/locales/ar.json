@@ -93,7 +93,16 @@
     "subscribe": "إشتراك",
     "hotline": "الخط الساخن",
     "email": "البريد الإلكتروني",
-    "retry": "أعد المحاولة"
+    "retry": "أعد المحاولة",
+    "currency": "جنيه مصري"
+  },
+  "projectDetails": {
+    "backToProjects": "العودة للمشاريع",
+    "aboutProject": "عن المشروع",
+    "developer": "المطور",
+    "priceRange": "نطاق السعر",
+    "additionalDescription": "تفاصيل إضافية",
+    "availableUnits": "الوحدات المتاحة"
   },
   "ads": {
     "sectionTitle": "العروض الخاصة",

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/useLanguage";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, formatDate } from "@/lib/utils";
 import { ReservationModal } from "@/components/ReservationModal";
 import { UnitDetailsModal } from "@/components/UnitDetailsModal";
 import { ProjectLocation } from "@/components/ProjectLocation";
@@ -20,6 +20,10 @@ import {
   Tag,
   Download,
   Search,
+  Home,
+  Phone,
+  Mail,
+  Calendar,
 } from "lucide-react";
 import { Unit } from "@/types/unit";
 
@@ -120,6 +124,10 @@ const ProjectDetail = () => {
     return String(unit.status);
   };
 
+  const availableUnitsCount = project?.units
+    ? project.units.filter((u) => getUnitStatusEn(u) === "Available").length
+    : 0;
+
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
@@ -172,59 +180,38 @@ const ProjectDetail = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Info */}
           <div className="lg:col-span-2 space-y-8">
-            <Card>
-              <CardContent className="p-8">
-                <h2 className="text-2xl font-bold mb-6">
-                  {tString("projectDetails.aboutProject")}
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="flex items-start gap-3">
-                    <Building className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        {tString("projectDetails.developer")}
-                      </p>
-                      <p className="font-medium">{developer}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Tag className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        {tString("projectDetails.priceRange")}
-                      </p>
-                      <p className="font-medium">
-                        {project.priceMin.toLocaleString()} -{" "}
-                        {project.priceMax.toLocaleString()}{" "}
-                        {tString("common.currency")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            {/* Project Description Section */}
+            {additionalDescription && (
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-bold text-foreground mb-4">
+                    {tString("projectDetails.projectDescription")}
+                  </h2>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {additionalDescription}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
 
-                <h3 className="text-lg font-semibold mb-3">
+            {/* Features & Amenities */}
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold text-foreground mb-4">
                   {tString("projectDetails.amenities")}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {amenities.split(",").map((amenity, idx) => (
-                    <span
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {amenities.split(",").map((feature, idx) => (
+                    <div
                       key={idx}
-                      className="bg-muted px-3 py-1 rounded-md text-sm">
-                      {amenity.trim()}
-                    </span>
+                      className="flex items-center space-x-2 rtl:space-x-reverse">
+                      <div className="w-2 h-2 bg-gradient-primary rounded-full" />
+                      <span className="text-sm text-muted-foreground">
+                        {feature.trim()}
+                      </span>
+                    </div>
                   ))}
                 </div>
-
-                {additionalDescription && (
-                  <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-3">
-                      {tString("projectDetails.additionalDescription")}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {additionalDescription}
-                    </p>
-                  </div>
-                )}
               </CardContent>
             </Card>
 
@@ -475,17 +462,86 @@ const ProjectDetail = () => {
 
           {/* Sidebar Actions */}
           <div className="space-y-6">
-            <Card className="bg-primary text-white">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">
-                  {tString("projectDetails.interestedTitle")}
+            {/* Quick Info */}
+            <Card className="sticky top-6">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-foreground mb-4">
+                  {tString("projectDetails.quickInfo")}
                 </h3>
-                <p className="mb-6 text-white/90">
-                  {tString("projectDetails.interestedDesc")}
-                </p>
-                <div className="space-y-3">
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3 rtl:space-x-reverse">
+                    <MapPin className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-foreground">
+                        {tString("projectDetails.location")}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {project.location}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 rtl:space-x-reverse">
+                    <Building className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-foreground">
+                        {tString("projectDetails.developer")}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {developer}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 rtl:space-x-reverse">
+                    <Home className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-foreground">
+                        {tString("projectDetails.availableUnits")}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {availableUnitsCount} {tString("projectDetails.of")}{" "}
+                        {project.totalUnits}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 rtl:space-x-reverse">
+                    <Calendar className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-foreground">
+                        {tString("projectDetails.displayPeriod")}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDate(project.startDate)} -{" "}
+                        {formatDate(project.endDate)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 rtl:space-x-reverse">
+                    <Tag className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-foreground">
+                        {tString("projectDetails.priceRange")}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {project.priceMin.toLocaleString()} -{" "}
+                        {project.priceMax.toLocaleString()}{" "}
+                        {tString("common.currency")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-3">
+                  <Button className="w-full bg-gradient-primary hover:opacity-90">
+                    <Phone className="mr-2 h-4 w-4" />
+                    {tString("projectDetails.callUs")}
+                  </Button>
+
                   {project.projectBrochurePdfUrl && (
-                    <Button variant="secondary" className="w-full" asChild>
+                    <Button variant="outline" className="w-full" asChild>
                       <a
                         href={getFileUrl(project.projectBrochurePdfUrl)}
                         target="_blank"
@@ -495,8 +551,9 @@ const ProjectDetail = () => {
                       </a>
                     </Button>
                   )}
+
                   {project.floorPlansPdfUrl && (
-                    <Button variant="secondary" className="w-full" asChild>
+                    <Button variant="outline" className="w-full" asChild>
                       <a
                         href={getFileUrl(project.floorPlansPdfUrl)}
                         target="_blank"
@@ -506,10 +563,10 @@ const ProjectDetail = () => {
                       </a>
                     </Button>
                   )}
-                  <Button
-                    variant="outline"
-                    className="w-full bg-transparent border-white text-white hover:bg-white/10">
-                    {tString("projectDetails.contactSales")}
+
+                  <Button variant="outline" className="w-full">
+                    <Mail className="mr-2 h-4 w-4" />
+                    {tString("projectDetails.requestInfo")}
                   </Button>
                 </div>
               </CardContent>

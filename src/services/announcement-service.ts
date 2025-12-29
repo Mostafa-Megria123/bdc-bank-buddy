@@ -52,7 +52,6 @@ export const AnnouncementService = {
     size: number = 10
   ): Promise<PaginatedResponse<Announcement>> => {
     const url = `${API_URL}?page=${page}&size=${size}`;
-    console.log("Fetching announcements from:", url);
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -60,7 +59,6 @@ export const AnnouncementService = {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Announcements fetched successfully:", data);
       return {
         ...data,
         content: (data.content || []).map((item: unknown) =>

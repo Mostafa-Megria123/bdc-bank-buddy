@@ -26,7 +26,6 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     const fetchProjects = async () => {
       try {
         const data = await ProjectService.getFeaturedProjects();
-        console.log("Featured projects fetched:", data);
         setFeaturedProjects(data);
       } catch (error) {
         console.error("Failed to fetch featured projects:", error);
@@ -42,6 +41,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         image: string;
         title: string;
         subtitle: string;
+        projectStatus: string;
       }
     | {
         type: "announcement";
@@ -49,6 +49,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         image: string;
         title: string;
         subtitle?: string;
+        projectStatus: string;
       }
     | {
         type: "project";
@@ -57,6 +58,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         name: string;
         description: string;
         link: string;
+        projectStatus: string;
       };
 
   // Hero slide
@@ -66,6 +68,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     image: heroBuilding,
     title: tString("hero.welcomeTitle"),
     subtitle: tString("hero.welcomeSubtitle"),
+    projectStatus: "",
   };
 
   // Project slides from service data
@@ -76,9 +79,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       p.projectGallery[0].imagePath
         ? getFileUrl(p.projectGallery[0].imagePath)
         : project1;
-    
-    console.log(`Project ${p.id} image URL:`, imageUrl);
-    
+
     return {
       type: "project",
       id: p.id,
@@ -86,14 +87,14 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       name: language === "ar" ? p.nameAr : p.nameEn,
       description: language === "ar" ? p.descriptionAr : p.descriptionEn,
       link: `/projects/${p.id}`,
+      projectStatus:
+        language === "ar" ? p.projectStatus.statusAr : p.projectStatus.statusEn,
     };
   });
 
   // Slides: hero slide followed by project slides (announcement removed)
   const slides: Slide[] = [heroSlide, ...projectSlides];
   const backgroundImages = slides.map((s) => s.image);
-
-  console.log("All carousel slides background images:", backgroundImages);
 
   const currentSlideObj = slides[currentSlide] ?? null;
 
@@ -118,56 +119,59 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
   };
 
   return (
-    <section className="relative h-[91vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden group">
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
-        style={{ 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out transform scale-105"
+        style={{
           backgroundImage: `url('${backgroundImages[currentSlide]}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
-        onError={(e) => {
-          console.log("Background image failed to load:", backgroundImages[currentSlide]);
-        }}
+        onError={(e) => {}}
       />
-      <div className="absolute inset-0 bg-gradient-overlay" />
+      {/* Enhanced Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
+      <div className="absolute inset-0 bg-black/20" />
 
       {/* Content: keep hero welcome static while slides rotate (hero is the first slide) */}
-      <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center h-full pb-16">
         {/* Show welcome content only on the first slide */}
         {currentSlide === 0 && (
-          <>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
+          <div className="animate-fade-in space-y-8">
+            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight drop-shadow-lg leading-tight">
               {heroSlide.title}
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8 animate-fade-in">
+            <p className="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto font-light drop-shadow-md leading-relaxed">
               {heroSlide.subtitle}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link to="/projects" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="bg-white text-bdc-orange hover:bg-white/90 shadow-brand text-lg px-8 py-4 group">
+                  className="bg-white text-primary hover:bg-gray-100 border-0 text-lg px-10 py-6 rounded-full shadow-xl transition-all duration-300 hover:scale-105 group">
                   {tString("hero.exploreProjects")}
                   {language === "ar" ? (
-                    <ArrowLeft className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowLeft className="ml-2 h-5 w-5 group-hover:-translate-x-1 transition-transform" />
                   ) : (
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   )}
                 </Button>
               </Link>
             </div>
-          </>
+          </div>
         )}
 
         {/* If the current slide is a project, show its title/description below the welcome text */}
         {currentSlideObj && currentSlideObj.type === "project" && (
-          <div className="mt-8">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
+          <div className="animate-fade-in space-y-6 max-w-4xl">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-sm font-medium mb-2">
+              {currentSlideObj.projectStatus}
+            </div>
+            <h2 className="text-5xl md:text-7xl font-bold text-white tracking-tight drop-shadow-lg leading-tight">
               {currentSlideObj.name}
             </h2>
-            <p className="text-lg text-white/90 mb-6">
+            <p className="text-xl md:text-2xl text-gray-100 font-light drop-shadow-md leading-relaxed line-clamp-3">
               {currentSlideObj.description}
             </p>
           </div>
@@ -176,18 +180,23 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
 
       {/* Project overlay when a project slide is active */}
       {currentSlideObj && currentSlideObj.type === "project" && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-background/80 backdrop-blur-md rounded-lg px-4 py-3 w-auto max-w-md lg:left-auto lg:right-6 lg:translate-x-0 lg:w-auto lg:max-w-none">
-          <div className="text-sm font-semibold text-[#6d6f74] line-clamp-1">
-            {currentSlideObj.name}
+        <div className="absolute bottom-8 right-4 lg:right-12 z-20 hidden md:flex items-center gap-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl max-w-sm animate-fade-in">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-gray-300 uppercase tracking-wider font-semibold mb-1">
+              {tString("common.viewDetails")}
+            </p>
+            <h3 className="text-lg font-bold text-white truncate">
+              {currentSlideObj.name}
+            </h3>
           </div>
           <Link to={currentSlideObj.link}>
-            <Button size="sm" className="whitespace-nowrap">
-              {tString("hero.viewProjectButton") ||
-                tString("common.viewDetails")}
+            <Button
+              size="icon"
+              className="rounded-full bg-white text-primary hover:bg-gray-100 h-12 w-12 shadow-lg">
               {language === "ar" ? (
-                <ArrowLeft className="ml-2 h-4 w-4" />
+                <ArrowLeft className="h-5 w-5" />
               ) : (
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="h-5 w-5" />
               )}
             </Button>
           </Link>
@@ -195,40 +204,59 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       )}
 
       {/* Carousel arrow controls (bottom-left, rectangular) */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-24 z-30 flex items-center gap-3 lg:left-6 lg:translate-x-0 lg:bottom-6">
-        <button
-          aria-label={language === "ar" ? "السابق" : "Previous slide"}
-          onClick={prevSlide}
-          className="bg-white/90 hover:bg-white px-3 py-2 rounded-md shadow-md flex items-center"
-          style={{ backdropFilter: "blur(6px)" }}>
-          <ChevronLeft className="h-5 w-5 text-[#6d6f74]" />
-          <span className="sr-only">
-            {language === "ar" ? "السابق" : "Previous"}
-          </span>
-        </button>
+      <div className="absolute bottom-8 left-4 lg:left-12 z-30 flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <button
+            aria-label={language === "ar" ? "السابق" : "Previous slide"}
+            onClick={prevSlide}
+            className="group bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/10 text-white p-3 rounded-full transition-all duration-300 hover:scale-110">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">
+              {language === "ar" ? "السابق" : "Previous"}
+            </span>
+          </button>
 
-        <button
-          aria-label={language === "ar" ? "التالي" : "Next slide"}
-          onClick={nextSlide}
-          className="bg-white/90 hover:bg-white px-3 py-2 rounded-md shadow-md flex items-center"
-          style={{ backdropFilter: "blur(6px)" }}>
-          <ChevronRight className="h-5 w-5 text-[#6d6f74]" />
-          <span className="sr-only">
-            {language === "ar" ? "التالي" : "Next"}
-          </span>
-        </button>
+          <button
+            aria-label={language === "ar" ? "التالي" : "Next slide"}
+            onClick={nextSlide}
+            className="group bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/10 text-white p-3 rounded-full transition-all duration-300 hover:scale-110">
+            <ChevronRight className="h-6 w-6" />
+            <span className="sr-only">
+              {language === "ar" ? "التالي" : "Next"}
+            </span>
+          </button>
+        </div>
+
+        {/* Slide Indicators */}
+        <div className="flex gap-2 ml-4">
+          {backgroundImages.map((_, idx) => (
+            <div
+              key={idx}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                idx === currentSlide ? "w-8 bg-white" : "w-2 bg-white/40"
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Progress Bar */}
       {autoPlay && (
-        <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20">
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10">
           <div
-            className="h-full bg-white transition-all duration-300 ease-linear"
+            className="h-full bg-primary shadow-[0_0_10px_rgba(255,255,255,0.5)]"
             style={{
               width: `${((currentSlide + 1) / backgroundImages.length) * 100}%`,
-              animation: `progressBar ${autoPlayInterval}ms linear infinite`,
-            }}
-          />
+              transition: "width 0.5s ease-out",
+            }}>
+            <div
+              className="h-full w-full bg-white/30"
+              style={{
+                animation: `progressBar ${autoPlayInterval}ms linear infinite`,
+                transformOrigin: "left",
+              }}
+            />
+          </div>
         </div>
       )}
     </section>

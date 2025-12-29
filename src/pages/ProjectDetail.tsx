@@ -7,6 +7,7 @@ import { getFileUrl, formatDate } from "@/lib/utils";
 import { ReservationModal } from "@/components/ReservationModal";
 import { UnitDetailsModal } from "@/components/UnitDetailsModal";
 import { ProjectLocation } from "@/components/ProjectLocation";
+import { RequestInfoModal } from "@/components/RequestInfoModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,7 @@ import {
   Phone,
   Mail,
   Calendar,
+  Share2,
 } from "lucide-react";
 import { Unit } from "@/types/unit";
 
@@ -40,6 +42,8 @@ const ProjectDetail = () => {
   const [isReservationModalOpen, setIsReservationModalOpen] =
     React.useState(false);
   const [isUnitDetailsModalOpen, setIsUnitDetailsModalOpen] =
+    React.useState(false);
+  const [isRequestInfoModalOpen, setIsRequestInfoModalOpen] =
     React.useState(false);
 
   useEffect(() => {
@@ -71,6 +75,18 @@ const ProjectDetail = () => {
   const closeReservationModal = () => {
     setIsReservationModalOpen(false);
     setSelectedUnit(null);
+  };
+
+  const handleShare = () => {
+    if (navigator.share && project) {
+      navigator
+        .share({
+          title: project.nameAr,
+          text: project.descriptionAr,
+          url: window.location.href,
+        })
+        .catch((error) => console.error("Error sharing project", error));
+    }
   };
 
   if (loading) {
@@ -535,10 +551,23 @@ const ProjectDetail = () => {
                 </div>
 
                 <div className="mt-6 space-y-3">
-                  <Button className="w-full bg-gradient-primary hover:opacity-90">
-                    <Phone className="mr-2 h-4 w-4" />
-                    {tString("projectDetails.callUs")}
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setIsRequestInfoModalOpen(true)}>
+                    <Mail className="mr-2 h-4 w-4" />
+                    {tString("projectDetails.requestInfo")}
                   </Button>
+
+                  {navigator.share && (
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={handleShare}>
+                      <Share2 className="mr-2 h-4 w-4" />
+                      {tString("projectDetails.shareProject")}
+                    </Button>
+                  )}
 
                   {project.projectBrochurePdfUrl && (
                     <Button variant="outline" className="w-full" asChild>
@@ -564,9 +593,13 @@ const ProjectDetail = () => {
                     </Button>
                   )}
 
-                  <Button variant="outline" className="w-full">
-                    <Mail className="mr-2 h-4 w-4" />
-                    {tString("projectDetails.requestInfo")}
+                  <Button
+                    className="w-full bg-gradient-primary hover:opacity-90"
+                    asChild>
+                    <a href="tel:16990">
+                      <Phone className="mr-2 h-4 w-4" />
+                      {tString("projectDetails.callUs")}
+                    </a>
                   </Button>
                 </div>
               </CardContent>
@@ -587,6 +620,12 @@ const ProjectDetail = () => {
         isOpen={isUnitDetailsModalOpen}
         onClose={() => setIsUnitDetailsModalOpen(false)}
         unit={detailUnit}
+      />
+
+      <RequestInfoModal
+        isOpen={isRequestInfoModalOpen}
+        onClose={() => setIsRequestInfoModalOpen(false)}
+        projectName={language === "ar" ? project.nameAr : project.nameEn}
       />
 
       {lightboxOpen && (

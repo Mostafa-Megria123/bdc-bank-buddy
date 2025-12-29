@@ -147,46 +147,89 @@ const ProjectDetail = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
-      <section className="relative h-[60vh] overflow-hidden">
+      <section className="relative h-[85vh] min-h-[600px] overflow-hidden group">
         <div className="absolute inset-0">
           <img
             src={heroImage}
             alt={name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
             onError={(e) => (e.currentTarget.src = "/placeholder.svg")}
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent opacity-60" />
         </div>
 
-        <div className="absolute inset-0 flex items-end p-8 sm:p-16">
-          <div className="max-w-4xl text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <span className="bg-primary px-3 py-1 rounded-full text-sm font-medium">
+        <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-12 lg:p-20">
+          <div className="max-w-5xl w-full animate-fade-in space-y-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge className="bg-primary hover:bg-primary/90 text-white px-4 py-1.5 text-sm font-medium border-0 shadow-lg">
                 {language === "ar"
                   ? project.projectStatus.statusAr
                   : project.projectStatus.statusEn}
-              </span>
-              <span className="flex items-center text-sm bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                <MapPin className="h-3 w-3 mr-1" />
+              </Badge>
+              <Badge
+                variant="outline"
+                className="bg-black/30 backdrop-blur-md border-white/20 text-white px-4 py-1.5 text-sm font-medium">
+                <MapPin className="h-3.5 w-3.5 mr-2" />
                 {project.location}
-              </span>
+              </Badge>
+              <Badge
+                variant="outline"
+                className="bg-black/30 backdrop-blur-md border-white/20 text-white px-4 py-1.5 text-sm font-medium">
+                <Building className="h-3.5 w-3.5 mr-2" />
+                {developer}
+              </Badge>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">{name}</h1>
-            <p className="text-xl text-white/90 max-w-2xl">{description}</p>
+
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
+                {name}
+              </h1>
+              <p className="text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed line-clamp-3 drop-shadow-md">
+                {description}
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-white/20 flex flex-wrap gap-8 text-white">
+              <div>
+                <p className="text-sm text-gray-300 mb-1">
+                  {tString("projectDetails.priceRange")}
+                </p>
+                <p className="text-xl font-semibold">
+                  {project.priceMin.toLocaleString()} -{" "}
+                  {project.priceMax.toLocaleString()}{" "}
+                  <span className="text-sm font-normal">
+                    {tString("common.currency")}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-300 mb-1">
+                  {tString("projectDetails.availableUnits")}
+                </p>
+                <p className="text-xl font-semibold">
+                  {availableUnitsCount}{" "}
+                  <span className="text-sm font-normal">
+                    {tString("projectDetails.of")} {project.totalUnits}
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="absolute top-8 left-8">
+        <div className="absolute top-6 left-6 z-20">
           <Button
-            variant="outline"
-            className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20"
-            onClick={() => navigate("/projects")}>
+            variant="ghost"
+            size="icon"
+            className="bg-black/20 backdrop-blur-md text-white hover:bg-black/40 rounded-full h-12 w-12 border border-white/10"
+            onClick={() => navigate("/projects")}
+            title={tString("projectDetails.backToProjects")}>
             {language === "ar" ? (
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="h-6 w-6" />
             ) : (
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="h-6 w-6" />
             )}
-            {tString("projectDetails.backToProjects")}
           </Button>
         </div>
       </section>

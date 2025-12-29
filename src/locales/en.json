@@ -1,4 +1,11 @@
 {
+    "home": {
+    "about": {
+      "title": "About BDC Real Estate",
+      "subtitle": "Discover our commitment to excellence and innovation in creating vibrant communities and landmark properties.",
+      "button": "Learn More About Us"
+    }
+  },
   "nav": {
     "home": "Home",
     "announcements": "Announcements",

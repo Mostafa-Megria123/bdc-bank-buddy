@@ -10,13 +10,7 @@ import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
-
-interface Ad {
-  id: string;
-  title: string;
-  image: string;
-  link: string;
-}
+import bdcAbout from "@/assets/about-us-corporate.png";
 
 const Index = () => {
   const { language, t, tString } = useLanguage();
@@ -41,13 +35,50 @@ const Index = () => {
     fetchData();
   }, []);
 
-  const rawAds = t("ads.list");
-  const ads: Ad[] = Array.isArray(rawAds) ? (rawAds as unknown as Ad[]) : [];
-
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
       <HeroCarousel autoPlay={true} autoPlayInterval={6000} />
+
+      {/* About Us Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <Card className="overflow-hidden border-0 shadow-elegant bg-card/80 backdrop-blur-sm relative z-10 shadow-xl bg-background/50 backdrop-blur-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-center">
+              <div className="p-8 md:p-12 lg:p-16 animate-fade-in">
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  {tString("home.about.title")}
+                </h2>
+                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                  {tString("home.about.subtitle")}
+                </p>
+                <Link to="/about">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-primary hover:shadow-brand transition-all duration-500 text-lg py-6 group/button">
+                    <span className="flex items-center justify-center">
+                      {tString("home.about.button")}
+                      {language === "ar" ? (
+                        <ArrowLeft className="mr-3 h-5 w-5 group-hover/button:-translate-x-1 transition-transform duration-300" />
+                      ) : (
+                        <ArrowRight className="ml-3 h-5 w-5 group-hover/button:translate-x-1 transition-transform duration-300" />
+                      )}
+                    </span>
+                  </Button>
+                </Link>
+              </div>
+              <div className="relative h-64 md:h-full min-h-[300px] overflow-hidden">
+                <img
+                  src={bdcAbout}
+                  alt={tString("home.about.title")}
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent md:bg-gradient-to-l" />
+              </div>
+            </div>
+          </Card>
+        </div>
+      </section>
 
       {/* Announcements Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
@@ -204,47 +235,6 @@ const Index = () => {
                 </Card>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* Ads Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {tString("ads.sectionTitle")}
-            </h2>
-            <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {ads.map((ad, index) => (
-              <Card
-                key={ad.id}
-                className="overflow-hidden hover:shadow-brand transition-all duration-500 group cursor-pointer animate-fade-in hover:scale-105 hover:-rotate-1"
-                style={{ animationDelay: `${index * 0.3}s` }}>
-                <div className="relative overflow-hidden">
-                  <img
-                    src={getFileUrl(ad.image)}
-                    alt={ad.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button className="bg-white text-bdc-orange hover:bg-white/90">
-                      {tString("common.viewDetails")}
-                    </Button>
-                  </div>
-                </div>
-
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-foreground text-center">
-                    {ad.title}
-                  </h3>
-                </CardContent>
-              </Card>
-            ))}
           </div>
         </div>
       </section>

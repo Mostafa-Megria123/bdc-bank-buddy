@@ -34,7 +34,8 @@ const ProjectDetail = () => {
   const [lightboxStartIndex, setLightboxStartIndex] = useState(0);
   const [isReservationModalOpen, setIsReservationModalOpen] =
     React.useState(false);
-  const [isUnitDetailsModalOpen, setIsUnitDetailsModalOpen] = React.useState(false);
+  const [isUnitDetailsModalOpen, setIsUnitDetailsModalOpen] =
+    React.useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -95,6 +96,10 @@ const ProjectDetail = () => {
     language === "ar" ? project.developerAr : project.developerEn;
   const amenities =
     language === "ar" ? project.amenitiesAr : project.amenitiesEn;
+  const additionalDescription =
+    language === "ar"
+      ? project.additionalDescriptionAr
+      : project.additionalDescriptionEn;
   const heroImage = project.projectGallery?.[0]?.imagePath
     ? getFileUrl(project.projectGallery[0].imagePath)
     : "/placeholder.svg";
@@ -202,6 +207,17 @@ const ProjectDetail = () => {
                     </span>
                   ))}
                 </div>
+
+                {additionalDescription && (
+                  <div className="mt-8">
+                    <h3 className="text-lg font-semibold mb-3">
+                      {language === "ar" ? "تفاصيل إضافية" : "Additional Description"}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {additionalDescription}
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

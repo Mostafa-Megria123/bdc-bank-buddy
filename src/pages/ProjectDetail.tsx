@@ -174,12 +174,16 @@ const ProjectDetail = () => {
           <div className="lg:col-span-2 space-y-8">
             <Card>
               <CardContent className="p-8">
-                <h2 className="text-2xl font-bold mb-6">{tString("projectDetails.aboutProject")}</h2>
+                <h2 className="text-2xl font-bold mb-6">
+                  {tString("projectDetails.aboutProject")}
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div className="flex items-start gap-3">
                     <Building className="h-5 w-5 text-primary mt-1" />
                     <div>
-                      <p className="text-sm text-muted-foreground">{tString("projectDetails.developer")}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {tString("projectDetails.developer")}
+                      </p>
                       <p className="font-medium">{developer}</p>
                     </div>
                   </div>
@@ -198,7 +202,9 @@ const ProjectDetail = () => {
                   </div>
                 </div>
 
-                <h3 className="text-lg font-semibold mb-3">Amenities</h3>
+                <h3 className="text-lg font-semibold mb-3">
+                  {tString("projectDetails.amenities")}
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {amenities.split(",").map((amenity, idx) => (
                     <span
@@ -467,15 +473,35 @@ const ProjectDetail = () => {
           <div className="space-y-6">
             <Card className="bg-primary text-white">
               <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">{tString("projectDetails.interestedTitle")}</h3>
+                <h3 className="text-xl font-bold mb-4">
+                  {tString("projectDetails.interestedTitle")}
+                </h3>
                 <p className="mb-6 text-white/90">
                   {tString("projectDetails.interestedDesc")}
                 </p>
                 <div className="space-y-3">
-                  <Button variant="secondary" className="w-full">
-                    <Download className="mr-2 h-4 w-4" />
-                    {tString("projectDetails.downloadBrochure")}
-                  </Button>
+                  {project.projectBrochurePdfUrl && (
+                    <Button variant="secondary" className="w-full" asChild>
+                      <a
+                        href={getFileUrl(project.projectBrochurePdfUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        <Download className="mr-2 h-4 w-4" />
+                        {tString("projectDetails.downloadBrochure")}
+                      </a>
+                    </Button>
+                  )}
+                  {project.floorPlansPdfUrl && (
+                    <Button variant="secondary" className="w-full" asChild>
+                      <a
+                        href={getFileUrl(project.floorPlansPdfUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        <Download className="mr-2 h-4 w-4" />
+                        {tString("projectDetails.downloadFloorPlans")}
+                      </a>
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     className="w-full bg-transparent border-white text-white hover:bg-white/10">

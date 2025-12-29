@@ -106,7 +106,9 @@
     "interestedTitle": "Interested?",
     "interestedDesc": "Download the brochure or contact us for more details.",
     "downloadBrochure": "Download Brochure",
-    "contactSales": "Contact Sales"
+    "contactSales": "Contact Sales",
+    "downloadFloorPlans": "Download Floor Plans",
+    "amenities": "Amenities"
   },
   "ads": {
     "sectionTitle": "Special Offers",

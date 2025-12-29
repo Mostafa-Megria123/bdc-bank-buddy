@@ -106,7 +106,9 @@
     "interestedTitle": "مهتم؟",
     "interestedDesc": "قم بتنزيل الكتيب أو اتصل بنا لمزيد من التفاصيل.",
     "downloadBrochure": "تنزيل الكتيب",
-    "contactSales": "تواصل مع المبيعات"
+    "contactSales": "تواصل مع المبيعات",
+    "downloadFloorPlans": "تنزيل المخططات",
+    "amenities": "المرافق والميزات"
   },
   "ads": {
     "sectionTitle": "العروض الخاصة",

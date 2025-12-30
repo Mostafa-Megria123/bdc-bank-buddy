@@ -82,7 +82,6 @@ export const AnnouncementService = {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("Announcement fetched successfully:", result);
       return normalizeAnnouncement(result);
     } catch (error) {
       console.error("Error fetching announcement:", error, "URL:", url);

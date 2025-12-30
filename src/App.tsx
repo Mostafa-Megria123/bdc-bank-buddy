@@ -29,7 +29,9 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
+          <BrowserRouter
+            basename="/bdc-real-estate"
+            future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
             <ScrollToTop />
             <div className="min-h-screen flex flex-col">
               <Navigation />

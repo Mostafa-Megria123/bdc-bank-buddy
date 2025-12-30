@@ -28,12 +28,12 @@ export default function FAQs() {
 
         const mapped: DisplayFaq[] = data
           .slice()
-          .sort((a: Faq, b: Faq) => a.order - b.order)
+          .sort((a: Faq, b: Faq) => a.displayOrder - b.displayOrder)
           .map((d: Faq) => ({
-            id: d.id !== undefined ? String(d.id) : String(d.order),
-            question: language === "ar" ? d.question_ar : d.question_en,
-            answer: language === "ar" ? d.answer_ar : d.answer_en,
-            order: d.order ?? 0,
+            id: d.id !== undefined ? String(d.id) : String(d.displayOrder),
+            question: language === "ar" ? d.questionAr : d.questionEn,
+            answer: language === "ar" ? d.answerAr : d.answerEn,
+            order: d.displayOrder ?? 0,
           }));
 
         setFaqs(mapped);

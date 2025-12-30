@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/contexts/useLanguage';
-import { Menu, X, Globe } from 'lucide-react';
-import bdcLogo from '@/assets/bdc-logo.png';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/useLanguage";
+import { Menu, X, Globe } from "lucide-react";
+import bdcLogo from "@/assets/bdc-logo.png";
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,18 +12,18 @@ export const Navigation: React.FC = () => {
   const location = useLocation();
 
   const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'ar' : 'en');
+    setLanguage(language === "en" ? "ar" : "en");
   };
 
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
-    { path: '/', label: tString('nav.home') },
-    { path: '/announcements', label: tString('nav.announcements') },
-    { path: '/projects', label: tString('nav.projects') || 'Projects' },
-    { path: '/faqs', label: tString('nav.faqs') },
-    { path: '/about', label: tString('nav.about') },
-    { path: '/my-reservations', label: tString('nav.myReservations') }
+    { path: "/", label: tString("nav.home") },
+    { path: "/announcements", label: tString("nav.announcements") },
+    { path: "/projects", label: tString("nav.projects") || "Projects" },
+    { path: "/faqs", label: tString("nav.faqs") },
+    { path: "/about", label: tString("nav.about") },
+    { path: "/my-reservations", label: tString("nav.myReservations") },
   ];
 
   return (
@@ -46,11 +46,11 @@ export const Navigation: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive(item.path)
-                      ? 'bg-gradient-primary text-white'
-                      : 'text-secondary hover:text-primary hover:bg-muted'
-                    }`}
-                >
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive(item.path)
+                      ? "bg-gradient-primary text-white"
+                      : "text-secondary hover:text-primary hover:bg-muted"
+                  }`}>
                   {item.label}
                 </Link>
               ))}
@@ -64,41 +64,38 @@ export const Navigation: React.FC = () => {
               variant="ghost"
               size="sm"
               onClick={toggleLanguage}
-              className="flex items-center space-x-1 rtl:space-x-reverse"
-            >
+              className="flex items-center space-x-1 rtl:space-x-reverse">
               <Globe className="h-4 w-4" />
-              <span>{tString('nav.languageToggle')}</span>
+              <span>{tString("nav.languageToggle")}</span>
             </Button>
 
             {/* Auth Buttons */}
             {isLoggedIn ? (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Button variant="outline" size="sm">
-                  {tString('nav.resetPassword')}
+                  {tString("nav.resetPassword")}
                 </Button>
                 <Button
                   variant="default"
                   size="sm"
                   onClick={() => setIsLoggedIn(false)}
-                  className="bg-gradient-primary hover:opacity-90"
-                >
-                  {tString('nav.logout')}
+                  className="bg-gradient-primary hover:opacity-90">
+                  {tString("nav.logout")}
                 </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Link to="/login">
                   <Button variant="outline" size="sm">
-                    {tString('nav.login')}
+                    {tString("nav.login")}
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button
                     variant="default"
                     size="sm"
-                    className="bg-gradient-primary hover:opacity-90"
-                  >
-                    {tString('nav.register')}
+                    className="bg-gradient-primary hover:opacity-90">
+                    {tString("nav.register")}
                   </Button>
                 </Link>
               </div>
@@ -111,17 +108,19 @@ export const Navigation: React.FC = () => {
               variant="ghost"
               size="sm"
               onClick={toggleLanguage}
-              className="p-1"
-            >
+              className="p-1">
               <Globe className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="p-1"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              className="p-1">
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
           </div>
         </div>
@@ -135,11 +134,11 @@ export const Navigation: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${isActive(item.path)
-                      ? 'bg-gradient-primary text-white'
-                      : 'text-secondary hover:text-primary hover:bg-muted'
-                    }`}
-                >
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    isActive(item.path)
+                      ? "bg-gradient-primary text-white"
+                      : "text-secondary hover:text-primary hover:bg-muted"
+                  }`}>
                   {item.label}
                 </Link>
               ))}
@@ -150,31 +149,29 @@ export const Navigation: React.FC = () => {
               {isLoggedIn ? (
                 <>
                   <Button variant="outline" size="sm" className="w-full">
-                    {tString('nav.resetPassword')}
+                    {tString("nav.resetPassword")}
                   </Button>
                   <Button
                     variant="default"
                     size="sm"
                     onClick={() => setIsLoggedIn(false)}
-                    className="w-full bg-gradient-primary hover:opacity-90"
-                  >
-                    {tString('nav.logout')}
+                    className="w-full bg-gradient-primary hover:opacity-90">
+                    {tString("nav.logout")}
                   </Button>
                 </>
               ) : (
                 <>
                   <Link to="/login" className="block">
                     <Button variant="outline" size="sm" className="w-full">
-                      {tString('nav.login')}
+                      {tString("nav.login")}
                     </Button>
                   </Link>
                   <Link to="/register" className="block">
                     <Button
                       variant="default"
                       size="sm"
-                      className="w-full bg-gradient-primary hover:opacity-90"
-                    >
-                      {tString('nav.register')}
+                      className="w-full bg-gradient-primary hover:opacity-90">
+                      {tString("nav.register")}
                     </Button>
                   </Link>
                 </>

@@ -1,5 +1,5 @@
 {
-    "home": {
+  "home": {
     "about": {
       "title": "About BDC Real Estate",
       "subtitle": "Discover our commitment to excellence and innovation in creating vibrant communities and landmark properties.",
@@ -163,7 +163,7 @@
     "executorDept": "Executor & Trustee Dept.",
     "additionalInfoTitle": "Additional Info",
     "workingHoursDays": "Working Hours: Sunday - Thursday",
-    "workingHoursTime": "9:00 AM - 3:00 PM",
+    "workingHoursTime": "8:00 AM - 4:00 PM",
     "privacyPolicy": "Privacy Policy"
   },
   "announcementDetails": {

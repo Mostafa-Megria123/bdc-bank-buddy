@@ -10,6 +10,8 @@ import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
+import { AboutService } from "@/services/about.service";
+import { About } from "@/types/about";
 import bdcAbout from "@/assets/about-us-corporate.png";
 
 const Index = () => {
@@ -18,16 +20,21 @@ const Index = () => {
     Announcement[]
   >([]);
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
+  const [aboutData, setAboutData] = useState<About | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [announcementsData, projectsData] = await Promise.all([
+        const [announcementsData, projectsData, aboutList] = await Promise.all([
           AnnouncementService.getLatest(3),
           ProjectService.getFeaturedProjects(),
+          AboutService.getAll(),
         ]);
         setLatestAnnouncements(announcementsData);
         setFeaturedProjects(projectsData);
+        if (aboutList && aboutList.length > 0) {
+          setAboutData(aboutList[0]);
+        }
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -47,10 +54,18 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 items-center">
               <div className="p-8 md:p-12 lg:p-16 animate-fade-in">
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  {tString("home.about.title")}
+                  {aboutData
+                    ? language === "ar"
+                      ? aboutData.titleAr
+                      : aboutData.titleEn
+                    : tString("home.about.title")}
                 </h2>
-                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                  {tString("home.about.subtitle")}
+                <p className="text-lg text-muted-foreground mb-8 leading-relaxed line-clamp-6">
+                  {aboutData
+                    ? language === "ar"
+                      ? aboutData.descriptionAr
+                      : aboutData.descriptionEn
+                    : tString("home.about.subtitle")}
                 </p>
                 <Link to="/about">
                   <Button

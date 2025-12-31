@@ -8,26 +8,53 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Search, MessageCircleQuestion } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { Input } from "@/components/ui/input";
 import FaqService, { Faq } from "@/services/faq.Service";
 import { DisplayFaq } from "@/types/faq";
 import SectionTitle from "@/components/SectionTitle";
+import { ContactInfo } from "@/types/contactInfo";
+import { ContactInfoService } from "@/services/contactInfo.service";
+
+// Helper component to render icon from string name
+const DynamicIcon = ({
+  name,
+  className,
+}: {
+  name: string;
+  className?: string;
+}) => {
+  const IconComponent = (
+    LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>
+  )[name];
+
+  if (!IconComponent) {
+    return <LucideIcons.HelpCircle className={className} />;
+  }
+
+  return <IconComponent className={className} />;
+};
 
 export default function FAQs() {
   const { language, tString } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [faqs, setFaqs] = useState<DisplayFaq[]>([]);
+  const [contactInfos, setContactInfos] = useState<ContactInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
 
-    const loadFaqs = async () => {
+    const fetchData = async () => {
       try {
-        const data = await FaqService.getAll();
+        const [faqData, contactData] = await Promise.all([
+          FaqService.getAll(),
+          ContactInfoService.getAll(),
+        ]);
+
         if (!mounted) return;
 
-        const mapped: DisplayFaq[] = data
+        const mapped: DisplayFaq[] = faqData
           .slice()
           .sort((a: Faq, b: Faq) => a.displayOrder - b.displayOrder)
           .map((d: Faq) => ({
@@ -38,14 +65,18 @@ export default function FAQs() {
           }));
 
         setFaqs(mapped);
+
+        if (contactData) {
+          setContactInfos(contactData);
+        }
       } catch (error) {
-        console.error("Error loading FAQs:", error);
+        console.error("Error loading data:", error);
       } finally {
         if (mounted) setIsLoading(false);
       }
     };
 
-    loadFaqs();
+    fetchData();
 
     return () => {
       mounted = false;
@@ -125,28 +156,38 @@ export default function FAQs() {
 
       {/* Contact Section */}
       <section className="py-20 bg-muted/30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Card className="bg-gradient-primary text-white animate-fade-in">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-4">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Card className="bg-gradient-primary text-white animate-fade-in overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-full bg-white/5 opacity-10" />
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+
+            <CardContent className="p-12 relative z-10">
+              <h2 className="text-3xl font-bold mb-4">
                 {tString("faqsPage.cta.title")}
               </h2>
-              <p className="text-white/90 mb-6">
+              <p className="text-white/90 mb-10 text-lg max-w-2xl mx-auto">
                 {tString("faqsPage.cta.subtitle")}
               </p>
-              <div className="space-y-4">
-                <div>
-                  <p className="font-semibold mb-2">
-                    {tString("common.hotline")}
-                  </p>
-                  <p className="text-xl font-bold">19033</p>
-                </div>
-                <div>
-                  <p className="font-semibold mb-2">
-                    {tString("common.email")}
-                  </p>
-                  <p className="text-lg">info@bdc.com.eg</p>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {contactInfos.map((info, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center p-6 bg-white/10 rounded-xl backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1">
+                    <div className="p-3 bg-white/20 rounded-full mb-4 shadow-lg">
+                      <DynamicIcon
+                        name={info.icon}
+                        className="h-6 w-6 text-white"
+                      />
+                    </div>
+                    <h3 className="font-semibold mb-2 text-lg">
+                      {language === "ar" ? info.titleAr : info.titleEn}
+                    </h3>
+                    <p className="text-white/90 font-medium dir-ltr">
+                      {info.value}
+                    </p>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

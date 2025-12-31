@@ -160,31 +160,31 @@ const Projects: React.FC = () => {
       </section>
 
       {/* CTA Section (reuse patterns from Announcements) */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="overflow-hidden border-0 shadow-elegant animate-fade-in">
-            <div className="relative bg-gradient-primary p-12 md:p-16">
-              <div className="absolute inset-0 bg-[url('/placeholder.svg')] bg-cover bg-center opacity-10" />
-              <div className="relative text-center text-white">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  {tString("projects.cta.title")}
-                </h2>
-                <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
-                  {tString("projects.cta.subtitle")}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-                  <input
-                    type="email"
-                    placeholder={tString("common.enterYourEmail")}
-                    className="flex-1 px-6 py-4 rounded-xl text-foreground bg-background/95 backdrop-blur-md border-0 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 text-lg"
-                  />
-                  <Button className="bg-background text-primary hover:bg-background/90 px-8 py-4 font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale">
-                    {tString("common.subscribe")}
-                  </Button>
-                </div>
+      <section className="py-20 relative">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Card className="overflow-hidden border-0 shadow-elegant animate-fade-in bg-gradient-primary text-white relative">
+            <div className="absolute top-0 left-0 w-full h-full bg-white/5 opacity-10" />
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+
+            <CardContent className="p-12 md:p-16 relative z-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                {tString("projects.cta.title")}
+              </h2>
+              <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+                {tString("projects.cta.subtitle")}
+              </p>
+              <div className="flex gap-3 max-w-lg mx-auto">
+                <input
+                  type="email"
+                  placeholder={tString("common.enterYourEmail")}
+                  className="flex-1 px-6 py-4 rounded-xl text-foreground bg-background/95 backdrop-blur-md border-0 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 text-lg"
+                />
+                <Button className="bg-background text-primary hover:bg-background/90 px-8 py-4 my-4 font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale">
+                  {tString("common.subscribe")}
+                </Button>
               </div>
-            </div>
+            </CardContent>
           </Card>
         </div>
       </section>

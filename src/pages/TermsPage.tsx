@@ -1,5 +1,5 @@
 import React from "react";
-import TermsSection from "@/components/TermsSection";
+import { TermsSection } from "@/components/TermsSection";
 
 export default function TermsPage() {
   return (

@@ -7,10 +7,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Search } from "lucide-react";
+import { Search, MessageCircleQuestion } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import FaqService, { Faq } from "@/services/faq.Service";
 import { DisplayFaq } from "@/types/faq";
+import SectionTitle from "@/components/SectionTitle";
 
 export default function FAQs() {
   const { language, tString } = useLanguage();
@@ -62,9 +63,10 @@ export default function FAQs() {
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-            {tString("faqsPage.title")}
-          </h1>
+          <SectionTitle
+            title={tString("faqsPage.title")}
+            icon={MessageCircleQuestion}
+          />
           <p className="text-xl text-muted-foreground mb-8 animate-fade-in">
             {tString("faqsPage.subtitle")}
           </p>

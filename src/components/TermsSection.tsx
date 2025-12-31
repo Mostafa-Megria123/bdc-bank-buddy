@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Terms } from "@/types/terms";
 import { TermsService } from "@/services/terms.service";
-import { useLanguage } from "@/contexts/useLanguage";
 import { Loader2, FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import SectionTitle from "@/components/SectionTitle";
+import { useLanguage } from "@/contexts/useLanguage";
 
-const TermsSection = () => {
+export const TermsSection = () => {
   const [terms, setTerms] = useState<Terms | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { language } = useLanguage();
@@ -42,9 +43,6 @@ const TermsSection = () => {
     <section className="py-20 bg-muted/30">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
-          <div className="w-16 h-16 bg-gradient-primary rounded-2xl rotate-3 flex items-center justify-center mx-auto mb-6 shadow-lg transition-transform hover:rotate-6 duration-300">
-            <FileText className="h-8 w-8 text-white -rotate-3" />
-          </div>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             {language === "en" ? "Terms and Conditions" : "الشروط والأحكام"}
           </h2>
@@ -64,5 +62,3 @@ const TermsSection = () => {
     </section>
   );
 };
-
-export default TermsSection;

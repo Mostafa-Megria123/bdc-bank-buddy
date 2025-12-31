@@ -5,7 +5,7 @@ import VisionMissionSection from "@/components/VisionMissionSection";
 import ValuesSection from "@/components/ValuesSection";
 import AboutSection from "@/components/AboutSection";
 import ContactInfoSection from "@/components/ContactInfoSection";
-import TermsSection from "@/components/TermsSection";
+import { TermsSection } from "@/components/TermsSection";
 
 const About = () => {
   const { language } = useLanguage();

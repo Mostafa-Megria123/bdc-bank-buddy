@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { getFileUrl, formatDate } from "@/lib/utils";
 import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
+import SectionTitle from "@/components/SectionTitle";
 
 const Announcements = () => {
   const { language, tString } = useLanguage();
@@ -79,9 +80,10 @@ const Announcements = () => {
         <div className="absolute inset-0 bg-gradient-primary/5" />
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="animate-fade-in">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-              {tString("announcementsPage.sectionTitle")}
-            </h1>
+            <SectionTitle
+              title={tString("announcementsPage.sectionTitle")}
+              icon={Calendar}
+            />
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               {tString("announcementsPage.sectionSubtitle")}
             </p>

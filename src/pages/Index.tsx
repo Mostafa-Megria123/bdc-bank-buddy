@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { ArrowRight, ArrowLeft, Calendar, Home, Download } from "lucide-react";
-import { getFileUrl, formatDate } from "@/lib/utils";
+import { getFileUrl, formatDate, cn } from "@/lib/utils";
 import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
 import { ProjectService } from "@/services/project-service";
@@ -14,6 +14,7 @@ import { AboutService } from "@/services/about.service";
 import { About } from "@/types/about";
 import bdcAbout from "@/assets/about-us-corporate.png";
 
+import SectionTitle from "@/components/SectionTitle";
 const Index = () => {
   const { language, t, tString } = useLanguage();
   const [latestAnnouncements, setLatestAnnouncements] = useState<
@@ -60,7 +61,8 @@ const Index = () => {
                       : aboutData.titleEn
                     : tString("home.about.title")}
                 </h2>
-                <p className="text-lg text-muted-foreground mb-8 leading-relaxed line-clamp-6">
+                <div className="w-24 h-1 bg-gradient-primary rounded-full"></div>
+                <p className="text-lg text-muted-foreground mb-8 leading-relaxed line-clamp-6 py-6">
                   {aboutData
                     ? language === "ar"
                       ? aboutData.descriptionAr
@@ -98,12 +100,10 @@ const Index = () => {
       {/* Announcements Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {tString("announcementsPage.sectionTitle")}
-            </h2>
-            <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
-          </div>
+          <SectionTitle
+            title={tString("announcementsPage.sectionTitle")}
+            icon={Calendar}
+          />
 
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent animate-pulse" />
@@ -161,12 +161,7 @@ const Index = () => {
       {/* Projects Section */}
       <section className="py-20 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {tString("projects.sectionTitle")}
-            </h2>
-            <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
-          </div>
+          <SectionTitle title={tString("projects.sectionTitle")} icon={Home} />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {featuredProjects.map((project, index) => {

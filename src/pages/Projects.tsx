@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { getFileUrl } from "@/lib/utils";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
+import SectionTitle from "@/components/SectionTitle";
 
 const Projects: React.FC = () => {
   const { language, tString } = useLanguage();
@@ -52,9 +53,11 @@ const Projects: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-primary/5" />
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="animate-fade-in">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-              {tString("projects.sectionTitle")}
-            </h1>
+            <SectionTitle
+              title={tString("projects.sectionTitle")}
+              icon={Home}
+            />
+
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               {tString("projects.sectionSubtitle")}
             </p>

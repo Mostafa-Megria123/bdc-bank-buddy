@@ -20,5 +20,6 @@ export const endpoints = {
   projects: `${config.apiBaseUrl}/projects`,
   projectStatuses: `${config.apiBaseUrl}/project-status`,
   unitStatuses: `${config.apiBaseUrl}/unit-statuses`,
+  privacyPolicy: `${config.apiBaseUrl}/privacy-policy`,
   // Add other endpoints here as needed
 } as const;

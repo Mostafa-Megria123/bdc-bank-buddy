@@ -6,7 +6,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import SectionTitle from "@/components/SectionTitle";
 import { useLanguage } from "@/contexts/useLanguage";
 
-export const TermsSection = () => {
+interface TermsSectionProps {
+  withIcon?: boolean;
+}
+
+export const TermsSection = ({ withIcon = false }: TermsSectionProps) => {
   const [terms, setTerms] = useState<Terms | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { language } = useLanguage();
@@ -42,12 +46,21 @@ export const TermsSection = () => {
   return (
     <section className="py-20 bg-muted/30">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {language === "en" ? "Terms and Conditions" : "الشروط والأحكام"}
-          </h2>
-          <div className="w-24 h-1 bg-gradient-primary mx-auto rounded-full"></div>
-        </div>
+        {withIcon ? (
+          <SectionTitle
+            title={
+              language === "en" ? "Terms and Conditions" : "الشروط والأحكام"
+            }
+            icon={FileText}
+          />
+        ) : (
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              {language === "en" ? "Terms and Conditions" : "الشروط والأحكام"}
+            </h2>
+            <div className="w-24 h-1 bg-gradient-primary mx-auto rounded-full"></div>
+          </div>
+        )}
 
         <Card
           className="border-none shadow-elevated bg-card/80 backdrop-blur-sm animate-fade-in"

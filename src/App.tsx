@@ -17,6 +17,7 @@ import Projects from "./pages/Projects";
 import MyReservations from "./pages/MyReservations";
 import ProjectDetail from "./pages/ProjectDetail";
 import NotFound from "./pages/NotFound";
+import TermsPage from "./pages/TermsPage";
 import { AnnouncementDetails } from "@/components/AnnouncementDetails";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
@@ -50,6 +51,7 @@ const App = () => (
                   />
                   <Route path="/projects/:id" element={<ProjectDetail />} />
                   <Route path="/my-reservations" element={<MyReservations />} />
+                  <Route path="/terms" element={<TermsPage />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

@@ -9,6 +9,12 @@ export const config = {
 // API endpoints
 export const endpoints = {
   faqs: `${config.apiBaseUrl}/faqs`,
+  terms: `${config.apiBaseUrl}/termsAndConditions`,
+  about: `${config.apiBaseUrl}/about`,
+  features: `${config.apiBaseUrl}/features`,
+  visionAndMission: `${config.apiBaseUrl}/vision-mission`,
+  values: `${config.apiBaseUrl}/our-values`,
+  contactInfo: `${config.apiBaseUrl}/contact-info`,
   announcements: `${config.apiBaseUrl}/announcements`,
   files: `${config.apiBaseUrl}/files`,
   projects: `${config.apiBaseUrl}/projects`,

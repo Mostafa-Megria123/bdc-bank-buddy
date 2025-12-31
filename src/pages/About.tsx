@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Phone, Mail, MapPin } from "lucide-react";
 import FeaturesSection from "@/components/FeaturesSection";
 import VisionMissionSection from "@/components/VisionMissionSection";
+import ValuesSection from "@/components/ValuesSection";
 
 const About = () => {
   const { language } = useLanguage();
@@ -112,46 +113,12 @@ const About = () => {
       {/* About Content */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <VisionMissionSection />
-            <div className="animate-fade-in">
-              <Card className="bg-gradient-primary text-white p-8">
-                <CardContent className="pt-6">
-                  <h3 className="text-2xl font-bold mb-4">
-                    {language === "ar" ? "قيمنا" : "Our Values"}
-                  </h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-center">
-                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                      {language === "ar"
-                        ? "الشفافية والصدق"
-                        : "Transparency and Honesty"}
-                    </li>
-                    <li className="flex items-center">
-                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                      {language === "ar"
-                        ? "الجودة والتميز"
-                        : "Quality and Excellence"}
-                    </li>
-                    <li className="flex items-center">
-                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                      {language === "ar"
-                        ? "الابتكار والتطوير"
-                        : "Innovation and Development"}
-                    </li>
-                    <li className="flex items-center">
-                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                      {language === "ar"
-                        ? "خدمة العملاء المتميزة"
-                        : "Exceptional Customer Service"}
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          <VisionMissionSection />
         </div>
       </section>
+
+      {/* Values Section */}
+      <ValuesSection />
 
       {/* Contact Section */}
       <section className="py-20 bg-muted/30">

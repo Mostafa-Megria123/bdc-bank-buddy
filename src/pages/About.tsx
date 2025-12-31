@@ -1,46 +1,14 @@
 import React from "react";
 import { useLanguage } from "@/contexts/useLanguage";
 import { Card, CardContent } from "@/components/ui/card";
-import { Phone, Mail, MapPin } from "lucide-react";
 import FeaturesSection from "@/components/FeaturesSection";
 import VisionMissionSection from "@/components/VisionMissionSection";
 import ValuesSection from "@/components/ValuesSection";
 import AboutSection from "@/components/AboutSection";
+import ContactInfoSection from "@/components/ContactInfoSection";
 
 const About = () => {
   const { language } = useLanguage();
-
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: language === "ar" ? "الخط الساخن" : "Hotline",
-      value: "19033",
-      description: language === "ar" ? "متاح 24/7" : "Available 24/7",
-    },
-    {
-      icon: Phone,
-      title:
-        language === "ar"
-          ? "قسم المنفذ والوصي"
-          : "Executor and Trustee Department",
-      value: "+20 2 1234 5678",
-      description:
-        language === "ar" ? "خلال ساعات العمل" : "During business hours",
-    },
-    {
-      icon: Mail,
-      title: language === "ar" ? "البريد الإلكتروني" : "Email",
-      value: "info@bdc.com.eg",
-      description:
-        language === "ar" ? "نرد خلال 24 ساعة" : "We respond within 24 hours",
-    },
-    {
-      icon: MapPin,
-      title: language === "ar" ? "العنوان الرئيسي" : "Main Address",
-      value: language === "ar" ? "القاهرة، مصر" : "Cairo, Egypt",
-      description: language === "ar" ? "المقر الرئيسي" : "Headquarters",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -57,43 +25,7 @@ const About = () => {
       <ValuesSection />
 
       {/* Contact Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {language === "ar" ? "تواصل معنا" : "Contact Us"}
-            </h2>
-            <div className="w-24 h-1 bg-gradient-primary mx-auto"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {contactInfo.map((contact, index) => {
-              const IconComponent = contact.icon;
-              return (
-                <Card
-                  key={contact.title}
-                  className="text-center p-6 hover:shadow-brand transition-all duration-300 group animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}>
-                  <CardContent className="pt-6">
-                    <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                      <IconComponent className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-foreground mb-2">
-                      {contact.title}
-                    </h3>
-                    <p className="text-primary font-medium mb-1">
-                      {contact.value}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {contact.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <ContactInfoSection />
 
       {/* Terms & Conditions */}
       <section className="py-20">

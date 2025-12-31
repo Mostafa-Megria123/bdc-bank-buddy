@@ -1,55 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useLanguage } from "@/contexts/useLanguage";
-import { AboutService } from "@/services/about.service";
-import { About as AboutData } from "@/types/about";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import FeaturesSection from "@/components/FeaturesSection";
 import VisionMissionSection from "@/components/VisionMissionSection";
 import ValuesSection from "@/components/ValuesSection";
+import AboutSection from "@/components/AboutSection";
 
 const About = () => {
   const { language } = useLanguage();
-  const [aboutData, setAboutData] = useState<AboutData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadAboutData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await AboutService.getAll();
-        // The backend returns an array, we only display the first one
-        if (data && data.length > 0) {
-          const first = data[0];
-          setAboutData(first);
-        }
-      } catch (error) {
-        console.error("Error loading About:", error);
-        setError("Failed to load about information");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadAboutData();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh] text-destructive">
-        {error}
-      </div>
-    );
-  }
 
   const contactInfo = [
     {
@@ -86,36 +45,13 @@ const About = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-in">
-            {aboutData
-              ? language === "ar"
-                ? aboutData.titleAr
-                : aboutData.titleEn
-              : language === "ar"
-              ? "عن بنك القاهرة للتنمية والائتمان العقاري"
-              : "About BDC"}
-          </h1>
-          <p className="text-xl text-muted-foreground leading-relaxed animate-fade-in whitespace-pre-wrap">
-            {aboutData
-              ? language === "ar"
-                ? aboutData.descriptionAr
-                : aboutData.descriptionEn
-              : ""}
-          </p>
-        </div>
-      </section>
+      <AboutSection />
 
       {/* Features Section */}
       <FeaturesSection />
 
       {/* About Content */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <VisionMissionSection />
-        </div>
-      </section>
+      <VisionMissionSection />
 
       {/* Values Section */}
       <ValuesSection />

@@ -74,7 +74,6 @@ export const AnnouncementService = {
   // Get a single announcement by ID
   getById: async (id: number): Promise<Announcement> => {
     const url = `${API_URL}/${id}`;
-    console.log("Fetching announcement from:", url);
     try {
       const response = await fetch(url);
       if (!response.ok) {

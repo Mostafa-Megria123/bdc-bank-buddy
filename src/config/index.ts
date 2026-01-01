@@ -17,6 +17,7 @@ export const endpoints = {
   contactInfo: `${config.apiBaseUrl}/contact-info`,
   announcements: `${config.apiBaseUrl}/announcements`,
   files: `${config.apiBaseUrl}/files`,
+  batchFiles: `${config.apiBaseUrl}/files/batch`,
   projects: `${config.apiBaseUrl}/projects`,
   projectStatuses: `${config.apiBaseUrl}/project-status`,
   unitStatuses: `${config.apiBaseUrl}/unit-statuses`,

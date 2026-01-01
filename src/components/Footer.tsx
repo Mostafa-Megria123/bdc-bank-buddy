@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/useLanguage";
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, AArrowDown, AArrowUp, Type } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import bdcLogo from "@/assets/bdc_logo_transparent.png";
 import { ContactInfo } from "@/types/contactInfo";
@@ -64,6 +64,18 @@ export const Footer: React.FC = () => {
     { path: "/faqs", label: tString("nav.faqs") },
     { path: "/about", label: tString("nav.about") },
   ];
+
+  const adjustFontSize = (action: "increase" | "decrease" | "reset") => {
+    const root = document.documentElement;
+    const currentSize = parseFloat(window.getComputedStyle(root).fontSize);
+
+    let newSize = currentSize;
+    if (action === "increase") newSize = Math.min(currentSize + 1, 24);
+    if (action === "decrease") newSize = Math.max(currentSize - 1, 12);
+    if (action === "reset") newSize = 16;
+
+    root.style.fontSize = `${newSize}px`;
+  };
 
   return (
     <footer className="bg-bdc-dark text-white mt-20">
@@ -157,6 +169,33 @@ export const Footer: React.FC = () => {
                 </>
               )}
             </div>
+
+            {/* Font Size */}
+            <div className="pt-4 border-t border-white/10">
+              <p className="text-white/80 text-sm mb-3">
+                {tString("footer.textSize")}
+              </p>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <button
+                  onClick={() => adjustFontSize("decrease")}
+                  className="p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
+                  aria-label="Decrease font size">
+                  <AArrowDown className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => adjustFontSize("reset")}
+                  className="p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
+                  aria-label="Reset font size">
+                  <Type className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => adjustFontSize("increase")}
+                  className="p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
+                  aria-label="Increase font size">
+                  <AArrowUp className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Additional Info */}
@@ -181,6 +220,7 @@ export const Footer: React.FC = () => {
             <p className="text-white/80 text-sm">
               {tString("footer.copyright")}
             </p>
+
             <div className="flex space-x-4 rtl:space-x-reverse">
               <Link
                 to="/privacy"

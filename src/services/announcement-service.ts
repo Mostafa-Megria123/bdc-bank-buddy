@@ -1,3 +1,4 @@
+import axios from "@/lib/axios";
 import { Announcement } from "@/types/announcement";
 import { endpoints, config } from "@/config";
 import { UnitType } from "@/types/unit-type";
@@ -53,12 +54,8 @@ export const AnnouncementService = {
   ): Promise<PaginatedResponse<Announcement>> => {
     const url = `${API_URL}?page=${page}&size=${size}`;
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.error(`HTTP error! status: ${response.status}, url: ${url}`);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
+      const response = await axios.get(url);
+      const data = response.data;
       return {
         ...data,
         content: (data.content || []).map((item: unknown) =>
@@ -75,12 +72,8 @@ export const AnnouncementService = {
   getById: async (id: number): Promise<Announcement> => {
     const url = `${API_URL}/${id}`;
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.error(`HTTP error! status: ${response.status}, url: ${url}`);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
+      const response = await axios.get(url);
+      const result = response.data;
       return normalizeAnnouncement(result);
     } catch (error) {
       console.error("Error fetching announcement:", error, "URL:", url);
@@ -93,12 +86,8 @@ export const AnnouncementService = {
    */
   getLatest: async (limit = 3): Promise<Announcement[]> => {
     const params = new URLSearchParams({ limit: limit.toString() });
-    const response = await fetch(`${API_URL}/latest?${params}`);
-    if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      throw new Error("Failed to fetch latest announcements");
-    }
-    const data = await response.json();
+    const response = await axios.get(`${API_URL}/latest?${params}`);
+    const data = response.data;
     return Array.isArray(data) ? data.map(normalizeAnnouncement) : [];
   },
 };

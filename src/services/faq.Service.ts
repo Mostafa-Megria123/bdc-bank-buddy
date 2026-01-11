@@ -1,3 +1,4 @@
+import axios from "@/lib/axios";
 import { endpoints } from "@/config";
 
 // Types
@@ -15,13 +16,8 @@ const API_URL = endpoints.faqs;
 export const FaqService = {
   // Get all FAQs
   getAll: async (): Promise<Faq[]> => {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
+    const response = await axios.get<Faq[]>(API_URL);
+    return response.data;
   },
 };
 

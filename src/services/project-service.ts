@@ -1,13 +1,6 @@
+import axios from "@/lib/axios";
 import { Project, ProjectFilter } from "@/types/project";
 import { endpoints } from "@/config/index";
-
-const handleResponse = async (response: Response) => {
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Something went wrong");
-  }
-  return response.json();
-};
 
 /**
  * Fetches all projects.
@@ -21,8 +14,8 @@ export const ProjectService = {
     totalPages: number;
   }> => {
     const url = `${endpoints.projects}?page=${page}&size=${size}`;
-    const response = await fetch(url);
-    return handleResponse(response);
+    const response = await axios.get(url);
+    return response.data;
   },
 
   /**
@@ -30,8 +23,8 @@ export const ProjectService = {
    * @param projectId The ID of the project to fetch.
    */
   getProjectById: async (id: string): Promise<Project> => {
-    const response = await fetch(`${endpoints.projects}/${id}`);
-    return handleResponse(response);
+    const response = await axios.get(`${endpoints.projects}/${id}`);
+    return response.data;
   },
 
   /**
@@ -39,8 +32,7 @@ export const ProjectService = {
    */
   getFeaturedProjects: async (): Promise<Project[]> => {
     const url = `${endpoints.projects}?page=0&size=3`;
-    const response = await fetch(url);
-    const data = await handleResponse(response);
-    return data.content;
+    const response = await axios.get(url);
+    return response.data.content;
   },
 };

@@ -1,3 +1,4 @@
+import axios from "@/lib/axios";
 import { PrivacyPolicy } from "@/types/privacyPolicy";
 import { endpoints } from "@/config";
 
@@ -8,12 +9,7 @@ const API_URL = endpoints.privacyPolicy;
 export const PrivacyPolicyService = {
   // Get all PrivacyPolicy
   getAll: async (): Promise<PrivacyPolicy[]> => {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
+    const response = await axios.get<PrivacyPolicy[]>(API_URL);
+    return response.data;
   },
 };

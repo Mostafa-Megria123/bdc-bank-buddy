@@ -9,7 +9,7 @@ export const config = {
 // API endpoints
 export const endpoints = {
   faqs: `${config.apiBaseUrl}/faqs`,
-  terms: `${config.apiBaseUrl}/termsAndConditions`,
+  terms: `${config.apiBaseUrl}/terms-conditions`,
   about: `${config.apiBaseUrl}/about`,
   features: `${config.apiBaseUrl}/features`,
   visionAndMission: `${config.apiBaseUrl}/vision-mission`,
@@ -22,5 +22,6 @@ export const endpoints = {
   projectStatuses: `${config.apiBaseUrl}/project-status`,
   unitStatuses: `${config.apiBaseUrl}/unit-statuses`,
   privacyPolicy: `${config.apiBaseUrl}/privacy-policy`,
+  auth: `${config.apiBaseUrl}/auth`,
   // Add other endpoints here as needed
 } as const;

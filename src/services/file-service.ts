@@ -1,3 +1,4 @@
+import axios from "@/lib/axios";
 import { endpoints } from "@/config";
 import { FileResponse } from "@/types/fileResponse";
 
@@ -14,14 +15,9 @@ export const FileService = {
     params.append("module", module);
     fileNames.forEach((name) => params.append("fileNames", name));
 
-    const response = await fetch(`${API_URL}?${params.toString()}`, {
-      method: "POST",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch batch files");
-    }
-
-    return response.json();
+    const response = await axios.post<FileResponse[]>(
+      `${API_URL}?${params.toString()}`
+    );
+    return response.data;
   },
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/useLanguage";
+import { useAuth } from "@/contexts/useAuth";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
 import { getFileUrl, formatDate } from "@/lib/utils";
@@ -12,6 +13,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Lightbox } from "@/components/ui/lightBox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Loader2,
   ArrowLeft,
@@ -33,6 +43,7 @@ const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { language, tString } = useLanguage();
+  const { user } = useAuth();
   const [project, setProject] = useState<Project | null>(null);
   const [selectedUnit, setSelectedUnit] = React.useState<Unit | null>(null);
   const [detailUnit, setDetailUnit] = React.useState<Unit | null>(null);
@@ -45,6 +56,7 @@ const ProjectDetail = () => {
     React.useState(false);
   const [isRequestInfoModalOpen, setIsRequestInfoModalOpen] =
     React.useState(false);
+  const [showLoginAlert, setShowLoginAlert] = React.useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -63,6 +75,11 @@ const ProjectDetail = () => {
   }, [id]);
 
   const handleReserveUnit = (unit: Unit) => {
+    // Check if user is logged in
+    if (!user) {
+      setShowLoginAlert(true);
+      return;
+    }
     setSelectedUnit(unit);
     setIsReservationModalOpen(true);
   };
@@ -294,8 +311,8 @@ const ProjectDetail = () => {
                             statusEn === "Reserved"
                               ? "border-destructive/30 bg-destructive/5"
                               : statusEn === "Sold"
-                              ? "border-muted bg-muted/20"
-                              : "border-primary/30 hover:border-primary/50 cursor-pointer"
+                                ? "border-muted bg-muted/20"
+                                : "border-primary/30 hover:border-primary/50 cursor-pointer"
                           }`}>
                           <CardContent className="p-4">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -312,8 +329,8 @@ const ProjectDetail = () => {
                                       statusEn === "Available"
                                         ? "default"
                                         : statusEn === "Reserved"
-                                        ? "destructive"
-                                        : "secondary"
+                                          ? "destructive"
+                                          : "secondary"
                                     }
                                     className={
                                       statusEn === "Available"
@@ -326,10 +343,10 @@ const ProjectDetail = () => {
                                         ? (unit.status as { statusAr: string })
                                             .statusAr
                                         : statusEn === "Available"
-                                        ? "متاح"
-                                        : statusEn === "Reserved"
-                                        ? "محجوز"
-                                        : "مباع"
+                                          ? "متاح"
+                                          : statusEn === "Reserved"
+                                            ? "محجوز"
+                                            : "مباع"
                                       : statusEn}
                                   </Badge>
                                 </div>
@@ -365,7 +382,7 @@ const ProjectDetail = () => {
                                     <p className="font-medium text-foreground">
                                       {unit.bedrooms}{" "}
                                       {tString(
-                                        "projectDetails.units.bedroomsSuffix"
+                                        "projectDetails.units.bedroomsSuffix",
                                       )}
                                     </p>
                                   </div>
@@ -376,7 +393,7 @@ const ProjectDetail = () => {
                                     <p className="font-medium text-foreground">
                                       {unit.bathrooms}{" "}
                                       {tString(
-                                        "projectDetails.units.bathroomsSuffix"
+                                        "projectDetails.units.bathroomsSuffix",
                                       )}
                                     </p>
                                   </div>
@@ -413,7 +430,7 @@ const ProjectDetail = () => {
                                     disabled
                                     className="whitespace-nowrap">
                                     {tString(
-                                      "projectDetails.units.status.reserved"
+                                      "projectDetails.units.status.reserved",
                                     )}
                                   </Button>
                                 )}
@@ -425,7 +442,7 @@ const ProjectDetail = () => {
                                     disabled
                                     className="whitespace-nowrap">
                                     {tString(
-                                      "projectDetails.units.status.sold"
+                                      "projectDetails.units.status.sold",
                                     )}
                                   </Button>
                                 )}
@@ -443,7 +460,7 @@ const ProjectDetail = () => {
                       <p className="text-2xl font-bold text-green-600">
                         {
                           project.units.filter(
-                            (u) => getUnitStatusEn(u) === "Available"
+                            (u) => getUnitStatusEn(u) === "Available",
                           ).length
                         }
                       </p>
@@ -455,7 +472,7 @@ const ProjectDetail = () => {
                       <p className="text-2xl font-bold text-destructive">
                         {
                           project.units.filter(
-                            (u) => getUnitStatusEn(u) === "Reserved"
+                            (u) => getUnitStatusEn(u) === "Reserved",
                           ).length
                         }
                       </p>
@@ -467,7 +484,7 @@ const ProjectDetail = () => {
                       <p className="text-2xl font-bold text-muted-foreground">
                         {
                           project.units.filter(
-                            (u) => getUnitStatusEn(u) === "Sold"
+                            (u) => getUnitStatusEn(u) === "Sold",
                           ).length
                         }
                       </p>
@@ -679,6 +696,29 @@ const ProjectDetail = () => {
           onClose={() => setLightboxOpen(false)}
         />
       )}
+
+      {/* Login Required Alert */}
+      <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {tString("reservation.loginRequired") || "Login Required"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {tString("reservation.loginRequiredMessage") ||
+                "You must be logged in to make a reservation. Please log in or create an account."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex gap-3">
+            <AlertDialogCancel>
+              {tString("common.cancel") || "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => navigate("/login")}>
+              {tString("common.login") || "Go to Login"}
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

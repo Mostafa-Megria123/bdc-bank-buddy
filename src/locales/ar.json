@@ -101,7 +101,9 @@
     "hotline": "الخط الساخن",
     "email": "البريد الإلكتروني",
     "retry": "أعد المحاولة",
-    "currency": "جنيه مصري"
+    "currency": "جنيه مصري",
+    "cancel": "إلغاء",
+    "login": "انتقل لتسجيل الدخول"
   },
   "projectDetails": {
     "backToProjects": "العودة للمشاريع",
@@ -220,7 +222,9 @@
     "errorDesc": "يرجى ملء جميع الحقول المطلوبة",
     "successTitle": "تم الحجز بنجاح!",
     "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}",
-    "dialogDescription": "املأ تفاصيل الحجز ثم تابع لتأكيد الحجز."
+    "dialogDescription": "املأ تفاصيل الحجز ثم تابع لتأكيد الحجز.",
+    "loginRequired": "تسجيل الدخول مطلوب",
+    "loginRequiredMessage": "يجب عليك تسجيل الدخول لإجراء عملية حجز. يرجى تسجيل الدخول أو إنشاء حساب."
   },
   "faqsPage": {
     "title": "الأسئلة الشائعة",

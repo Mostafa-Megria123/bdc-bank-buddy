@@ -6,6 +6,8 @@ import {
   ForgotPasswordFormData,
   ResetPasswordFormData,
 } from "@/lib/validations";
+import axios from "@/lib/axios";
+import { User } from "@/types/user";
 
 const API_URL = endpoints.auth;
 
@@ -57,5 +59,10 @@ export const authService = {
       method: "POST",
       body: JSON.stringify(data),
     });
+  },
+
+  getCurrentUser: async (): Promise<User> => {
+    const response = await axios.get(`${API_URL}/me`);
+    return response.data;
   },
 };

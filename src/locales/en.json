@@ -101,7 +101,9 @@
     "hotline": "Hotline",
     "email": "Email",
     "retry": "Retry",
-    "currency": "EGP"
+    "currency": "EGP",
+    "cancel": "Cancel",
+    "login": "Go to Login"
   },
   "projectDetails": {
     "backToProjects": "Back to Projects",
@@ -220,7 +222,9 @@
     "errorDesc": "Please fill all required fields",
     "successTitle": "Reservation Successful!",
     "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}",
-    "dialogDescription": "Fill in the reservation details and proceed to confirm your booking."
+    "dialogDescription": "Fill in the reservation details and proceed to confirm your booking.",
+    "loginRequired": "Login Required",
+    "loginRequiredMessage": "You must be logged in to make a reservation. Please log in or create an account."
   },
   "faqsPage": {
     "title": "Frequently Asked Questions",

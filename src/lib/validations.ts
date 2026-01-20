@@ -49,6 +49,12 @@ export const registerSchema = z.object({
     .email('Please enter a valid email address'),
   confirmEmail: z
     .string(),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .max(100, 'Password is too long'),
+  confirmPassword: z
+    .string(),
   notificationLanguage: z
     .enum(['ar', 'en']),
   nationality: z
@@ -81,7 +87,25 @@ export const registerSchema = z.object({
 }).refine((data) => data.email === data.confirmEmail, {
   message: "Email addresses don't match",
   path: ["confirmEmail"],
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+});
+
+export const resetPasswordSchema = z.object({
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;

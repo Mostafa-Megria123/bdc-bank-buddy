@@ -19,10 +19,10 @@ export const Navigation: React.FC = () => {
 
   const navItems = [
     { path: "/", label: tString("nav.home") },
+    { path: "/about", label: tString("nav.about") },
     { path: "/announcements", label: tString("nav.announcements") },
     { path: "/projects", label: tString("nav.projects") || "Projects" },
     { path: "/faqs", label: tString("nav.faqs") },
-    { path: "/about", label: tString("nav.about") },
     { path: "/my-reservations", label: tString("nav.myReservations") },
   ];
 

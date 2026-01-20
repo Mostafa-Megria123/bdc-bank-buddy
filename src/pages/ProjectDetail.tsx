@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useAuth } from "@/contexts/useAuth";
 import { ProjectService } from "@/services/project-service";
@@ -42,6 +42,7 @@ import { Unit } from "@/types/unit";
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { language, tString } = useLanguage();
   const { user } = useAuth();
   const [project, setProject] = useState<Project | null>(null);
@@ -713,7 +714,7 @@ const ProjectDetail = () => {
             <AlertDialogCancel>
               {tString("common.cancel") || "Cancel"}
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => navigate("/login")}>
+            <AlertDialogAction onClick={() => navigate("/login", { state: { from: location.pathname } })}>
               {tString("common.login") || "Go to Login"}
             </AlertDialogAction>
           </div>

@@ -1,48 +1,59 @@
-import React, { useState } from 'react';
-import { useLanguage } from '@/contexts/useLanguage';
-import { useAuth } from '@/contexts/useAuth';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, LogIn, Loader2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, LoginFormData } from '@/lib/validations';
-import { toast } from 'sonner';
-import CaptchaField from '@/components/CaptchaField';
+import React, { useState } from "react";
+import { useLanguage } from "@/contexts/useLanguage";
+import { useAuth } from "@/contexts/useAuth";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, LoginFormData } from "@/lib/validations";
+import { toast } from "sonner";
+import CaptchaField from "@/components/CaptchaField";
 
 const Login = () => {
   const { language } = useLanguage();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+
+  // Get the page user came from, or default to home page
+  const from = (location.state as { from?: string })?.from || "/";
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    watch
+    watch,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      nationalId: '',
-      password: '',
-      captcha: ''
-    }
+      nationalId: "",
+      password: "",
+      captcha: "",
+    },
   });
 
-  const captchaValue = watch('captcha');
+  const captchaValue = watch("captcha");
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.nationalId, data.password, data.captcha);
-      toast.success(language === 'ar' ? 'تم تسجيل الدخول بنجاح' : 'Login successful');
-      navigate('/');
+      toast.success(
+        language === "ar" ? "تم تسجيل الدخول بنجاح" : "Login successful",
+      );
+      // Redirect to the page user came from, or home if no previous page
+      navigate(from);
     } catch (error) {
-      toast.error(language === 'ar' ? 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى' : 'Login failed. Please try again');
+      toast.error(
+        language === "ar"
+          ? "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى"
+          : "Login failed. Please try again",
+      );
     }
   };
 
@@ -52,53 +63,59 @@ const Login = () => {
         <Card className="shadow-brand animate-fade-in">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold text-foreground">
-              {language === 'ar' ? 'تسجيل الدخول' : 'Login'}
+              {language === "ar" ? "تسجيل الدخول" : "Login"}
             </CardTitle>
             <p className="text-muted-foreground">
-              {language === 'ar' 
-                ? 'أدخل بياناتك للوصول إلى حسابك'
-                : 'Enter your credentials to access your account'
-              }
+              {language === "ar"
+                ? "أدخل بياناتك للوصول إلى حسابك"
+                : "Enter your credentials to access your account"}
             </p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
-                  {language === 'ar' ? 'الرقم القومي' : 'National ID'} *
+                  {language === "ar" ? "الرقم القومي" : "National ID"} *
                 </Label>
                 <Input
                   id="nationalId"
                   type="text"
                   maxLength={14}
-                  placeholder={language === 'ar' ? 'أدخل الرقم القومي (14 رقم)' : 'Enter National ID (14 digits)'}
+                  placeholder={
+                    language === "ar"
+                      ? "أدخل الرقم القومي (14 رقم)"
+                      : "Enter National ID (14 digits)"
+                  }
                   className="transition-all duration-300 focus:shadow-sm"
-                  {...register('nationalId')}
+                  {...register("nationalId")}
                   aria-invalid={!!errors.nationalId}
                 />
                 {errors.nationalId && (
-                  <p className="text-sm text-destructive">{errors.nationalId.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.nationalId.message}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password">
-                  {language === 'ar' ? 'كلمة المرور' : 'Password'} *
+                  {language === "ar" ? "كلمة المرور" : "Password"} *
                 </Label>
                 <div className="relative">
                   <Input
                     id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder={language === 'ar' ? 'أدخل كلمة المرور' : 'Enter password'}
+                    type={showPassword ? "text" : "password"}
+                    placeholder={
+                      language === "ar" ? "أدخل كلمة المرور" : "Enter password"
+                    }
                     className="transition-all duration-300 focus:shadow-sm pr-10"
-                    {...register('password')}
+                    {...register("password")}
                     aria-invalid={!!errors.password}
                   />
                   <button
                     type="button"
                     className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
+                    onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-muted-foreground" />
                     ) : (
@@ -107,43 +124,44 @@ const Login = () => {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
               <CaptchaField
                 value={captchaValue}
-                onChange={(value) => setValue('captcha', value)}
+                onChange={(value) => setValue("captcha", value)}
                 error={errors.captcha?.message}
               />
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300 disabled:opacity-50"
-              >
+                className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300 disabled:opacity-50">
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <LogIn className="mr-2 h-4 w-4" />
                 )}
-                {language === 'ar' ? 'تسجيل الدخول' : 'Login'}
+                {language === "ar" ? "تسجيل الدخول" : "Login"}
               </Button>
 
               <div className="text-center space-y-2">
-                <Link 
-                  to="/reset-password" 
-                  className="text-sm text-primary hover:underline transition-colors duration-300"
-                >
-                  {language === 'ar' ? 'نسيت كلمة المرور؟' : 'Forgot Password?'}
+                <Link
+                  to="/reset-password"
+                  className="text-sm text-primary hover:underline transition-colors duration-300">
+                  {language === "ar" ? "نسيت كلمة المرور؟" : "Forgot Password?"}
                 </Link>
                 <div className="text-sm text-muted-foreground">
-                  {language === 'ar' ? 'ليس لديك حساب؟' : "Don't have an account?"}{' '}
-                  <Link 
-                    to="/register" 
-                    className="text-primary hover:underline transition-colors duration-300"
-                  >
-                    {language === 'ar' ? 'سجل الآن' : 'Register Now'}
+                  {language === "ar"
+                    ? "ليس لديك حساب؟"
+                    : "Don't have an account?"}{" "}
+                  <Link
+                    to="/register"
+                    className="text-primary hover:underline transition-colors duration-300">
+                    {language === "ar" ? "سجل الآن" : "Register Now"}
                   </Link>
                 </div>
               </div>

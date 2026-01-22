@@ -1,5 +1,13 @@
+const RAW_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!RAW_API_BASE_URL) {
+  console.error(
+    "CRITICAL: VITE_API_BASE_URL not set. Using fallback: https://127.0.0.1:8030/api",
+  );
+}
+
 export const config = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
+  apiBaseUrl: RAW_API_BASE_URL || "https://127.0.0.1:8030/api",
   environment: import.meta.env.MODE, // 'development', 'production', or 'staging'
   isDevelopment: import.meta.env.MODE === "development",
   isProduction: import.meta.env.MODE === "production",

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, ArrowLeft, Calendar, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getFileUrl, formatDate } from "@/lib/utils";
+import { useImageWithRetry } from "@/hooks/useImageWithRetry";
 import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
 import SectionTitle from "@/components/SectionTitle";
@@ -15,6 +16,12 @@ const Announcements = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { handleImageError, getImageUrl } = useImageWithRetry(placeholderSvg, {
+    maxRetries: 2,
+    initialDelay: 500,
+    maxDelay: 3000,
+    backoffMultiplier: 2,
+  });
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -110,15 +117,19 @@ const Announcements = () => {
                   style={{ animationDelay: `${index * 0.15}s` }}>
                   <div className="relative overflow-hidden h-56">
                     <img
-                      src={
+                      src={getImageUrl(
                         announcement.gallery?.[0]?.imagePath
                           ? getFileUrl(announcement.gallery[0].imagePath)
-                          : placeholderSvg
-                      }
+                          : placeholderSvg,
+                      )}
                       alt={getTitle(announcement)}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                      onError={(e) => {
-                        e.currentTarget.src = placeholderSvg;
+                      onError={() => {
+                        const imageUrl =
+                          announcement.gallery?.[0]?.imagePath
+                            ? getFileUrl(announcement.gallery[0].imagePath)
+                            : placeholderSvg;
+                        handleImageError(imageUrl);
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

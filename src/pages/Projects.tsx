@@ -28,7 +28,11 @@ const Projects: React.FC = () => {
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await ProjectService.getAllProjects();
+        // Minimum loading delay (1.5 seconds) to allow all projects to load
+        const [response] = await Promise.all([
+          ProjectService.getAllProjects(),
+          new Promise((resolve) => setTimeout(resolve, 1500)),
+        ]);
         setProjects(response.content);
       } catch (error) {
         console.error("Failed to fetch projects:", error);

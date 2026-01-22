@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { ArrowRight, ArrowLeft, Calendar, Home, Download } from "lucide-react";
 import { getFileUrl, formatDate, cn } from "@/lib/utils";
+import { useImageWithRetry } from "@/hooks/useImageWithRetry";
 import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
 import { ProjectService } from "@/services/project-service";
@@ -23,6 +24,12 @@ const Index = () => {
   >([]);
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
   const [aboutData, setAboutData] = useState<About | null>(null);
+  const { handleImageError, getImageUrl } = useImageWithRetry(placeholderSvg, {
+    maxRetries: 2,
+    initialDelay: 500,
+    maxDelay: 3000,
+    backoffMultiplier: 2,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,15 +123,19 @@ const Index = () => {
                   style={{ animationDelay: `${index * 0.2}s` }}>
                   <div className="relative overflow-hidden h-48">
                     <img
-                      src={
+                      src={getImageUrl(
                         a.gallery?.[0]?.imagePath
                           ? getFileUrl(a.gallery[0].imagePath)
-                          : placeholderSvg
-                      }
+                          : placeholderSvg,
+                      )}
                       alt={language === "ar" ? a.titleAr : a.titleEn}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       onError={(e) => {
-                        e.currentTarget.src = placeholderSvg;
+                        const imageUrl =
+                          a.gallery?.[0]?.imagePath
+                            ? getFileUrl(a.gallery[0].imagePath)
+                            : placeholderSvg;
+                        handleImageError(imageUrl);
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -171,7 +182,7 @@ const Index = () => {
                 language === "ar"
                   ? project.descriptionAr
                   : project.descriptionEn;
-              const image = project.projectGallery?.[0]?.imagePath
+              const imageUrl = project.projectGallery?.[0]?.imagePath
                 ? getFileUrl(project.projectGallery[0].imagePath)
                 : placeholderSvg;
 
@@ -182,12 +193,10 @@ const Index = () => {
                   style={{ animationDelay: `${index * 0.2}s` }}>
                   <div className="relative overflow-hidden">
                     <img
-                      src={image}
+                      src={getImageUrl(imageUrl)}
                       alt={name}
                       className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
-                      onError={(e) => {
-                        e.currentTarget.src = placeholderSvg;
-                      }}
+                      onError={() => handleImageError(imageUrl)}
                     />
                     <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute top-4 right-4">

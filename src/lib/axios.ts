@@ -1,16 +1,39 @@
 import axios, { AxiosResponse, AxiosHeaders } from "axios";
 import { endpoints } from "@/config";
 
-const API_URL = endpoints.auth;
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api";
+// Get API base URL from environment variable - REQUIRED!
+const RAW_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!RAW_BASE_URL) {
+  console.error(
+    "CRITICAL ERROR: VITE_API_BASE_URL environment variable is not set!",
+    {
+      mode: import.meta.env.MODE,
+      availableEnvKeys: Object.keys(import.meta.env).filter((key) =>
+        key.startsWith("VITE_"),
+      ),
+    },
+  );
+  console.warn(
+    "Falling back to development default: https://127.0.0.1:8030/api",
+  );
+}
+
+const BASE_URL = RAW_BASE_URL || "https://127.0.0.1:8030/api";
 
 // Remove trailing /api from BASE_URL if present to avoid duplication
 const CLEAN_BASE_URL = BASE_URL.endsWith("/api")
   ? BASE_URL.slice(0, -4)
   : BASE_URL;
 
+console.log("Axios configured with BASE_URL:", {
+  CLEAN_BASE_URL,
+  RAW_BASE_URL,
+  mode: import.meta.env.MODE,
+});
+
 axios.defaults.baseURL = CLEAN_BASE_URL;
+const API_URL = endpoints.auth;
 
 // Determine if CSRF protection should be enabled (disabled only in development)
 const isDevelopment = import.meta.env.MODE === "development";
@@ -18,13 +41,6 @@ const enableCsrfProtection = !isDevelopment;
 
 // CRITICAL: Enable credentials for cross-origin requests (CSRF tokens)
 axios.defaults.withCredentials = true;
-
-// Add CORS headers configuration
-axios.defaults.headers.common["Access-Control-Allow-Credentials"] = "true";
-axios.defaults.headers.common["Access-Control-Allow-Headers"] =
-  "Content-Type, Authorization, X-XSRF-TOKEN";
-axios.defaults.headers.common["Access-Control-Allow-Methods"] =
-  "GET, POST, PUT, DELETE, PATCH, OPTIONS";
 
 // Store CSRF token in memory
 let csrfTokenCache: string | null = null;
@@ -226,6 +242,41 @@ axios.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // Handle network errors with exponential backoff retry
+    if (
+      (error.code === "ERR_NETWORK" || !error.response) &&
+      !originalRequest._retryCount
+    ) {
+      originalRequest._retryCount = 0;
+      originalRequest._retryAttempts = 3; // Max 3 attempts
+      originalRequest._retryDelay = 500; // Start with 500ms
+    }
+
+    // Retry logic for network errors
+    if (
+      originalRequest._retryCount !== undefined &&
+      originalRequest._retryCount < originalRequest._retryAttempts
+    ) {
+      const retryCount = originalRequest._retryCount;
+      const delay = originalRequest._retryDelay * Math.pow(2, retryCount); // Exponential backoff
+
+      console.warn(
+        `Network error detected. Retrying (${retryCount + 1}/${originalRequest._retryAttempts}) after ${delay}ms:`,
+        {
+          url: originalRequest.url,
+          error: error.code,
+        },
+      );
+
+      originalRequest._retryCount += 1;
+
+      // Wait before retrying
+      await new Promise((resolve) => setTimeout(resolve, delay));
+
+      // Retry the request
+      return axios(originalRequest);
+    }
+
     // Handle 403 Forbidden - possible CSRF token expiration
     if (
       error.response?.status === 403 &&
@@ -325,7 +376,7 @@ axios.interceptors.response.use(
       }
     }
 
-    // Log network errors with more details
+    // Log network errors with more details (after retry attempts exhausted)
     if (error.code === "ERR_NETWORK" || !error.response) {
       console.error("Network error detected:", {
         message: error.message,
@@ -335,6 +386,7 @@ axios.interceptors.response.use(
         method: originalRequest?.method,
         status: error.response?.status,
         statusText: error.response?.statusText,
+        retryAttempts: originalRequest?._retryCount,
       });
     }
 

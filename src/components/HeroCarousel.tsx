@@ -6,6 +6,7 @@ import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { getFileUrl } from "@/lib/utils";
 import heroBuilding from "@/assets/hero-building.jpg";
 import placeholderSvg from "@/assets/placeholder.svg";
+import { useImageWithRetry } from "@/hooks/useImageWithRetry";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
 
@@ -21,7 +22,12 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
   const { language, t, tString } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
-  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+  const { handleImageError, getImageUrl } = useImageWithRetry(placeholderSvg, {
+    maxRetries: 2,
+    initialDelay: 500,
+    maxDelay: 3000,
+    backoffMultiplier: 2,
+  });
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -119,26 +125,13 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     );
   };
 
-  // Function to validate and get the correct image URL
-  const getBackgroundImage = (imageUrl: string) => {
-    if (failedImages.has(imageUrl)) {
-      return placeholderSvg;
-    }
-    return imageUrl;
-  };
-
-  // Function to handle image load errors
-  const handleImageError = (imageUrl: string) => {
-    setFailedImages((prev) => new Set([...prev, imageUrl]));
-  };
-
   return (
     <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden group">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out transform scale-105"
         style={{
-          backgroundImage: `url('${getBackgroundImage(backgroundImages[currentSlide])}')`,
+          backgroundImage: `url('${getImageUrl(backgroundImages[currentSlide])}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

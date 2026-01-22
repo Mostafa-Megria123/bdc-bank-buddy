@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/useAuth";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
 import { getFileUrl, formatDate } from "@/lib/utils";
+import { useImageWithRetry } from "@/hooks/useImageWithRetry";
 import { ReservationModal } from "@/components/ReservationModal";
 import { UnitDetailsModal } from "@/components/UnitDetailsModal";
 import { ProjectLocation } from "@/components/ProjectLocation";
@@ -62,6 +63,13 @@ const ProjectDetail = () => {
   const [failedGalleryImages, setFailedGalleryImages] = useState<Set<string>>(
     new Set(),
   );
+  const { handleImageError: handleGalleryImageError, getImageUrl } =
+    useImageWithRetry(placeholderSvg, {
+      maxRetries: 2,
+      initialDelay: 500,
+      maxDelay: 3000,
+      backoffMultiplier: 2,
+    });
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -157,10 +165,6 @@ const ProjectDetail = () => {
     setLightboxOpen(true);
   };
 
-  const handleGalleryImageError = (imageUrl: string) => {
-    setFailedGalleryImages((prev) => new Set([...prev, imageUrl]));
-  };
-
   const getUnitStatusEn = (unit: Unit) => {
     if (typeof unit.status === "object" && unit.status !== null) {
       return (unit.status as { statusEn: string }).statusEn;
@@ -181,7 +185,7 @@ const ProjectDetail = () => {
             src={heroImage}
             alt={name}
             className="w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
-            onError={(e) => (e.currentTarget.src = placeholderSvg)}
+            onError={() => handleGalleryImageError(heroImage)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent opacity-60" />
@@ -527,7 +531,7 @@ const ProjectDetail = () => {
                           className="relative overflow-hidden rounded-lg group cursor-pointer"
                           onClick={() => openLightbox(index)}>
                           <img
-                            src={image}
+                            src={getImageUrl(image)}
                             alt={`${name} ${index + 1}`}
                             className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                             onError={() =>
@@ -707,7 +711,7 @@ const ProjectDetail = () => {
 
       {lightboxOpen && (
         <Lightbox
-          images={galleryImages}
+          images={galleryImages.map((img) => getImageUrl(img))}
           startIndex={lightboxStartIndex}
           isOpen={lightboxOpen}
           onClose={() => setLightboxOpen(false)}

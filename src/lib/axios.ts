@@ -19,6 +19,13 @@ const enableCsrfProtection = !isDevelopment;
 // CRITICAL: Enable credentials for cross-origin requests (CSRF tokens)
 axios.defaults.withCredentials = true;
 
+// Add CORS headers configuration
+axios.defaults.headers.common["Access-Control-Allow-Credentials"] = "true";
+axios.defaults.headers.common["Access-Control-Allow-Headers"] =
+  "Content-Type, Authorization, X-XSRF-TOKEN";
+axios.defaults.headers.common["Access-Control-Allow-Methods"] =
+  "GET, POST, PUT, DELETE, PATCH, OPTIONS";
+
 // Store CSRF token in memory
 let csrfTokenCache: string | null = null;
 
@@ -316,6 +323,19 @@ axios.interceptors.response.use(
         }
         return Promise.reject(refreshError);
       }
+    }
+
+    // Log network errors with more details
+    if (error.code === "ERR_NETWORK" || !error.response) {
+      console.error("Network error detected:", {
+        message: error.message,
+        code: error.code,
+        url: originalRequest?.url,
+        baseURL: originalRequest?.baseURL,
+        method: originalRequest?.method,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+      });
     }
 
     return Promise.reject(error);

@@ -33,6 +33,9 @@ export const AnnouncementDetails: React.FC = () => {
   const [lightboxStartIndex, setLightboxStartIndex] = React.useState(0);
   const [resolvedImageUrls, setResolvedImageUrls] = useState<string[]>([]);
   const [heroImageUrl, setHeroImageUrl] = useState<string>(placeholderSvg);
+  const [failedGalleryImages, setFailedGalleryImages] = useState<Set<string>>(
+    new Set(),
+  );
 
   useEffect(() => {
     const fetchAnnouncement = async () => {
@@ -175,6 +178,10 @@ export const AnnouncementDetails: React.FC = () => {
     setLightboxOpen(true);
   };
 
+  const handleGalleryImageError = (imageUrl: string) => {
+    setFailedGalleryImages((prev) => new Set([...prev, imageUrl]));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
@@ -288,26 +295,29 @@ export const AnnouncementDetails: React.FC = () => {
                     {tString("announcementDetails.gallery")}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {resolvedImageUrls.map((imageUrl, index) => (
-                      <div
-                        key={`${imageUrl}-${index}`}
-                        className="group overflow-hidden rounded-xl bg-muted/20 cursor-pointer relative"
-                        onClick={() => openLightbox(index)}>
-                        <img
-                          src={imageUrl}
-                          alt={`${tString(
-                            "announcementDetails.galleryImage",
-                          )} ${index + 1}`}
-                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
-                          onError={(e) => {
-                            e.currentTarget.src = placeholderSvg;
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Search className="h-8 w-8 text-white" />
+                    {resolvedImageUrls.map((imageUrl, index) => {
+                      const displayUrl = failedGalleryImages.has(imageUrl)
+                        ? placeholderSvg
+                        : imageUrl;
+                      return (
+                        <div
+                          key={`${imageUrl}-${index}`}
+                          className="group overflow-hidden rounded-xl bg-muted/20 cursor-pointer relative"
+                          onClick={() => openLightbox(index)}>
+                          <img
+                            src={displayUrl}
+                            alt={`${tString(
+                              "announcementDetails.galleryImage",
+                            )} ${index + 1}`}
+                            className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
+                            onError={() => handleGalleryImageError(imageUrl)}
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Search className="h-8 w-8 text-white" />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -413,7 +423,9 @@ export const AnnouncementDetails: React.FC = () => {
 
       {lightboxOpen && resolvedImageUrls.length > 0 && (
         <Lightbox
-          images={resolvedImageUrls}
+          images={resolvedImageUrls.map((url) =>
+            failedGalleryImages.has(url) ? placeholderSvg : url,
+          )}
           startIndex={lightboxStartIndex}
           isOpen={lightboxOpen}
           onClose={() => setLightboxOpen(false)}

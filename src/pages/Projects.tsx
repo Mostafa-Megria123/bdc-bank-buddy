@@ -17,6 +17,7 @@ import { getFileUrl } from "@/lib/utils";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
 import SectionTitle from "@/components/SectionTitle";
+import placeholderSvg from "@/assets/placeholder.svg";
 
 const Projects: React.FC = () => {
   const { language, tString } = useLanguage();
@@ -77,7 +78,7 @@ const Projects: React.FC = () => {
                   : project.descriptionEn;
               const image = project.projectGallery?.[0]?.imagePath
                 ? getFileUrl(project.projectGallery[0].imagePath)
-                : "/placeholder.svg";
+                : placeholderSvg;
 
               return (
                 <Card
@@ -89,9 +90,7 @@ const Projects: React.FC = () => {
                       src={image}
                       alt={name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                      onError={(e) =>
-                        (e.currentTarget.src = "/placeholder.svg")
-                      }
+                      onError={(e) => (e.currentTarget.src = placeholderSvg)}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

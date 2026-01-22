@@ -20,6 +20,7 @@ import { AnnouncementService } from "@/services/announcement-service";
 import { getFileUrl, formatDate } from "@/lib/utils";
 import { UnitType } from "@/types/unit-type";
 import { AnnouncementCategory } from "@/types/announcement-category";
+import placeholderSvg from "@/assets/placeholder.svg";
 
 export const AnnouncementDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export const AnnouncementDetails: React.FC = () => {
   const [lightboxOpen, setLightboxOpen] = React.useState(false);
   const [lightboxStartIndex, setLightboxStartIndex] = React.useState(0);
   const [resolvedImageUrls, setResolvedImageUrls] = useState<string[]>([]);
-  const [heroImageUrl, setHeroImageUrl] = useState<string>("/placeholder.svg");
+  const [heroImageUrl, setHeroImageUrl] = useState<string>(placeholderSvg);
 
   useEffect(() => {
     const fetchAnnouncement = async () => {
@@ -54,7 +55,7 @@ export const AnnouncementDetails: React.FC = () => {
 
           // Resolve all gallery image URLs
           const galleryUrls = data.gallery.map((img) =>
-            getFileUrl(img.imagePath)
+            getFileUrl(img.imagePath),
           );
           setResolvedImageUrls(galleryUrls);
         }
@@ -63,7 +64,7 @@ export const AnnouncementDetails: React.FC = () => {
       } catch (err) {
         console.error("Failed to fetch announcement:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load announcement"
+          err instanceof Error ? err.message : "Failed to load announcement",
         );
         setAnnouncement(null);
       } finally {
@@ -187,7 +188,7 @@ export const AnnouncementDetails: React.FC = () => {
               if (process.env.NODE_ENV !== "production") {
                 console.log("Image failed to load:", heroImageUrl);
               }
-              e.currentTarget.src = "/placeholder.svg";
+              e.currentTarget.src = placeholderSvg;
             }}
           />
         </div>
@@ -295,11 +296,11 @@ export const AnnouncementDetails: React.FC = () => {
                         <img
                           src={imageUrl}
                           alt={`${tString(
-                            "announcementDetails.galleryImage"
+                            "announcementDetails.galleryImage",
                           )} ${index + 1}`}
                           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 hover-scale"
                           onError={(e) => {
-                            e.currentTarget.src = "/placeholder.svg";
+                            e.currentTarget.src = placeholderSvg;
                           }}
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -333,7 +334,7 @@ export const AnnouncementDetails: React.FC = () => {
                           <div className="text-left">
                             <div className="font-semibold">
                               {tString(
-                                "announcementDetails.details.downloads.projectBrochure"
+                                "announcementDetails.details.downloads.projectBrochure",
                               )}
                             </div>
                           </div>
@@ -353,7 +354,7 @@ export const AnnouncementDetails: React.FC = () => {
                           <div className="text-left">
                             <div className="font-semibold">
                               {tString(
-                                "announcementDetails.details.downloads.floorPlans"
+                                "announcementDetails.details.downloads.floorPlans",
                               )}
                             </div>
                           </div>

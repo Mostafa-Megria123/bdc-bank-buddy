@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { getFileUrl } from "@/lib/utils";
 import heroBuilding from "@/assets/hero-building.jpg";
-import project1 from "@/assets/project-1.jpg";
+import placeholderSvg from "@/assets/placeholder.svg";
 import { ProjectService } from "@/services/project-service";
 import { Project } from "@/types/project";
 
@@ -21,6 +21,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
   const { language, t, tString } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -78,7 +79,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       p.projectGallery.length > 0 &&
       p.projectGallery[0].imagePath
         ? getFileUrl(p.projectGallery[0].imagePath)
-        : project1;
+        : placeholderSvg;
 
     return {
       type: "project",
@@ -114,8 +115,21 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
 
   const prevSlide = () => {
     setCurrentSlide(
-      (prev) => (prev - 1 + backgroundImages.length) % backgroundImages.length
+      (prev) => (prev - 1 + backgroundImages.length) % backgroundImages.length,
     );
+  };
+
+  // Function to validate and get the correct image URL
+  const getBackgroundImage = (imageUrl: string) => {
+    if (failedImages.has(imageUrl)) {
+      return placeholderSvg;
+    }
+    return imageUrl;
+  };
+
+  // Function to handle image load errors
+  const handleImageError = (imageUrl: string) => {
+    setFailedImages((prev) => new Set([...prev, imageUrl]));
   };
 
   return (
@@ -124,11 +138,18 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out transform scale-105"
         style={{
-          backgroundImage: `url('${backgroundImages[currentSlide]}')`,
+          backgroundImage: `url('${getBackgroundImage(backgroundImages[currentSlide])}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        onError={(e) => {}}
+      />
+      {/* Hidden image element to detect load errors */}
+      <img
+        key={backgroundImages[currentSlide]}
+        src={backgroundImages[currentSlide]}
+        alt="slide-validator"
+        style={{ display: "none" }}
+        onError={() => handleImageError(backgroundImages[currentSlide])}
       />
       {/* Enhanced Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />

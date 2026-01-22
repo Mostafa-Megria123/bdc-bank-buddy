@@ -71,7 +71,7 @@ const Register = () => {
       toast.success(
         language === "ar"
           ? "تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب"
-          : "Account created successfully. Please check your email to verify your account"
+          : "Account created successfully. Please check your email to verify your account",
       );
       navigate("/login");
     } catch (error) {
@@ -370,85 +370,6 @@ const Register = () => {
                   {errors.confirmEmail && (
                     <p className="text-sm text-destructive">
                       {errors.confirmEmail.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Password Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="password">
-                    {language === "ar" ? "كلمة المرور" : "Password"} *
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder={
-                        language === "ar"
-                          ? "أدخل كلمة المرور"
-                          : "Enter password"
-                      }
-                      {...register("password")}
-                      aria-invalid={!!errors.password}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
-                  {errors.password && (
-                    <p className="text-sm text-destructive">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">
-                    {language === "ar"
-                      ? "تأكيد كلمة المرور"
-                      : "Confirm Password"}{" "}
-                    *
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder={
-                        language === "ar"
-                          ? "أعد إدخال كلمة المرور"
-                          : "Re-enter password"
-                      }
-                      {...register("confirmPassword")}
-                      aria-invalid={!!errors.confirmPassword}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }>
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
-                  {errors.confirmPassword && (
-                    <p className="text-sm text-destructive">
-                      {errors.confirmPassword.message}
                     </p>
                   )}
                 </div>

@@ -8,6 +8,7 @@ import { getFileUrl, formatDate } from "@/lib/utils";
 import { AnnouncementService } from "@/services/announcement-service";
 import { Announcement } from "@/types/announcement";
 import SectionTitle from "@/components/SectionTitle";
+import placeholderSvg from "@/assets/placeholder.svg";
 
 const Announcements = () => {
   const { language, tString } = useLanguage();
@@ -26,7 +27,7 @@ const Announcements = () => {
       } catch (err) {
         console.error("Failed to fetch announcements:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load announcements"
+          err instanceof Error ? err.message : "Failed to load announcements",
         );
         setAnnouncements([]);
       } finally {
@@ -112,12 +113,12 @@ const Announcements = () => {
                       src={
                         announcement.gallery?.[0]?.imagePath
                           ? getFileUrl(announcement.gallery[0].imagePath)
-                          : "/placeholder.svg"
+                          : placeholderSvg
                       }
                       alt={getTitle(announcement)}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                       onError={(e) => {
-                        e.currentTarget.src = "/placeholder.svg";
+                        e.currentTarget.src = placeholderSvg;
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

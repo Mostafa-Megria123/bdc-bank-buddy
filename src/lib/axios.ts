@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosRequestHeaders } from "axios";
+import axios, { AxiosResponse, AxiosHeaders } from "axios";
 import { endpoints } from "@/config";
 
 const API_URL = endpoints.auth;
@@ -137,7 +137,9 @@ axios.interceptors.request.use(
     if (config.url?.includes("/refresh-token")) {
       const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
-        config.headers.AxiosRequestHeaders = config.headers || {};
+        if (!config.headers) {
+          config.headers = new AxiosHeaders();
+        }
         config.headers.Authorization = `Bearer ${refreshToken}`;
       }
       return config;
@@ -146,7 +148,9 @@ axios.interceptors.request.use(
     // 2. For all other endpoints, send access token in Authorization header
     const token = localStorage.getItem("token");
     if (token && token !== "undefined" && token !== "null") {
-      config.headers.AxiosRequestHeaders = config.headers || {};
+      if (!config.headers) {
+        config.headers = new AxiosHeaders();
+      }
       config.headers.Authorization = `Bearer ${token}`;
     }
 
@@ -159,7 +163,9 @@ axios.interceptors.request.use(
         const csrfToken = getCsrfToken();
 
         if (csrfToken) {
-          config.headers.AxiosRequestHeaders = config.headers || {};
+          if (!config.headers) {
+            config.headers = new AxiosHeaders();
+          }
           config.headers["X-XSRF-TOKEN"] = csrfToken;
         } else {
           console.warn(
@@ -175,6 +181,9 @@ axios.interceptors.request.use(
       try {
         const parsedUser = JSON.parse(user);
         if (parsedUser.preferredLanguage) {
+          if (!config.headers) {
+            config.headers = new AxiosHeaders();
+          }
           config.headers["Accept-Language"] = parsedUser.preferredLanguage;
         }
       } catch (e) {

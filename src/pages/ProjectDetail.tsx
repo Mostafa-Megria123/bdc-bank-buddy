@@ -38,6 +38,7 @@ import {
   Share2,
 } from "lucide-react";
 import { Unit } from "@/types/unit";
+import placeholderSvg from "@/assets/placeholder.svg";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -58,6 +59,9 @@ const ProjectDetail = () => {
   const [isRequestInfoModalOpen, setIsRequestInfoModalOpen] =
     React.useState(false);
   const [showLoginAlert, setShowLoginAlert] = React.useState(false);
+  const [failedGalleryImages, setFailedGalleryImages] = useState<Set<string>>(
+    new Set(),
+  );
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -141,14 +145,20 @@ const ProjectDetail = () => {
       : project.additionalDescriptionEn;
   const heroImage = project.projectGallery?.[0]?.imagePath
     ? getFileUrl(project.projectGallery[0].imagePath)
-    : "/placeholder.svg";
+    : placeholderSvg;
 
-  const galleryImages =
-    project?.projectGallery.map((img) => getFileUrl(img.imagePath)) || [];
+  const galleryImages = (project?.projectGallery || []).map((img) => {
+    const imageUrl = getFileUrl(img.imagePath);
+    return failedGalleryImages.has(imageUrl) ? placeholderSvg : imageUrl;
+  });
 
   const openLightbox = (index: number) => {
     setLightboxStartIndex(index);
     setLightboxOpen(true);
+  };
+
+  const handleGalleryImageError = (imageUrl: string) => {
+    setFailedGalleryImages((prev) => new Set([...prev, imageUrl]));
   };
 
   const getUnitStatusEn = (unit: Unit) => {
@@ -171,7 +181,7 @@ const ProjectDetail = () => {
             src={heroImage}
             alt={name}
             className="w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
-            onError={(e) => (e.currentTarget.src = "/placeholder.svg")}
+            onError={(e) => (e.currentTarget.src = placeholderSvg)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent opacity-60" />
@@ -506,24 +516,30 @@ const ProjectDetail = () => {
                     {tString("projectDetails.gallery")}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {galleryImages.map((image, index) => (
-                      <div
-                        key={index}
-                        className="relative overflow-hidden rounded-lg group cursor-pointer"
-                        onClick={() => openLightbox(index)}>
-                        <img
-                          src={image}
-                          alt={`${name} ${index + 1}`}
-                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) =>
-                            (e.currentTarget.src = "/placeholder.svg")
-                          }
-                        />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Search className="h-8 w-8 text-white" />
+                    {galleryImages.map((image, index) => {
+                      const originalImage = project.projectGallery[index]
+                        ?.imagePath
+                        ? getFileUrl(project.projectGallery[index].imagePath)
+                        : image;
+                      return (
+                        <div
+                          key={index}
+                          className="relative overflow-hidden rounded-lg group cursor-pointer"
+                          onClick={() => openLightbox(index)}>
+                          <img
+                            src={image}
+                            alt={`${name} ${index + 1}`}
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={() =>
+                              handleGalleryImageError(originalImage)
+                            }
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Search className="h-8 w-8 text-white" />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
@@ -714,7 +730,10 @@ const ProjectDetail = () => {
             <AlertDialogCancel>
               {tString("common.cancel") || "Cancel"}
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => navigate("/login", { state: { from: location.pathname } })}>
+            <AlertDialogAction
+              onClick={() =>
+                navigate("/login", { state: { from: location.pathname } })
+              }>
               {tString("common.login") || "Go to Login"}
             </AlertDialogAction>
           </div>

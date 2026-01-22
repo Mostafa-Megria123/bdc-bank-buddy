@@ -13,6 +13,7 @@ import { Project } from "@/types/project";
 import { AboutService } from "@/services/about.service";
 import { About } from "@/types/about";
 import bdcAbout from "@/assets/about-us-corporate.png";
+import placeholderSvg from "@/assets/placeholder.svg";
 
 import SectionTitle from "@/components/SectionTitle";
 const Index = () => {
@@ -118,12 +119,12 @@ const Index = () => {
                       src={
                         a.gallery?.[0]?.imagePath
                           ? getFileUrl(a.gallery[0].imagePath)
-                          : "/placeholder.svg"
+                          : placeholderSvg
                       }
                       alt={language === "ar" ? a.titleAr : a.titleEn}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       onError={(e) => {
-                        e.currentTarget.src = "/placeholder.svg";
+                        e.currentTarget.src = placeholderSvg;
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -172,7 +173,7 @@ const Index = () => {
                   : project.descriptionEn;
               const image = project.projectGallery?.[0]?.imagePath
                 ? getFileUrl(project.projectGallery[0].imagePath)
-                : "/placeholder.svg";
+                : placeholderSvg;
 
               return (
                 <Card
@@ -184,6 +185,9 @@ const Index = () => {
                       src={image}
                       alt={name}
                       className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+                      onError={(e) => {
+                        e.currentTarget.src = placeholderSvg;
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute top-4 right-4">
@@ -218,7 +222,7 @@ const Index = () => {
                         <span>
                           {tString("projects.display.unitsAvailable").replace(
                             "{count}",
-                            project.totalUnits.toString()
+                            project.totalUnits.toString(),
                           )}
                         </span>
                       </div>

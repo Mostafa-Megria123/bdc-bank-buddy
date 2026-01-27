@@ -26,12 +26,6 @@ const CLEAN_BASE_URL = BASE_URL.endsWith("/api")
   ? BASE_URL.slice(0, -4)
   : BASE_URL;
 
-console.log("Axios configured with BASE_URL:", {
-  CLEAN_BASE_URL,
-  RAW_BASE_URL,
-  mode: import.meta.env.MODE,
-});
-
 axios.defaults.baseURL = CLEAN_BASE_URL;
 const API_URL = endpoints.auth;
 
@@ -156,7 +150,23 @@ function getCsrfToken(): string | null {
 // Request Interceptor
 axios.interceptors.request.use(
   (config) => {
-    // 1. For refresh-token endpoint, send refreshToken in Authorization header
+    // 1. For verify-email endpoint, skip interceptor (use manually set Authorization header)
+    if (
+      config.url?.includes("/verify-email") ||
+      config.url?.includes("verify-email")
+    ) {
+      console.log("🔐 Axios Interceptor - verify-email endpoint:");
+      console.log("   URL:", config.url);
+      console.log("   Params:", config.params);
+      console.log(
+        "   Full URL with params:",
+        config.url + "?" + new URLSearchParams(config.params).toString(),
+      );
+      console.log("   Authorization header:", config.headers?.Authorization);
+      return config;
+    }
+
+    // 2. For refresh-token endpoint, send refreshToken in Authorization header
     if (config.url?.includes("/refresh-token")) {
       const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
@@ -168,7 +178,7 @@ axios.interceptors.request.use(
       return config;
     }
 
-    // 2. For all other endpoints, send access token in Authorization header
+    // 3. For all other endpoints, send access token in Authorization header
     const token = localStorage.getItem("token");
     if (token && token !== "undefined" && token !== "null") {
       if (!config.headers) {
@@ -178,7 +188,8 @@ axios.interceptors.request.use(
     }
 
     // 3. Handle CSRF token for POST, PUT, DELETE, PATCH requests (only in non-development environments)
-    if (enableCsrfProtection) {
+    // Skip CSRF for verify-email endpoint (unauthenticated users)
+    if (enableCsrfProtection && !config.url?.includes("/verify-email")) {
       if (
         config.method &&
         ["post", "put", "delete", "patch"].includes(config.method.toLowerCase())

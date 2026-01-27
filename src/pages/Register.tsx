@@ -20,6 +20,7 @@ import { registerSchema, RegisterFormData } from "@/lib/validations";
 import { toast } from "sonner";
 import { Loader2, Eye, EyeOff, Upload, UserPlus, Facebook } from "lucide-react";
 import CaptchaField from "@/components/CaptchaField";
+import IDGuideImage from "@/assets/ID.png";
 
 const Register = () => {
   const { language } = useLanguage();
@@ -62,7 +63,23 @@ const Register = () => {
   const residenceValue = watch("residence");
   const captchaValue = watch("captcha");
 
-  const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
+  const handleFormSubmit = async (data: RegisterFormData) => {
+    // Check if there are any validation errors
+    if (Object.keys(errors).length > 0) {
+      const errorMessages = Object.values(errors)
+        .map((error) => error?.message)
+        .filter(Boolean)
+        .slice(0, 3) // Show first 3 errors
+        .join(" • ");
+
+      toast.error(
+        language === "ar"
+          ? `تصحيح المراجعة: ${errorMessages}`
+          : `Please fix: ${errorMessages}`,
+      );
+      return;
+    }
+
     try {
       await registerUser({
         ...data,
@@ -73,7 +90,7 @@ const Register = () => {
           ? "تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب"
           : "Account created successfully. Please check your email to verify your account",
       );
-      navigate("/login");
+      navigate("/verification-pending");
     } catch (error) {
       const err = error as {
         message?: string;
@@ -161,7 +178,24 @@ const Register = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              onSubmit={handleSubmit(handleFormSubmit, () => {
+                // Show toast on validation failure
+                const errorMessages = Object.values(errors)
+                  .map((error) => error?.message)
+                  .filter(Boolean)
+                  .slice(0, 3)
+                  .join(" • ");
+
+                if (errorMessages) {
+                  toast.error(
+                    language === "ar"
+                      ? `تصحيح المراجعة: ${errorMessages}`
+                      : `Please fix: ${errorMessages}`,
+                  );
+                }
+              })}
+              className="space-y-6">
               {/* National ID */}
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
@@ -174,11 +208,6 @@ const Register = () => {
                   id="nationalId"
                   type="text"
                   maxLength={14}
-                  placeholder={
-                    language === "ar"
-                      ? "أدخل الرقم القومي"
-                      : "Enter National ID"
-                  }
                   {...register("nationalId")}
                   aria-invalid={!!errors.nationalId}
                 />
@@ -200,9 +229,6 @@ const Register = () => {
                 <Input
                   id="name"
                   type="text"
-                  placeholder={
-                    language === "ar" ? "أدخل الاسم الكامل" : "Enter full name"
-                  }
                   {...register("name")}
                   aria-invalid={!!errors.name}
                 />
@@ -217,8 +243,8 @@ const Register = () => {
               <div className="space-y-2">
                 <Label htmlFor="nationalIdImage">
                   {language === "ar"
-                    ? "صورة الرقم القومي (الوجهين)"
-                    : "National ID Image (both sides)"}{" "}
+                    ? "صورة الرقم القومي"
+                    : "National ID Image"}{" "}
                   *
                 </Label>
                 <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-primary/50 transition-colors duration-300">
@@ -251,20 +277,37 @@ const Register = () => {
               </div>
 
               {/* Printed Number */}
-              <div className="space-y-2">
-                <Label htmlFor="printedNumber">
-                  {language === "ar"
-                    ? "الرقم المطبوع تحت الصورة في الرقم القومي"
-                    : "Printed Number below the picture"}{" "}
-                  *
-                </Label>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="printedNumber">
+                    {language === "ar"
+                      ? "الرقم المطبوع تحت الصورة في الرقم القومي (رقم المصنع)"
+                      : "Printed Number below the picture (Factory Number)"}{" "}
+                    *
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {language === "ar"
+                      ? "رقم من 9 أرقام موجود أسفل الصورة مباشرة"
+                      : "9-digit number located directly below the photo"}
+                  </p>
+                </div>
+                <div className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
+                  <img
+                    src={IDGuideImage}
+                    alt={
+                      language === "ar"
+                        ? "دليل رقم المصنع"
+                        : "Factory Number Guide"
+                    }
+                    className="w-full h-auto rounded"
+                  />
+                </div>
                 <Input
                   id="printedNumber"
                   type="text"
+                  maxLength={9}
                   placeholder={
-                    language === "ar"
-                      ? "أدخل الرقم المطبوع"
-                      : "Enter printed number"
+                    language === "ar" ? "أدخل 9 أرقام" : "Enter 9 digits"
                   }
                   {...register("printedNumber")}
                   aria-invalid={!!errors.printedNumber}
@@ -285,11 +328,6 @@ const Register = () => {
                   <Input
                     id="mobile"
                     type="tel"
-                    placeholder={
-                      language === "ar"
-                        ? "أدخل رقم المحمول"
-                        : "Enter mobile number"
-                    }
                     {...register("mobile")}
                     aria-invalid={!!errors.mobile}
                   />
@@ -309,11 +347,6 @@ const Register = () => {
                   <Input
                     id="confirmMobile"
                     type="tel"
-                    placeholder={
-                      language === "ar"
-                        ? "أعد إدخال رقم المحمول"
-                        : "Re-enter mobile number"
-                    }
                     {...register("confirmMobile")}
                     aria-invalid={!!errors.confirmMobile}
                   />
@@ -335,11 +368,6 @@ const Register = () => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder={
-                      language === "ar"
-                        ? "أدخل البريد الإلكتروني"
-                        : "Enter email address"
-                    }
                     {...register("email")}
                     aria-invalid={!!errors.email}
                   />
@@ -359,11 +387,6 @@ const Register = () => {
                   <Input
                     id="confirmEmail"
                     type="email"
-                    placeholder={
-                      language === "ar"
-                        ? "أعد إدخال البريد الإلكتروني"
-                        : "Re-enter email address"
-                    }
                     {...register("confirmEmail")}
                     aria-invalid={!!errors.confirmEmail}
                   />
@@ -375,47 +398,14 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Notification Language */}
-              <div className="space-y-2">
-                <Label>
-                  {language === "ar"
-                    ? "لغة الإشعارات المفضلة"
-                    : "Preferred Notification Language"}{" "}
-                  *
-                </Label>
-                <Controller
-                  name="notificationLanguage"
-                  control={control}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            language === "ar" ? "اختر اللغة" : "Select language"
-                          }
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ar">العربية</SelectItem>
-                        <SelectItem value="en">English</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.notificationLanguage && (
-                  <p className="text-sm text-destructive">
-                    {errors.notificationLanguage.message}
-                  </p>
-                )}
-              </div>
-
               {/* Country and Residence */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>
                     {language === "ar"
                       ? "بلد الجنسية"
-                      : "Country of Nationality"}
+                      : "Country of Nationality"}{" "}
+                    *
                   </Label>
                   <Controller
                     name="nationality"
@@ -437,6 +427,11 @@ const Register = () => {
                       </Select>
                     )}
                   />
+                  {errors.nationality && (
+                    <p className="text-sm text-destructive">
+                      {errors.nationality.message}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>
@@ -451,13 +446,7 @@ const Register = () => {
                         onValueChange={field.onChange}
                         value={field.value}>
                         <SelectTrigger>
-                          <SelectValue
-                            placeholder={
-                              language === "ar"
-                                ? "اختر البلد"
-                                : "Select country"
-                            }
-                          />
+                          <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           {countries.map((country) => (
@@ -481,7 +470,7 @@ const Register = () => {
               {residenceValue === "Egypt" && (
                 <div className="space-y-2">
                   <Label>
-                    {language === "ar" ? "المحافظة" : "Governorate"}
+                    {language === "ar" ? "المحافظة" : "Governorate"} *
                   </Label>
                   <Controller
                     name="governorate"
@@ -491,13 +480,7 @@ const Register = () => {
                         onValueChange={field.onChange}
                         value={field.value}>
                         <SelectTrigger>
-                          <SelectValue
-                            placeholder={
-                              language === "ar"
-                                ? "اختر المحافظة"
-                                : "Select governorate"
-                            }
-                          />
+                          <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           {governorates.map((gov) => (
@@ -509,83 +492,87 @@ const Register = () => {
                       </Select>
                     )}
                   />
+                  {errors.governorate && (
+                    <p className="text-sm text-destructive">
+                      {errors.governorate.message}
+                    </p>
+                  )}
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label>
+                  {language === "ar" ? "الحالة الاجتماعية" : "Marital Status"} *
+                </Label>
+                <Controller
+                  name="maritalStatus"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {maritalStatuses.map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.maritalStatus && (
+                  <p className="text-sm text-destructive">
+                    {errors.maritalStatus.message}
+                  </p>
+                )}
+              </div>
+              {/* </div> */}
+
+              {/* Notification Language */}
+              <div className="space-y-2">
+                <Label>
+                  {language === "ar" ? "اللغة المفضلة" : "Preferred Language"} *
+                </Label>
+                <Controller
+                  name="notificationLanguage"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ar">العربية</SelectItem>
+                        <SelectItem value="en">English</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.notificationLanguage && (
+                  <p className="text-sm text-destructive">
+                    {errors.notificationLanguage.message}
+                  </p>
+                )}
+              </div>
 
               {/* Address */}
               <div className="space-y-2">
                 <Label htmlFor="address">
-                  {language === "ar" ? "العنوان" : "Address"}
+                  {language === "ar" ? "العنوان" : "Address"} *
                 </Label>
                 <Textarea
                   id="address"
-                  placeholder={
-                    language === "ar"
-                      ? "أدخل العنوان التفصيلي"
-                      : "Enter detailed address"
-                  }
                   rows={3}
                   {...register("address")}
+                  aria-invalid={!!errors.address}
                 />
-              </div>
-
-              {/* Phone and Marital Status */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="phone">
-                    {language === "ar"
-                      ? "رقم التليفون (8-20 رقم)"
-                      : "Phone Number (8-20 digits)"}
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    minLength={8}
-                    maxLength={20}
-                    placeholder={
-                      language === "ar"
-                        ? "أدخل رقم التليفون"
-                        : "Enter phone number"
-                    }
-                    {...register("phone")}
-                  />
-                  {errors.phone && (
-                    <p className="text-sm text-destructive">
-                      {errors.phone.message}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label>
-                    {language === "ar" ? "الحالة الاجتماعية" : "Marital Status"}
-                  </Label>
-                  <Controller
-                    name="maritalStatus"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={
-                              language === "ar"
-                                ? "اختر الحالة"
-                                : "Select status"
-                            }
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {maritalStatuses.map((status) => (
-                            <SelectItem key={status} value={status}>
-                              {status}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                </div>
+                {errors.address && (
+                  <p className="text-sm text-destructive">
+                    {errors.address.message}
+                  </p>
+                )}
               </div>
 
               <CaptchaField
@@ -605,58 +592,6 @@ const Register = () => {
                 )}
                 {language === "ar" ? "إنشاء الحساب" : "Create Account"}
               </Button>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    {language === "ar" ? "أو التسجيل عبر" : "Or register with"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={() => handleSocialLogin("google")}>
-                  <svg
-                    className="mr-2 h-4 w-4"
-                    aria-hidden="true"
-                    focusable="false"
-                    data-prefix="fab"
-                    data-icon="google"
-                    role="img"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 488 512">
-                    <path
-                      fill="currentColor"
-                      d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
-                  </svg>
-                  Google
-                </Button>
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={() => handleSocialLogin("facebook")}>
-                  <Facebook className="mr-2 h-4 w-4" /> Facebook
-                </Button>
-              </div>
-
-              <div className="text-center">
-                <span className="text-sm text-muted-foreground">
-                  {language === "ar"
-                    ? "لديك حساب بالفعل؟"
-                    : "Already have an account?"}{" "}
-                  <Link
-                    to="/login"
-                    className="text-primary hover:underline transition-colors duration-300">
-                    {language === "ar" ? "تسجيل الدخول" : "Login"}
-                  </Link>
-                </span>
-              </div>
             </form>
           </CardContent>
         </Card>

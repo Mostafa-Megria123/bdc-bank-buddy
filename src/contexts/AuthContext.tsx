@@ -1,51 +1,49 @@
-import React, { useState, ReactNode } from 'react';
-import { AuthContext } from './AuthContextCore';
-import type { AuthContextType, User } from './authTypes';
+import React, { useState, ReactNode } from "react";
+import { AuthContext } from "./AuthContextCore";
+import type { AuthContextType, User } from "./authTypes";
+import { authService } from "@/services/auth.service";
+import { RegisterFormData } from "@/lib/validations";
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const login: AuthContextType['login'] = async (nationalId, password, captcha) => {
+  const login: AuthContextType["login"] = async (
+    nationalId,
+    password,
+    captcha,
+  ) => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       const mockUser: User = {
-        id: '1',
+        id: "1",
         nationalId,
-        name: 'John Doe',
-        email: 'john@example.com',
-        mobile: '01234567890'
+        name: "John Doe",
+        email: "john@example.com",
+        mobile: "01234567890",
       };
       setUser(mockUser);
     } catch (error) {
-      throw new Error('Login failed. Please check your credentials.');
+      throw new Error("Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const register: AuthContextType['register'] = async (userData) => {
+  const register: AuthContextType["register"] = async (userData) => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      const ud = userData as Record<string, unknown>;
-      const mockUser: User = {
-        id: '1',
-        nationalId: String(ud['nationalId'] ?? ''),
-        name: String(ud['name'] ?? ''),
-        email: String(ud['email'] ?? ''),
-        mobile: String(ud['mobile'] ?? '')
-      };
-      setUser(mockUser);
-    } catch (error) {
-      throw new Error('Registration failed. Please try again.');
+      // Call the actual backend API
+      await authService.register(userData as RegisterFormData);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout: AuthContextType['logout'] = () => {
+  const logout: AuthContextType["logout"] = () => {
     setUser(null);
   };
 

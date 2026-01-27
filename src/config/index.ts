@@ -31,5 +31,12 @@ export const endpoints = {
   unitStatuses: `${config.apiBaseUrl}/unit-statuses`,
   privacyPolicy: `${config.apiBaseUrl}/privacy-policy`,
   auth: `${config.apiBaseUrl}/auth`,
+  register: `${config.apiBaseUrl}/customers/register`,
+  login: `${config.apiBaseUrl}/auth/login`,
+  verifyEmail: `${config.apiBaseUrl}/auth/verify-email`,
+  refreshToken: `${config.apiBaseUrl}/auth/refresh-token`,
+  forgoetPassword: `${config.apiBaseUrl}/auth/forgot-password`,
+  resetPassword: `${config.apiBaseUrl}/auth/reset-password`,
+  me: `${config.apiBaseUrl}/auth/me`,
   // Add other endpoints here as needed
 } as const;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useAuth } from "@/contexts/useAuth";
 import { Button } from "@/components/ui/button";
@@ -6,22 +6,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormData } from "@/lib/validations";
 import { toast } from "sonner";
 import CaptchaField from "@/components/CaptchaField";
+import { redirectService } from "@/services/redirect.service";
 
 const Login = () => {
   const { language } = useLanguage();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
 
-  // Get the page user came from, or default to home page
-  const from = (location.state as { from?: string })?.from || "/";
+  useEffect(() => {
+    // Store current page before user might navigate to register/forgot password
+    redirectService.storeLastPage(window.location.pathname);
+  }, []);
 
   const {
     register,
@@ -46,8 +48,9 @@ const Login = () => {
       toast.success(
         language === "ar" ? "تم تسجيل الدخول بنجاح" : "Login successful",
       );
-      // Redirect to the page user came from, or home if no previous page
-      navigate(from);
+      // Redirect to the page user came from, or default to projects page
+      const redirectUrl = redirectService.getPostLoginRedirect("/projects");
+      navigate(redirectUrl);
     } catch (error) {
       toast.error(
         language === "ar"
@@ -81,11 +84,6 @@ const Login = () => {
                   id="nationalId"
                   type="text"
                   maxLength={14}
-                  placeholder={
-                    language === "ar"
-                      ? "أدخل الرقم القومي (14 رقم)"
-                      : "Enter National ID (14 digits)"
-                  }
                   className="transition-all duration-300 focus:shadow-sm"
                   {...register("nationalId")}
                   aria-invalid={!!errors.nationalId}
@@ -105,9 +103,6 @@ const Login = () => {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder={
-                      language === "ar" ? "أدخل كلمة المرور" : "Enter password"
-                    }
                     className="transition-all duration-300 focus:shadow-sm pr-10"
                     {...register("password")}
                     aria-invalid={!!errors.password}

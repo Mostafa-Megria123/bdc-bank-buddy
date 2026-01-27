@@ -10,6 +10,8 @@ import { Footer } from "@/components/Footer";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerificationPending from "./pages/VerificationPending";
+import EmailVerification from "./pages/EmailVerification";
 import About from "./pages/About";
 import FAQs from "./pages/FAQs";
 import Announcements from "./pages/Announcements";
@@ -42,6 +44,8 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/verification-pending" element={<VerificationPending />} />
+                  <Route path="/verify-email" element={<EmailVerification />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/faqs" element={<FAQs />} />
                   <Route path="/announcements" element={<Announcements />} />

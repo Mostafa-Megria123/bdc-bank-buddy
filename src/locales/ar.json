@@ -328,5 +328,98 @@
     },
     "none": "لا يوجد",
     "requestRefund": "طلب استرداد"
+  },
+
+  "auth": {
+    "register": {
+      "title": "إنشاء حساب جديد",
+      "subtitle": "املأ البيانات التالية لإنشاء حسابك",
+      "nationalId": "الرقم القومي (14 رقم)",
+      "name": "الاسم (كما هو مذكور في الرقم القومي)",
+      "nationalIdImage": "صورة الرقم القومي",
+      "uploadFile": "اضغط لرفع الملف (JPG, PDF فقط)",
+      "printedNumber": "الرقم المطبوع تحت الصورة في الرقم القومي (رقم المصنع)",
+      "printedNumberHelper": "رقم من 9 أرقام موجود أسفل الصورة مباشرة",
+      "enter9Digits": "أدخل 9 أرقام",
+      "mobileNumber": "رقم المحمول",
+      "confirmMobileNumber": "تأكيد رقم المحمول",
+      "emailAddress": "البريد الإلكتروني",
+      "confirmEmailAddress": "تأكيد البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "countryOfNationality": "بلد الجنسية",
+      "placeOfResidence": "مكان الإقامة",
+      "governorate": "المحافظة",
+      "maritalStatus": "الحالة الاجتماعية",
+      "preferredLanguage": "اللغة المفضلة",
+      "address": "العنوان",
+      "createAccount": "إنشاء الحساب",
+      "accountCreatedSuccess": "تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب",
+      "registrationFailed": "فشل إنشاء الحساب. يرجى المحاولة مرة أخرى",
+      "nationalIdAlreadyRegistered": "رقم الهوية مسجل بالفعل",
+      "nationalIdExists": "يبدو أن هذا الرقم القومي مسجل بالفعل. يرجى اختيار إحدى الخيارات التالية:",
+      "goToLogin": "الذهاب إلى تسجيل الدخول",
+      "resendVerification": "إعادة إرسال التحقق",
+      "passwordRequirements": "متطلبات كلمة المرور",
+      "chars8": "8+ أحرف",
+      "uppercaseLowercase": "حرف صغير وحرف كبير",
+      "numberAndSpecial": "رقم وحرف خاص (@#$%^&+=!)",
+      "maritalStatusOptions": {
+        "single": "أعزب",
+        "married": "متزوج",
+        "divorced": "مطلق",
+        "widowed": "أرمل",
+        "marriedToForeigner": "متزوج من أجنبي"
+      },
+      "countriesOptions": {
+        "egypt": "مصر",
+        "saudiarabia": "المملكة العربية السعودية",
+        "uae": "الإمارات العربية المتحدة",
+        "kuwait": "الكويت",
+        "qatar": "قطر",
+        "bahrain": "البحرين",
+        "oman": "عمان"
+      }
+    },
+    "login": {
+      "title": "تسجيل الدخول",
+      "subtitle": "أدخل بياناتك للوصول إلى حسابك",
+      "nationalId": "الرقم القومي",
+      "password": "كلمة المرور",
+      "login": "تسجيل الدخول",
+      "loginSuccessful": "تم تسجيل الدخول بنجاح",
+      "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "noAccount": "ليس لديك حساب؟",
+      "registerNow": "سجل الآن",
+      "accountNotVerified": "حسابك لم يتم التحقق منه بعد",
+      "resendVerificationEmail": "إعادة إرسال رسالة التحقق"
+    },
+    "emailVerification": {
+      "verifyingEmail": "جاري التحقق...",
+      "verificationSuccessful": "تم التحقق بنجاح!",
+      "verificationFailed": "فشل التحقق",
+      "emailVerifiedSuccessfully": "تم التحقق من بريدك الإلكتروني بنجاح",
+      "emailVerificationFailed": "فشل التحقق من البريد الإلكتروني",
+      "tokenMissing": "رمز التحقق غير موجود",
+      "tokenInvalidExpired": "قد يكون الرمز غير صحيح أو منتهي الصلاحية. يرجى محاولة التسجيل مرة أخرى.",
+      "redirectingLogin": "سيتم نقلك إلى صفحة تسجيل الدخول...",
+      "backToRegistration": "العودة للتسجيل",
+      "emailVerifiedLogin": "تم التحقق من بريدك الإلكتروني. يمكنك الآن تسجيل الدخول."
+    },
+    "verifyNow": {
+      "title": "التحقق من الهوية",
+      "subtitle": "أدخل بيانات الهوية والبريد الإلكتروني الجديد",
+      "nationalId": "رقم الهوية",
+      "enterNationalId": "أدخل رقم هويتك",
+      "newEmail": "البريد الإلكتروني الجديد",
+      "enterEmail": "أدخل بريدك الإلكتروني",
+      "verifyNow": "تحقق الآن",
+      "processing": "جاري المعالجة...",
+      "verificationSuccessful": "تم التحقق بنجاح",
+      "verificationFailed": "فشل التحقق. يرجى المحاولة مرة أخرى.",
+      "backToLogin": "العودة إلى تسجيل الدخول",
+      "redirectingLogin": "سيتم نقلك إلى صفحة تسجيل الدخول..."
+    }
   }
 }

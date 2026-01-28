@@ -12,6 +12,7 @@ import { User } from "@/types/user";
 const AUTH_API_URL = endpoints.auth;
 const REGISTER_API_URL = endpoints.register;
 const LOGIN_API_URL = endpoints.login;
+const VERIFY_NOW_API_URL = endpoints.verifyNow;
 const VERIFY_EMAIL_API_URL = endpoints.verifyEmail;
 const REFRESH_TOKEN_API_URL = endpoints.refreshToken;
 const FORGOT_PASSWORD_API_URL = endpoints.forgoetPassword;
@@ -29,6 +30,7 @@ export const authService = {
     formData.append("nationalIdFactoryNumber", data.printedNumber);
     formData.append("mobileNumber", data.mobile);
     formData.append("email", data.email);
+    formData.append("password", data.password);
     formData.append("countryOfBirth", data.nationality);
     formData.append("placeOfResidence", data.residence);
     formData.append("maritalStatus", data.maritalStatus);
@@ -80,6 +82,14 @@ export const authService = {
     const response = await axios.post(VERIFY_EMAIL_API_URL, null, {
       params: { token },
     });
+    return response.data;
+  },
+
+  verifyNow: async (data: {
+    nationalId: string;
+    newEmail: string;
+  }): Promise<string> => {
+    const response = await axios.post(VERIFY_NOW_API_URL, data);
     return response.data;
   },
 

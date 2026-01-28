@@ -20,7 +20,9 @@ const VerificationPending = () => {
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-foreground">
-              {language === "ar" ? "تحقق من بريدك الإلكتروني" : "Check Your Email"}
+              {language === "ar"
+                ? "تحقق من بريدك الإلكتروني"
+                : "Check Your Email"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -44,6 +46,16 @@ const VerificationPending = () => {
                   ? "لن تتمكن من تسجيل الدخول حتى تتحقق من بريدك الإلكتروني."
                   : "You will not be able to log in until you verify your email address."}
               </p>
+            </div>
+
+            <div className="text-center">
+              <button
+                onClick={() => navigate("/verify-now")}
+                className="text-sm text-primary hover:underline">
+                {language === "ar"
+                  ? "لم تستقبل البريد؟"
+                  : "Didn't receive the email?"}
+              </button>
             </div>
 
             <Button

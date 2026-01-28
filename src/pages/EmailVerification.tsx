@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { authService } from "@/services/auth.service";
+import { getTranslation } from "@/locales";
 
 const EmailVerification = () => {
   const { language } = useLanguage();
@@ -29,9 +30,7 @@ const EmailVerification = () => {
       if (!token) {
         setStatus("error");
         setMessage(
-          language === "ar"
-            ? "رمز التحقق غير موجود"
-            : "Verification token is missing",
+          getTranslation(language, "auth.emailVerification.tokenMissing") as string,
         );
         return;
       }
@@ -42,15 +41,17 @@ const EmailVerification = () => {
         setStatus("success");
         setMessage(
           response ||
-            (language === "ar"
-              ? "تم التحقق من بريدك الإلكتروني بنجاح"
-              : "Email verified successfully"),
+            (getTranslation(
+              language,
+              "auth.emailVerification.emailVerifiedSuccessfully",
+            ) as string),
         );
 
         toast.success(
-          language === "ar"
-            ? "تم التحقق من بريدك الإلكتروني. يمكنك الآن تسجيل الدخول."
-            : "Email verified successfully. You can now login.",
+          getTranslation(
+            language,
+            "auth.emailVerification.emailVerifiedLogin",
+          ) as string,
         );
 
         // Redirect to login after 2 seconds
@@ -62,10 +63,10 @@ const EmailVerification = () => {
         const err = error as AxiosError<string>;
 
         // Extract error message from response
-        let errorMessage =
-          language === "ar"
-            ? "فشل التحقق من البريد الإلكتروني"
-            : "Email verification failed";
+        let errorMessage = getTranslation(
+          language,
+          "auth.emailVerification.emailVerificationFailed",
+        ) as string;
 
         if (err?.response?.data) {
           // Backend returns plain string message
@@ -112,13 +113,20 @@ const EmailVerification = () => {
             </div>
             <CardTitle className="text-2xl font-bold text-foreground">
               {status === "loading" &&
-                (language === "ar" ? "جاري التحقق..." : "Verifying Email...")}
+                (getTranslation(
+                  language,
+                  "auth.emailVerification.verifyingEmail",
+                ) as string)}
               {status === "success" &&
-                (language === "ar"
-                  ? "تم التحقق بنجاح!"
-                  : "Verification Successful!")}
+                (getTranslation(
+                  language,
+                  "auth.emailVerification.verificationSuccessful",
+                ) as string)}
               {status === "error" &&
-                (language === "ar" ? "فشل التحقق" : "Verification Failed")}
+                (getTranslation(
+                  language,
+                  "auth.emailVerification.verificationFailed",
+                ) as string)}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -139,9 +147,10 @@ const EmailVerification = () => {
               <div className="bg-red-50 dark:bg-red-950/20 rounded-lg p-4 border border-red-200 dark:border-red-900 flex gap-3">
                 <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-red-900 dark:text-red-300">
-                  {language === "ar"
-                    ? "قد يكون الرمز غير صحيح أو منتهي الصلاحية. يرجى محاولة التسجيل مرة أخرى."
-                    : "The token may be invalid or expired. Please try registering again."}
+                  {getTranslation(
+                    language,
+                    "auth.emailVerification.tokenInvalidExpired",
+                  ) as string}
                 </div>
               </div>
             )}
@@ -149,9 +158,10 @@ const EmailVerification = () => {
             {status === "success" && (
               <div className="bg-green-50 dark:bg-green-950/20 rounded-lg p-4 border border-green-200 dark:border-green-900">
                 <p className="text-sm text-green-900 dark:text-green-300">
-                  {language === "ar"
-                    ? "سيتم نقلك إلى صفحة تسجيل الدخول..."
-                    : "You will be redirected to login page..."}
+                  {getTranslation(
+                    language,
+                    "auth.emailVerification.redirectingLogin",
+                  ) as string}
                 </p>
               </div>
             )}
@@ -160,7 +170,10 @@ const EmailVerification = () => {
               <Button
                 onClick={() => navigate("/register")}
                 className="w-full bg-gradient-primary hover:opacity-90">
-                {language === "ar" ? "العودة للتسجيل" : "Back to Registration"}
+                {getTranslation(
+                  language,
+                  "auth.emailVerification.backToRegistration",
+                ) as string}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             )}

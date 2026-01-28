@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { Loader2, Eye, EyeOff, Upload, UserPlus, Facebook } from "lucide-react";
 import CaptchaField from "@/components/CaptchaField";
 import IDGuideImage from "@/assets/ID.png";
+import { getTranslation } from "@/locales";
 
 const Register = () => {
   const { language } = useLanguage();
@@ -29,6 +30,15 @@ const Register = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [nationalIdError, setNationalIdError] = useState(false);
+  const [registrationError, setRegistrationError] = useState("");
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    length: false,
+    lowercase: false,
+    uppercase: false,
+    number: false,
+    specialChar: false,
+  });
 
   const {
     register,
@@ -62,8 +72,34 @@ const Register = () => {
 
   const residenceValue = watch("residence");
   const captchaValue = watch("captcha");
+  const passwordValue = watch("password");
+
+  // Update password requirements in real-time
+  React.useEffect(() => {
+    if (passwordValue) {
+      setPasswordRequirements({
+        length: passwordValue.length >= 8,
+        lowercase: /[a-z]/.test(passwordValue),
+        uppercase: /[A-Z]/.test(passwordValue),
+        number: /[0-9]/.test(passwordValue),
+        specialChar: /[@#$%^&+=!]/.test(passwordValue),
+      });
+    } else {
+      setPasswordRequirements({
+        length: false,
+        lowercase: false,
+        uppercase: false,
+        number: false,
+        specialChar: false,
+      });
+    }
+  }, [passwordValue]);
 
   const handleFormSubmit = async (data: RegisterFormData) => {
+    // Reset error states
+    setNationalIdError(false);
+    setRegistrationError("");
+
     // Check if there are any validation errors
     if (Object.keys(errors).length > 0) {
       const errorMessages = Object.values(errors)
@@ -72,11 +108,7 @@ const Register = () => {
         .slice(0, 3) // Show first 3 errors
         .join(" • ");
 
-      toast.error(
-        language === "ar"
-          ? `تصحيح المراجعة: ${errorMessages}`
-          : `Please fix: ${errorMessages}`,
-      );
+      toast.error(errorMessages);
       return;
     }
 
@@ -86,9 +118,10 @@ const Register = () => {
         nationalIdImage: uploadedFile,
       });
       toast.success(
-        language === "ar"
-          ? "تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب"
-          : "Account created successfully. Please check your email to verify your account",
+        getTranslation(
+          language,
+          "auth.register.accountCreatedSuccess",
+        ) as string,
       );
       navigate("/verification-pending");
     } catch (error) {
@@ -99,10 +132,28 @@ const Register = () => {
       const errorMessage =
         err?.message ||
         err?.response?.data?.message ||
-        (language === "ar"
-          ? "فشل إنشاء الحساب. يرجى المحاولة مرة أخرى"
-          : "Registration failed. Please try again");
-      toast.error(errorMessage);
+        (getTranslation(
+          language,
+          "auth.register.registrationFailed",
+        ) as string);
+
+      // Check if it's a National ID already exists error
+      if (
+        errorMessage.toLowerCase().includes("national id") &&
+        errorMessage.toLowerCase().includes("already exists")
+      ) {
+        setNationalIdError(true);
+        setRegistrationError(errorMessage);
+        toast.error(
+          getTranslation(
+            language,
+            "auth.register.nationalIdAlreadyRegistered",
+          ) as string,
+        );
+      } else {
+        setRegistrationError(errorMessage);
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -169,12 +220,10 @@ const Register = () => {
         <Card className="shadow-brand animate-fade-in">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold text-foreground">
-              {language === "ar" ? "إنشاء حساب جديد" : "Create New Account"}
+              {getTranslation(language, "auth.register.title") as string}
             </CardTitle>
             <p className="text-muted-foreground">
-              {language === "ar"
-                ? "املأ البيانات التالية لإنشاء حسابك"
-                : "Fill in the following information to create your account"}
+              {getTranslation(language, "auth.register.subtitle") as string}
             </p>
           </CardHeader>
           <CardContent>
@@ -188,20 +237,14 @@ const Register = () => {
                   .join(" • ");
 
                 if (errorMessages) {
-                  toast.error(
-                    language === "ar"
-                      ? `تصحيح المراجعة: ${errorMessages}`
-                      : `Please fix: ${errorMessages}`,
-                  );
+                  toast.error(errorMessages);
                 }
               })}
               className="space-y-6">
               {/* National ID */}
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
-                  {language === "ar"
-                    ? "الرقم القومي (14 رقم)"
-                    : "National ID (14 digits)"}{" "}
+                  {getTranslation(language, "auth.register.nationalId") as string}{" "}
                   *
                 </Label>
                 <Input
@@ -221,9 +264,7 @@ const Register = () => {
               {/* Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">
-                  {language === "ar"
-                    ? "الاسم (كما هو مذكور في الرقم القومي)"
-                    : "Name (as mentioned in National ID)"}{" "}
+                  {getTranslation(language, "auth.register.name") as string}{" "}
                   *
                 </Label>
                 <Input
@@ -242,13 +283,11 @@ const Register = () => {
               {/* National ID Image */}
               <div className="space-y-2">
                 <Label htmlFor="nationalIdImage">
-                  {language === "ar"
-                    ? "صورة الرقم القومي"
-                    : "National ID Image"}{" "}
+                  {getTranslation(language, "auth.register.nationalIdImage") as string}{" "}
                   *
                 </Label>
-                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-primary/50 transition-colors duration-300">
-                  <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-2 text-center hover:border-primary/50 transition-colors duration-300">
+                  <Upload className="mx-auto h-8 w-6 text-muted-foreground mb-1" />
                   <input
                     id="nationalIdImage"
                     type="file"
@@ -259,9 +298,7 @@ const Register = () => {
                   <Label
                     htmlFor="nationalIdImage"
                     className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors duration-300">
-                    {language === "ar"
-                      ? "اضغط لرفع الملف (JPG, PDF فقط)"
-                      : "Click to upload file (JPG, PDF only)"}
+                    {getTranslation(language, "auth.register.uploadFile") as string}
                   </Label>
                   {uploadedFile && (
                     <p className="mt-2 text-sm text-primary">
@@ -277,53 +314,66 @@ const Register = () => {
               </div>
 
               {/* Printed Number */}
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="printedNumber">
-                    {language === "ar"
-                      ? "الرقم المطبوع تحت الصورة في الرقم القومي (رقم المصنع)"
-                      : "Printed Number below the picture (Factory Number)"}{" "}
-                    *
-                  </Label>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {language === "ar"
-                      ? "رقم من 9 أرقام موجود أسفل الصورة مباشرة"
-                      : "9-digit number located directly below the photo"}
-                  </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col justify-center">
+                  <div className="space-y-3">
+                    <div>
+                      <Label htmlFor="printedNumber">
+                        {getTranslation(
+                          language,
+                          "auth.register.printedNumber",
+                        ) as string}{" "}
+                        *
+                      </Label>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {getTranslation(
+                          language,
+                          "auth.register.printedNumberHelper",
+                        ) as string}
+                      </p>
+                    </div>
+                    <Input
+                      id="printedNumber"
+                      type="text"
+                      maxLength={9}
+                      placeholder={getTranslation(
+                        language,
+                        "auth.register.enter9Digits",
+                      ) as string}
+                      {...register("printedNumber")}
+                      aria-invalid={!!errors.printedNumber}
+                    />
+                    {errors.printedNumber && (
+                      <p className="text-sm text-destructive">
+                        {errors.printedNumber.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
-                  <img
-                    src={IDGuideImage}
-                    alt={
-                      language === "ar"
-                        ? "دليل رقم المصنع"
-                        : "Factory Number Guide"
-                    }
-                    className="w-full h-auto rounded"
-                  />
+                <div className="flex items-center justify-center">
+                  <div className="border-2 border-orange-200 rounded-lg p-4 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-900 max-w-xs w-full">
+                    <img
+                      src={IDGuideImage}
+                      alt={
+                        language === "ar"
+                          ? "دليل رقم المصنع"
+                          : "Factory Number Guide"
+                      }
+                      className="w-full h-auto rounded"
+                    />
+                  </div>
                 </div>
-                <Input
-                  id="printedNumber"
-                  type="text"
-                  maxLength={9}
-                  placeholder={
-                    language === "ar" ? "أدخل 9 أرقام" : "Enter 9 digits"
-                  }
-                  {...register("printedNumber")}
-                  aria-invalid={!!errors.printedNumber}
-                />
-                {errors.printedNumber && (
-                  <p className="text-sm text-destructive">
-                    {errors.printedNumber.message}
-                  </p>
-                )}
               </div>
 
               {/* Mobile Numbers */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="mobile">
-                    {language === "ar" ? "رقم المحمول" : "Mobile Number"} *
+                    {getTranslation(
+                      language,
+                      "auth.register.mobileNumber",
+                    ) as string}{" "}
+                    *
                   </Label>
                   <Input
                     id="mobile"
@@ -339,9 +389,10 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmMobile">
-                    {language === "ar"
-                      ? "تأكيد رقم المحمول"
-                      : "Confirm Mobile Number"}{" "}
+                    {getTranslation(
+                      language,
+                      "auth.register.confirmMobileNumber",
+                    ) as string}{" "}
                     *
                   </Label>
                   <Input
@@ -362,7 +413,10 @@ const Register = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">
-                    {language === "ar" ? "البريد الإلكتروني" : "Email Address"}{" "}
+                    {getTranslation(
+                      language,
+                      "auth.register.emailAddress",
+                    ) as string}{" "}
                     *
                   </Label>
                   <Input
@@ -379,9 +433,10 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmEmail">
-                    {language === "ar"
-                      ? "تأكيد البريد الإلكتروني"
-                      : "Confirm Email Address"}{" "}
+                    {getTranslation(
+                      language,
+                      "auth.register.confirmEmailAddress",
+                    ) as string}{" "}
                     *
                   </Label>
                   <Input
@@ -398,13 +453,130 @@ const Register = () => {
                 </div>
               </div>
 
+              {/* Password Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">
+                    {getTranslation(
+                      language,
+                      "auth.register.password",
+                    ) as string}{" "}
+                    *
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      {...register("password")}
+                      aria-invalid={!!errors.password}
+                      className="pr-10"
+                      style={{
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1">
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive">
+                      {errors.password.message}
+                    </p>
+                  )}
+                  <div className="text-xs space-y-1 mt-2">
+                    <p
+                      className={
+                        passwordRequirements.length
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-muted-foreground"
+                      }>
+                      {getTranslation(language, "auth.register.chars8") as string}
+                    </p>
+                    <p
+                      className={
+                        passwordRequirements.lowercase &&
+                        passwordRequirements.uppercase
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-muted-foreground"
+                      }>
+                      {getTranslation(
+                        language,
+                        "auth.register.uppercaseLowercase",
+                      ) as string}
+                    </p>
+                    <p
+                      className={
+                        passwordRequirements.number &&
+                        passwordRequirements.specialChar
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-muted-foreground"
+                      }>
+                      {getTranslation(
+                        language,
+                        "auth.register.numberAndSpecial",
+                      ) as string}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">
+                    {getTranslation(
+                      language,
+                      "auth.register.confirmPassword",
+                    ) as string}{" "}
+                    *
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      {...register("confirmPassword")}
+                      aria-invalid={!!errors.confirmPassword}
+                      className="pr-10"
+                      style={{
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1">
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-destructive">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
               {/* Country and Residence */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>
-                    {language === "ar"
-                      ? "بلد الجنسية"
-                      : "Country of Nationality"}{" "}
+                    {getTranslation(
+                      language,
+                      "auth.register.countryOfNationality",
+                    ) as string}{" "}
                     *
                   </Label>
                   <Controller
@@ -435,7 +607,10 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>
-                    {language === "ar" ? "مكان الإقامة" : "Place of Residence"}{" "}
+                    {getTranslation(
+                      language,
+                      "auth.register.placeOfResidence",
+                    ) as string}{" "}
                     *
                   </Label>
                   <Controller
@@ -470,7 +645,11 @@ const Register = () => {
               {residenceValue === "Egypt" && (
                 <div className="space-y-2">
                   <Label>
-                    {language === "ar" ? "المحافظة" : "Governorate"} *
+                    {getTranslation(
+                      language,
+                      "auth.register.governorate",
+                    ) as string}{" "}
+                    *
                   </Label>
                   <Controller
                     name="governorate"
@@ -502,7 +681,11 @@ const Register = () => {
 
               <div className="space-y-2">
                 <Label>
-                  {language === "ar" ? "الحالة الاجتماعية" : "Marital Status"} *
+                  {getTranslation(
+                    language,
+                    "auth.register.maritalStatus",
+                  ) as string}{" "}
+                  *
                 </Label>
                 <Controller
                   name="maritalStatus"
@@ -533,7 +716,11 @@ const Register = () => {
               {/* Notification Language */}
               <div className="space-y-2">
                 <Label>
-                  {language === "ar" ? "اللغة المفضلة" : "Preferred Language"} *
+                  {getTranslation(
+                    language,
+                    "auth.register.preferredLanguage",
+                  ) as string}{" "}
+                  *
                 </Label>
                 <Controller
                   name="notificationLanguage"
@@ -560,7 +747,7 @@ const Register = () => {
               {/* Address */}
               <div className="space-y-2">
                 <Label htmlFor="address">
-                  {language === "ar" ? "العنوان" : "Address"} *
+                  {getTranslation(language, "auth.register.address") as string} *
                 </Label>
                 <Textarea
                   id="address"
@@ -590,8 +777,47 @@ const Register = () => {
                 ) : (
                   <UserPlus className="mr-2 h-4 w-4" />
                 )}
-                {language === "ar" ? "إنشاء الحساب" : "Create Account"}
+                {getTranslation(language, "auth.register.createAccount") as string}
               </Button>
+
+              {/* National ID Already Exists Error */}
+              {nationalIdError && (
+                <div className="bg-red-50 dark:bg-red-950/20 rounded-lg p-4 border border-red-200 dark:border-red-900 space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-red-900 dark:text-red-300 mb-2">
+                      {getTranslation(
+                        language,
+                        "auth.register.nationalIdAlreadyRegistered",
+                      ) as string}
+                    </p>
+                    <p className="text-sm text-red-800 dark:text-red-400">
+                      {getTranslation(
+                        language,
+                        "auth.register.nationalIdExists",
+                      ) as string}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Button
+                      type="button"
+                      onClick={() => navigate("/login")}
+                      variant="secondary"
+                      className="w-full">
+                      {getTranslation(language, "auth.register.goToLogin") as string}
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => navigate("/verify-now")}
+                      variant="secondary"
+                      className="w-full">
+                      {getTranslation(
+                        language,
+                        "auth.register.resendVerification",
+                      ) as string}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </form>
           </CardContent>
         </Card>

@@ -34,6 +34,7 @@ export const endpoints = {
   register: `${config.apiBaseUrl}/customers/register`,
   login: `${config.apiBaseUrl}/auth/login`,
   verifyEmail: `${config.apiBaseUrl}/auth/verify-email`,
+  verifyNow: `${config.apiBaseUrl}/auth/verify-now`,
   refreshToken: `${config.apiBaseUrl}/auth/refresh-token`,
   forgoetPassword: `${config.apiBaseUrl}/auth/forgot-password`,
   resetPassword: `${config.apiBaseUrl}/auth/reset-password`,

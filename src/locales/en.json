@@ -329,5 +329,98 @@
     },
     "none": "None",
     "requestRefund": "Request Refund"
+  },
+
+  "auth": {
+    "register": {
+      "title": "Create New Account",
+      "subtitle": "Fill in the following information to create your account",
+      "nationalId": "National ID (14 digits)",
+      "name": "Name (as mentioned in National ID)",
+      "nationalIdImage": "National ID Image",
+      "uploadFile": "Click to upload file (JPG, PDF only)",
+      "printedNumber": "Printed Number below the picture (Factory Number)",
+      "printedNumberHelper": "9-digit number located directly below the photo",
+      "enter9Digits": "Enter 9 digits",
+      "mobileNumber": "Mobile Number",
+      "confirmMobileNumber": "Confirm Mobile Number",
+      "emailAddress": "Email Address",
+      "confirmEmailAddress": "Confirm Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "countryOfNationality": "Country of Nationality",
+      "placeOfResidence": "Place of Residence",
+      "governorate": "Governorate",
+      "maritalStatus": "Marital Status",
+      "preferredLanguage": "Preferred Language",
+      "address": "Address",
+      "createAccount": "Create Account",
+      "accountCreatedSuccess": "Account created successfully. Please check your email to verify your account",
+      "registrationFailed": "Registration failed. Please try again",
+      "nationalIdAlreadyRegistered": "National ID already registered",
+      "nationalIdExists": "It appears this National ID is already registered. Please choose one of the following options:",
+      "goToLogin": "Go to Login",
+      "resendVerification": "Resend Verification",
+      "passwordRequirements": "Password Requirements",
+      "chars8": "8+ characters",
+      "uppercaseLowercase": "Uppercase and lowercase",
+      "numberAndSpecial": "Number and special char (@#$%^&+=!)",
+      "maritalStatusOptions": {
+        "single": "Single",
+        "married": "Married",
+        "divorced": "Divorced",
+        "widowed": "Widowed",
+        "marriedToForeigner": "Married to Foreigner"
+      },
+      "countriesOptions": {
+        "egypt": "Egypt",
+        "saudiarabia": "Saudi Arabia",
+        "uae": "UAE",
+        "kuwait": "Kuwait",
+        "qatar": "Qatar",
+        "bahrain": "Bahrain",
+        "oman": "Oman"
+      }
+    },
+    "login": {
+      "title": "Login",
+      "subtitle": "Enter your credentials to access your account",
+      "nationalId": "National ID",
+      "password": "Password",
+      "login": "Login",
+      "loginSuccessful": "Login successful",
+      "loginFailed": "Login failed. Please try again",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "registerNow": "Register Now",
+      "accountNotVerified": "Your account has not been verified yet",
+      "resendVerificationEmail": "Resend Verification Email"
+    },
+    "emailVerification": {
+      "verifyingEmail": "Verifying Email...",
+      "verificationSuccessful": "Verification Successful!",
+      "verificationFailed": "Verification Failed",
+      "emailVerifiedSuccessfully": "Email verified successfully",
+      "emailVerificationFailed": "Email verification failed",
+      "tokenMissing": "Verification token is missing",
+      "tokenInvalidExpired": "The token may be invalid or expired. Please try registering again.",
+      "redirectingLogin": "You will be redirected to login page...",
+      "backToRegistration": "Back to Registration",
+      "emailVerifiedLogin": "Email verified successfully. You can now login."
+    },
+    "verifyNow": {
+      "title": "Verify Your Identity",
+      "subtitle": "Enter your national ID and new email",
+      "nationalId": "National ID",
+      "enterNationalId": "Enter your national ID",
+      "newEmail": "New Email",
+      "enterEmail": "Enter your email",
+      "verifyNow": "Verify Now",
+      "processing": "Processing...",
+      "verificationSuccessful": "Verification successful",
+      "verificationFailed": "Verification failed. Please try again.",
+      "backToLogin": "Back to Login",
+      "redirectingLogin": "You will be redirected to login page..."
+    }
   }
 }

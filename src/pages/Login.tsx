@@ -13,12 +13,14 @@ import { loginSchema, LoginFormData } from "@/lib/validations";
 import { toast } from "sonner";
 import CaptchaField from "@/components/CaptchaField";
 import { redirectService } from "@/services/redirect.service";
+import { getTranslation } from "@/locales";
 
 const Login = () => {
   const { language } = useLanguage();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [verificationError, setVerificationError] = useState(false);
 
   useEffect(() => {
     // Store current page before user might navigate to register/forgot password
@@ -43,20 +45,34 @@ const Login = () => {
   const captchaValue = watch("captcha");
 
   const onSubmit = async (data: LoginFormData) => {
+    setVerificationError(false);
     try {
       await login(data.nationalId, data.password, data.captcha);
       toast.success(
-        language === "ar" ? "تم تسجيل الدخول بنجاح" : "Login successful",
+        getTranslation(language, "auth.login.loginSuccessful") as string,
       );
       // Redirect to the page user came from, or default to projects page
       const redirectUrl = redirectService.getPostLoginRedirect("/projects");
       navigate(redirectUrl);
     } catch (error) {
-      toast.error(
-        language === "ar"
-          ? "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى"
-          : "Login failed. Please try again",
-      );
+      const errorMessage = (error as Error).message || "";
+      
+      // Check if the error is an account verification error
+      if (
+        errorMessage.includes("ACCOUNT_NOT_VERIFIED") ||
+        errorMessage.includes("account is not active") ||
+        errorMessage.toLowerCase().includes("not verified") ||
+        errorMessage.toLowerCase().includes("not active")
+      ) {
+        setVerificationError(true);
+        toast.error(
+          getTranslation(language, "auth.login.accountNotVerified") as string,
+        );
+      } else {
+        toast.error(
+          getTranslation(language, "auth.login.loginFailed") as string,
+        );
+      }
     }
   };
 
@@ -66,19 +82,17 @@ const Login = () => {
         <Card className="shadow-brand animate-fade-in">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold text-foreground">
-              {language === "ar" ? "تسجيل الدخول" : "Login"}
+              {getTranslation(language, "auth.login.title") as string}
             </CardTitle>
             <p className="text-muted-foreground">
-              {language === "ar"
-                ? "أدخل بياناتك للوصول إلى حسابك"
-                : "Enter your credentials to access your account"}
+              {getTranslation(language, "auth.login.subtitle") as string}
             </p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
-                  {language === "ar" ? "الرقم القومي" : "National ID"} *
+                  {getTranslation(language, "auth.login.nationalId") as string} *
                 </Label>
                 <Input
                   id="nationalId"
@@ -97,7 +111,7 @@ const Login = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="password">
-                  {language === "ar" ? "كلمة المرور" : "Password"} *
+                  {getTranslation(language, "auth.login.password") as string} *
                 </Label>
                 <div className="relative">
                   <Input
@@ -140,23 +154,34 @@ const Login = () => {
                 ) : (
                   <LogIn className="mr-2 h-4 w-4" />
                 )}
-                {language === "ar" ? "تسجيل الدخول" : "Login"}
+                {getTranslation(language, "auth.login.login") as string}
               </Button>
+
+              {verificationError && (
+                <Button
+                  type="button"
+                  onClick={() => navigate("/verify-now")}
+                  variant="secondary"
+                  className="w-full">
+                  {getTranslation(
+                    language,
+                    "auth.login.resendVerificationEmail",
+                  ) as string}
+                </Button>
+              )}
 
               <div className="text-center space-y-2">
                 <Link
                   to="/reset-password"
                   className="text-sm text-primary hover:underline transition-colors duration-300">
-                  {language === "ar" ? "نسيت كلمة المرور؟" : "Forgot Password?"}
+                  {getTranslation(language, "auth.login.forgotPassword") as string}
                 </Link>
                 <div className="text-sm text-muted-foreground">
-                  {language === "ar"
-                    ? "ليس لديك حساب؟"
-                    : "Don't have an account?"}{" "}
+                  {getTranslation(language, "auth.login.noAccount") as string}{" "}
                   <Link
                     to="/register"
                     className="text-primary hover:underline transition-colors duration-300">
-                    {language === "ar" ? "سجل الآن" : "Register Now"}
+                    {getTranslation(language, "auth.login.registerNow") as string}
                   </Link>
                 </div>
               </div>

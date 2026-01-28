@@ -52,14 +52,16 @@ export const registerSchema = z
       ),
     mobile: z
       .string()
-      .min(10, "Mobile number must be at least 10 digits")
-      .max(15, "Mobile number is too long")
-      .regex(/^\d+$/, "Mobile number must contain only numbers"),
+      .regex(
+        /^(010|011|012|015)\d{8}$/,
+        "Mobile number must be 11 digits starting with 010, 011, 012, or 015",
+      ),
     confirmMobile: z
       .string()
-      .min(10, "Mobile number must be at least 10 digits")
-      .max(15, "Mobile number is too long")
-      .regex(/^\d+$/, "Mobile number must contain only numbers"),
+      .regex(
+        /^(010|011|012|015)\d{8}$/,
+        "Mobile number must be 11 digits starting with 010, 011, 012, or 015",
+      ),
     email: z
       .string()
       .min(1, "Email is required")
@@ -68,8 +70,14 @@ export const registerSchema = z
       .string()
       .min(1, "Email confirmation is required")
       .email("Please enter a valid email address"),
-    password: z.string().optional(),
-    confirmPassword: z.string().optional(),
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .regex(
+        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?!.*\s).{8,100}$/,
+        "Password must contain: 8+ characters, uppercase, lowercase, number, and special character (@#$%^&+=!)",
+      ),
+    confirmPassword: z.string().min(1, "Password confirmation is required"),
     notificationLanguage: z.enum(["ar", "en"]),
     nationality: z.string().min(1, "Please select your nationality"),
     residence: z.string().min(1, "Please select your place of residence"),
@@ -89,6 +97,10 @@ export const registerSchema = z
   .refine((data) => data.email === data.confirmEmail, {
     message: "Email addresses don't match",
     path: ["confirmEmail"],
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
   });
 
 export type LoginFormData = z.infer<typeof loginSchema>;

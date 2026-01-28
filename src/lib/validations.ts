@@ -112,8 +112,14 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .regex(
+        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?!.*\s).{8,100}$/,
+        "Password must contain: 8+ characters, uppercase, lowercase, number, and special character (@#$%^&+=!)",
+      ),
+    confirmPassword: z.string().min(1, "Password confirmation is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

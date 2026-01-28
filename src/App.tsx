@@ -10,6 +10,8 @@ import { Footer } from "@/components/Footer";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import VerificationPending from "./pages/VerificationPending";
 import EmailVerification from "./pages/EmailVerification";
 import VerifyNow from "./pages/VerifyNow";
@@ -45,6 +47,8 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route
                     path="/verification-pending"
                     element={<VerificationPending />}

@@ -172,7 +172,7 @@ const Login = () => {
 
               <div className="text-center space-y-2">
                 <Link
-                  to="/reset-password"
+                  to="/forgot-password"
                   className="text-sm text-primary hover:underline transition-colors duration-300">
                   {getTranslation(language, "auth.login.forgotPassword") as string}
                 </Link>

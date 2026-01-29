@@ -72,9 +72,16 @@ export const authService = {
   },
 
   resetPassword: async (data: ResetPasswordFormData & { token: string }) => {
+    // Map frontend field names to backend request format
+    const resetPasswordRequest = {
+      token: data.token,
+      newPassword: data.password,
+      confirmPassword: data.confirmPassword,
+    };
+
     return fetchClient(`${RESET_PASSWORD_API_URL}`, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(resetPasswordRequest),
     });
   },
 

@@ -76,5 +76,20 @@ export const fetchClient = async (url: string, options: RequestInit = {}) => {
     return null;
   }
 
-  return response.json();
+  const contentType = response.headers.get("content-type");
+
+  // Check if response is JSON
+  if (contentType && contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  // Handle plain text responses
+  return response.text().then((text) => {
+    try {
+      return JSON.parse(text);
+    } catch {
+      // If it's not valid JSON, return the text as-is
+      return text;
+    }
+  });
 };

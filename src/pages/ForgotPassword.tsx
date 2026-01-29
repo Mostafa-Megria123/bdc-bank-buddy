@@ -8,7 +8,10 @@ import { Mail, Loader2, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forgotPasswordSchema, ForgotPasswordFormData } from "@/lib/validations";
+import {
+  forgotPasswordSchema,
+  ForgotPasswordFormData,
+} from "@/lib/validations";
 import { toast } from "sonner";
 import { authService } from "@/services/auth.service";
 import { getTranslation } from "@/locales";
@@ -24,6 +27,7 @@ const ForgotPassword = () => {
     handleSubmit,
     formState: { errors },
     getValues,
+    setError,
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -35,7 +39,8 @@ const ForgotPassword = () => {
     setIsSubmitting(true);
     try {
       // Call the forgot password service
-      await authService.forgotPassword(data);
+      const response = await authService.forgotPassword(data);
+      console.log("Forgot password response:", response);
 
       setEmailSent(true);
       toast.success(
@@ -44,7 +49,20 @@ const ForgotPassword = () => {
           : "Password reset link has been sent to your email",
       );
     } catch (error) {
+      console.error("Forgot password error:", error);
       const errorMessage = (error as Error).message || "";
+
+      // Check if it's a "user not found" error
+      if (
+        errorMessage.includes("User not found") ||
+        errorMessage.includes("404")
+      ) {
+        setError("email", {
+          type: "manual",
+          message: errorMessage,
+        });
+      }
+
       toast.error(
         errorMessage ||
           (language === "ar"
@@ -89,7 +107,9 @@ const ForgotPassword = () => {
                 to="/login"
                 className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 rounded-md transition-colors duration-300">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                {language === "ar" ? "العودة إلى تسجيل الدخول" : "Back to Login"}
+                {language === "ar"
+                  ? "العودة إلى تسجيل الدخول"
+                  : "Back to Login"}
               </Link>
             </CardContent>
           </Card>
@@ -104,9 +124,7 @@ const ForgotPassword = () => {
         <Card className="shadow-brand animate-fade-in">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold text-foreground">
-              {language === "ar"
-                ? "نسيت كلمة المرور؟"
-                : "Forgot Password?"}
+              {language === "ar" ? "نسيت كلمة المرور؟" : "Forgot Password?"}
             </CardTitle>
             <p className="text-muted-foreground">
               {language === "ar"
@@ -118,7 +136,9 @@ const ForgotPassword = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email">
-                  {language === "ar" ? "عنوان البريد الإلكتروني" : "Email Address"}{" "}
+                  {language === "ar"
+                    ? "عنوان البريد الإلكتروني"
+                    : "Email Address"}{" "}
                   *
                 </Label>
                 <Input

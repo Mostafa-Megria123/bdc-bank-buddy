@@ -1,5 +1,10 @@
 import axios, { AxiosResponse, AxiosHeaders } from "axios";
 import { endpoints } from "@/config";
+import {
+  isTokenExpired,
+  isValidTokenFormat,
+  getTokenTimeRemaining,
+} from "./jwt-utils";
 
 // Get API base URL from environment variable - REQUIRED!
 const RAW_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -150,19 +155,16 @@ function getCsrfToken(): string | null {
 // Request Interceptor
 axios.interceptors.request.use(
   (config) => {
+    // Log all requests with auth headers
+    const accessToken = localStorage.getItem("accessToken");
+    const fallbackToken = localStorage.getItem("token");
+    const currentToken = accessToken || fallbackToken;
+
     // 1. For verify-email endpoint, skip interceptor (use manually set Authorization header)
     if (
       config.url?.includes("/verify-email") ||
       config.url?.includes("verify-email")
     ) {
-      console.log("🔐 Axios Interceptor - verify-email endpoint:");
-      console.log("   URL:", config.url);
-      console.log("   Params:", config.params);
-      console.log(
-        "   Full URL with params:",
-        config.url + "?" + new URLSearchParams(config.params).toString(),
-      );
-      console.log("   Authorization header:", config.headers?.Authorization);
       return config;
     }
 
@@ -179,21 +181,59 @@ axios.interceptors.request.use(
     }
 
     // 3. For all other endpoints, send access token in Authorization header
-    const token = localStorage.getItem("token");
-    if (token && token !== "undefined" && token !== "null") {
+    const token = accessToken || fallbackToken;
+
+    // Skip token validation completely for auth endpoints (login, register, logout)
+    const isAuthEndpoint =
+      config.url?.includes("/auth/login") ||
+      config.url?.includes("/auth/register") ||
+      config.url?.includes("/auth/logout") ||
+      config.url?.includes("/refresh-token");
+
+    if (isAuthEndpoint) {
+      // Skip all token logic for auth endpoints
+      // For logout, ALWAYS attach token (even if expired) for backend user identification
+      if (config.url?.includes("/auth/logout") && token) {
+        if (!config.headers) {
+          config.headers = new AxiosHeaders();
+        }
+        config.headers.Authorization = `Bearer ${token}`;
+        const tokenExpired = isTokenExpired(token);
+      }
+      return config;
+    }
+
+    // Validate token format and expiration for all other requests
+    const tokenFormatValid = isValidTokenFormat(token);
+    const tokenExpired = token ? isTokenExpired(token) : true;
+    const timeRemaining = token ? getTokenTimeRemaining(token) : 0;
+
+    // If token is expired, trigger refresh before sending the request
+    if (token && tokenFormatValid && tokenExpired) {
+      // Don't attach the expired token - let it fail with 401 to trigger refresh
+      // This prevents sending expired tokens to the backend
+    } else if (token && tokenFormatValid && !tokenExpired) {
       if (!config.headers) {
         config.headers = new AxiosHeaders();
       }
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // 3. Handle CSRF token for POST, PUT, DELETE, PATCH requests (only in non-development environments)
-    // Skip CSRF for verify-email endpoint (unauthenticated users)
-    if (enableCsrfProtection && !config.url?.includes("/verify-email")) {
-      if (
+    // 3. Handle CSRF token for POST, PUT, DELETE, PATCH requests
+    // Skip CSRF for auth endpoints (login, register, logout) and verify-email
+    if (enableCsrfProtection) {
+      const needsCsrf =
         config.method &&
-        ["post", "put", "delete", "patch"].includes(config.method.toLowerCase())
-      ) {
+        ["post", "put", "delete", "patch"].includes(
+          config.method.toLowerCase(),
+        ) &&
+        !config.url?.includes("/auth/login") &&
+        !config.url?.includes("/auth/register") &&
+        !config.url?.includes("/auth/logout") &&
+        !config.url?.includes("/verify-email") &&
+        !config.url?.includes("/csrf-token");
+
+      if (needsCsrf) {
         const csrfToken = getCsrfToken();
 
         if (csrfToken) {
@@ -246,11 +286,23 @@ axios.interceptors.response.use(
     return response;
   },
   async (error) => {
+    // Log all errors
     const originalRequest = error.config;
 
     if (!originalRequest) {
-      console.error("No originalRequest config found:", error);
       return Promise.reject(error);
+    }
+
+    // Handle logout errors gracefully - don't retry, just resolve
+    if (originalRequest.url?.includes("/auth/logout")) {
+      // Return a resolved promise so logout cleanup can continue
+      return Promise.resolve({
+        data: { success: false },
+        status: error.response?.status || 500,
+        statusText: error.response?.statusText || "Error",
+        headers: {},
+        config: originalRequest,
+      });
     }
 
     // Handle network errors with exponential backoff retry
@@ -270,14 +322,6 @@ axios.interceptors.response.use(
     ) {
       const retryCount = originalRequest._retryCount;
       const delay = originalRequest._retryDelay * Math.pow(2, retryCount); // Exponential backoff
-
-      console.warn(
-        `Network error detected. Retrying (${retryCount + 1}/${originalRequest._retryAttempts}) after ${delay}ms:`,
-        {
-          url: originalRequest.url,
-          error: error.code,
-        },
-      );
 
       originalRequest._retryCount += 1;
 
@@ -307,7 +351,6 @@ axios.interceptors.response.use(
           return axios(originalRequest);
         }
       } catch (csrfError) {
-        console.error("Failed to refresh CSRF token:", csrfError);
         return Promise.reject(csrfError);
       }
     }
@@ -317,20 +360,19 @@ axios.interceptors.response.use(
       error.response?.status === 401 &&
       !originalRequest._retry &&
       !originalRequest.url?.includes("/auth/login") &&
+      !originalRequest.url?.includes("/auth/logout") &&
       !originalRequest.url?.includes(`${API_URL}/refresh-token`)
     ) {
       // If this is a login request, don't try to refresh - return the actual 401 error
       if (originalRequest.url?.includes("/auth/login")) {
         return Promise.reject(error);
       }
-
       originalRequest._retry = true;
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
 
         if (!refreshToken) {
-          console.error("No refresh token found in localStorage");
           throw new Error("No refresh token available");
         }
 
@@ -340,20 +382,20 @@ axios.interceptors.response.use(
         const responseData = response?.data;
 
         if (!responseData) {
-          console.error("No data in refresh token response:", response);
           throw new Error("Invalid refresh token response");
         }
 
         // Handle response structure - backend returns object directly, not wrapped
-        const token = responseData?.token;
+        const token = responseData?.token || responseData?.accessToken;
         const newRefreshToken = responseData?.refreshToken;
 
         if (!token) {
-          console.error("No token in auth response:", responseData);
           throw new Error("No token in refresh response");
         }
 
+        // Store with both keys for compatibility
         localStorage.setItem("token", token);
+        localStorage.setItem("accessToken", token);
         if (newRefreshToken) {
           localStorage.setItem("refreshToken", newRefreshToken);
         }
@@ -362,18 +404,29 @@ axios.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return axios(originalRequest);
       } catch (refreshError) {
-        console.error("REFRESH TOKEN FAILED:", {
-          errorMessage:
-            refreshError instanceof Error
-              ? refreshError.message
-              : String(refreshError),
-          stack: refreshError instanceof Error ? refreshError.stack : undefined,
-        });
+        // Refresh failed - call logout endpoint to invalidate session on backend
+        try {
+          await axios.post(`${API_URL}/logout`);
+        } catch (logoutError) {
+          // Continue even if logout fails - we still need to clear the session
+        }
 
-        // Refresh failed - clear session and redirect
+        // Clear ALL tokens from localStorage and URL parameters
         localStorage.removeItem("token");
+        localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("csrfToken");
+        localStorage.removeItem("user");
+
+        // Remove any URL parameter tokens from verify-email flow
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("token")) {
+          urlParams.delete("token");
+          const newUrl =
+            window.location.pathname +
+            (urlParams.toString() ? "?" + urlParams.toString() : "");
+          window.history.replaceState({}, "", newUrl);
+        }
 
         const baseUrl = import.meta.env.BASE_URL.endsWith("/")
           ? import.meta.env.BASE_URL
@@ -385,20 +438,6 @@ axios.interceptors.response.use(
         }
         return Promise.reject(refreshError);
       }
-    }
-
-    // Log network errors with more details (after retry attempts exhausted)
-    if (error.code === "ERR_NETWORK" || !error.response) {
-      console.error("Network error detected:", {
-        message: error.message,
-        code: error.code,
-        url: originalRequest?.url,
-        baseURL: originalRequest?.baseURL,
-        method: originalRequest?.method,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        retryAttempts: originalRequest?._retryCount,
-      });
     }
 
     return Promise.reject(error);

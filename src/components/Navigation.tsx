@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/useLanguage";
+import { useAuth } from "@/contexts/useAuth";
 import { Menu, X, Globe } from "lucide-react";
 import bdcLogo from "@/assets/bdc-logo.png";
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This would come from auth context
+  const { user, logout } = useAuth();
   const { language, setLanguage, tString } = useLanguage();
   const location = useLocation();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "ar" : "en");
@@ -23,7 +28,9 @@ export const Navigation: React.FC = () => {
     { path: "/announcements", label: tString("nav.announcements") },
     { path: "/projects", label: tString("nav.projects") || "Projects" },
     { path: "/faqs", label: tString("nav.faqs") },
-    { path: "/my-reservations", label: tString("nav.myReservations") },
+    ...(user
+      ? [{ path: "/my-reservations", label: tString("nav.myReservations") }]
+      : []),
   ];
 
   return (
@@ -70,17 +77,19 @@ export const Navigation: React.FC = () => {
             </Button>
 
             {/* Auth Buttons */}
-            {isLoggedIn ? (
+            {user ? (
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <Button variant="outline" size="sm">
-                  {tString("nav.resetPassword")}
-                </Button>
+                <Link to="/forgot-password">
+                  <Button variant="outline" size="sm">
+                    {tString("nav.resetPassword")}
+                  </Button>
+                </Link>
                 <Button
                   variant="default"
                   size="sm"
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={handleLogout}
                   className="bg-gradient-primary hover:opacity-90">
-                  {tString("nav.logout")}
+                  {tString("nav.logout")} - {user.fullName}
                 </Button>
               </div>
             ) : (
@@ -146,17 +155,19 @@ export const Navigation: React.FC = () => {
 
             {/* Mobile Auth Buttons */}
             <div className="px-4 py-3 border-t space-y-2">
-              {isLoggedIn ? (
+              {user ? (
                 <>
-                  <Button variant="outline" size="sm" className="w-full">
-                    {tString("nav.resetPassword")}
-                  </Button>
+                  <Link to="/forgot-password" className="block">
+                    <Button variant="outline" size="sm" className="w-full">
+                      {tString("nav.resetPassword")}
+                    </Button>
+                  </Link>
                   <Button
                     variant="default"
                     size="sm"
-                    onClick={() => setIsLoggedIn(false)}
+                    onClick={handleLogout}
                     className="w-full bg-gradient-primary hover:opacity-90">
-                    {tString("nav.logout")}
+                    {tString("nav.logout")} - {user.fullName}
                   </Button>
                 </>
               ) : (

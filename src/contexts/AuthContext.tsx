@@ -1,6 +1,7 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useEffect } from "react";
 import { AuthContext } from "./AuthContextCore";
-import type { AuthContextType, User } from "./authTypes";
+import type { AuthContextType } from "./authTypes";
+import { User } from "@/types/user";
 import { authService } from "@/services/auth.service";
 import { RegisterFormData } from "@/lib/validations";
 
@@ -10,6 +11,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Handle token expiration event from fetchClient
+  useEffect(() => {
+    const handleTokenExpired = () => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setUser(null);
+    };
+
+    window.addEventListener("token-expired", handleTokenExpired);
+    return () => {
+      window.removeEventListener("token-expired", handleTokenExpired);
+    };
+  }, []);
+
   const login: AuthContextType["login"] = async (
     nationalId,
     password,
@@ -17,17 +32,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   ) => {
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      const mockUser: User = {
-        id: "1",
+      const response = await authService.login({
         nationalId,
-        name: "John Doe",
-        email: "john@example.com",
-        mobile: "01234567890",
-      };
-      setUser(mockUser);
+        password,
+        captcha,
+      });
+
+      // Store tokens in localStorage
+      if (response.token) {
+        localStorage.setItem("accessToken", response.token);
+      }
+      if (response.refreshToken) {
+        localStorage.setItem("refreshToken", response.refreshToken);
+      }
+
+      // Store preferred language
+      if (response.preferredLanguage) {
+        localStorage.setItem("preferredLanguage", response.preferredLanguage);
+      }
+
+      // API returns user object directly, not wrapped in response.user
+      const userData = response.user || response;
+      setUser(userData);
     } catch (error) {
-      throw new Error("Login failed. Please check your credentials.");
+      const errorMessage =
+        (error as Error).message ||
+        "Login failed. Please check your credentials.";
+      throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -43,8 +74,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const logout: AuthContextType["logout"] = () => {
-    setUser(null);
+  const logout: AuthContextType["logout"] = async () => {
+    try {
+      // Call the logout API to invalidate the token
+      await authService.logout();
+    } catch (error) {
+      // Clear user state even if API call fails
+    } finally {
+      // Always clear local state
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("csrfToken");
+      setUser(null);
+    }
   };
 
   return (

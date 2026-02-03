@@ -7,6 +7,9 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { useTrackLastPage } from "@/hooks/useTrackLastPage";
+import { useInitializeAuth } from "@/hooks/useInitializeAuth";
+import { useTokenRefresh } from "@/hooks/useTokenRefresh";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -29,6 +32,57 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
+// Inner component that has access to router hooks
+const AppContent = () => {
+  // Initialize auth on app load (validate tokens, refresh if needed, logout if expired)
+  useInitializeAuth();
+
+  // Automatically refresh token before expiration
+  useTokenRefresh();
+
+  // Track last visited page for redirect after login
+  useTrackLastPage();
+
+  return (
+    <>
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route
+              path="/verification-pending"
+              element={<VerificationPending />}
+            />
+            <Route path="/verify-email" element={<EmailVerification />} />
+            <Route path="/verify-now" element={<VerifyNow />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faqs" element={<FAQs />} />
+            <Route path="/announcements" element={<Announcements />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route
+              path="/announcements/:id"
+              element={<AnnouncementDetails />}
+            />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/my-reservations" element={<MyReservations />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
@@ -39,40 +93,7 @@ const App = () => (
           <BrowserRouter
             basename="/bdc-real-estate"
             future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
-            <ScrollToTop />
-            <div className="min-h-screen flex flex-col">
-              <Navigation />
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route
-                    path="/verification-pending"
-                    element={<VerificationPending />}
-                  />
-                  <Route path="/verify-email" element={<EmailVerification />} />
-                  <Route path="/verify-now" element={<VerifyNow />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/faqs" element={<FAQs />} />
-                  <Route path="/announcements" element={<Announcements />} />
-                  <Route path="/projects" element={<Projects />} />
-                  <Route
-                    path="/announcements/:id"
-                    element={<AnnouncementDetails />}
-                  />
-                  <Route path="/projects/:id" element={<ProjectDetail />} />
-                  <Route path="/my-reservations" element={<MyReservations />} />
-                  <Route path="/terms" element={<TermsPage />} />
-                  <Route path="/privacy" element={<PrivacyPage />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
+            <AppContent />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>

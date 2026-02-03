@@ -15,6 +15,7 @@ import { getTranslation } from "@/locales";
 
 const ResetPassword = () => {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
@@ -31,12 +32,21 @@ const ResetPassword = () => {
   const token = searchParams.get("token");
 
   useEffect(() => {
-    // Redirect if no token is provided
-    if (!token) {
+    // If no token and not logged in, redirect to login
+    if (!token && !user) {
       toast.error("Invalid reset link. Please request a new password reset.");
       navigate("/login");
     }
-  }, [token, navigate]);
+    // If logged in but no token, redirect to forgot-password to get a reset token
+    if (!token && user) {
+      toast.info(
+        language === "ar"
+          ? "يرجى طلب إعادة تعيين كلمة المرور عبر البريد الإلكتروني"
+          : "Please request a password reset via email",
+      );
+      navigate("/forgot-password");
+    }
+  }, [token, user, navigate, language]);
 
   const {
     register,
@@ -82,7 +92,6 @@ const ResetPassword = () => {
 
     setIsResetting(true);
     try {
-      // Call the resetPassword service
       const { resetPassword } = await import("@/services/auth.service").then(
         (m) => ({ resetPassword: m.authService.resetPassword }),
       );
@@ -111,7 +120,7 @@ const ResetPassword = () => {
     }
   };
 
-  if (!token) {
+  if (!token && !user) {
     return null;
   }
 

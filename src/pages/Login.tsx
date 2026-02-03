@@ -16,11 +16,12 @@ import { redirectService } from "@/services/redirect.service";
 import { getTranslation } from "@/locales";
 
 const Login = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
+  const [loginError, setLoginError] = useState<string>("");
 
   useEffect(() => {
     // Store current page before user might navigate to register/forgot password
@@ -46,8 +47,16 @@ const Login = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     setVerificationError(false);
+    setLoginError("");
     try {
       await login(data.nationalId, data.password, data.captcha);
+
+      // Set user's preferred language from localStorage after successful login
+      const preferredLanguage = localStorage.getItem("preferredLanguage");
+      if (preferredLanguage && preferredLanguage !== language) {
+        setLanguage(preferredLanguage as "en" | "ar");
+      }
+
       toast.success(
         getTranslation(language, "auth.login.loginSuccessful") as string,
       );
@@ -56,7 +65,7 @@ const Login = () => {
       navigate(redirectUrl);
     } catch (error) {
       const errorMessage = (error as Error).message || "";
-      
+
       // Check if the error is an account verification error
       if (
         errorMessage.includes("ACCOUNT_NOT_VERIFIED") ||
@@ -65,13 +74,15 @@ const Login = () => {
         errorMessage.toLowerCase().includes("not active")
       ) {
         setVerificationError(true);
+        setLoginError(
+          getTranslation(language, "auth.login.accountNotVerified") as string,
+        );
         toast.error(
           getTranslation(language, "auth.login.accountNotVerified") as string,
         );
       } else {
-        toast.error(
-          getTranslation(language, "auth.login.loginFailed") as string,
-        );
+        setLoginError(errorMessage);
+        toast.error(errorMessage);
       }
     }
   };
@@ -92,7 +103,8 @@ const Login = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
-                  {getTranslation(language, "auth.login.nationalId") as string} *
+                  {getTranslation(language, "auth.login.nationalId") as string}{" "}
+                  *
                 </Label>
                 <Input
                   id="nationalId"
@@ -157,16 +169,24 @@ const Login = () => {
                 {getTranslation(language, "auth.login.login") as string}
               </Button>
 
+              {loginError && (
+                <p className="text-sm text-destructive text-center">
+                  {loginError}
+                </p>
+              )}
+
               {verificationError && (
                 <Button
                   type="button"
                   onClick={() => navigate("/verify-now")}
                   variant="secondary"
                   className="w-full">
-                  {getTranslation(
-                    language,
-                    "auth.login.resendVerificationEmail",
-                  ) as string}
+                  {
+                    getTranslation(
+                      language,
+                      "auth.login.resendVerificationEmail",
+                    ) as string
+                  }
                 </Button>
               )}
 
@@ -174,14 +194,24 @@ const Login = () => {
                 <Link
                   to="/forgot-password"
                   className="text-sm text-primary hover:underline transition-colors duration-300">
-                  {getTranslation(language, "auth.login.forgotPassword") as string}
+                  {
+                    getTranslation(
+                      language,
+                      "auth.login.forgotPassword",
+                    ) as string
+                  }
                 </Link>
                 <div className="text-sm text-muted-foreground">
                   {getTranslation(language, "auth.login.noAccount") as string}{" "}
                   <Link
                     to="/register"
                     className="text-primary hover:underline transition-colors duration-300">
-                    {getTranslation(language, "auth.login.registerNow") as string}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.login.registerNow",
+                      ) as string
+                    }
                   </Link>
                 </div>
               </div>

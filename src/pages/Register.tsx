@@ -19,14 +19,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, RegisterFormData } from "@/lib/validations";
 import { toast } from "sonner";
 import { Loader2, Eye, EyeOff, Upload, UserPlus, Facebook } from "lucide-react";
-import CaptchaField from "@/components/CaptchaField";
+import ReCAPTCHA from "react-google-recaptcha";
 import IDGuideImage from "@/assets/ID.png";
 import { getTranslation } from "@/locales";
 
 const Register = () => {
+  const recaptchaRef = React.useRef<ReCAPTCHA>(null);
   const { language } = useLanguage();
   const { register: registerUser, isLoading } = useAuth();
   const navigate = useNavigate();
+
+  // Debug: Log environment variable
+  React.useEffect(() => {
+    console.log("reCAPTCHA Site Key:", import.meta.env.VITE_RECAPTCHA_SITE_KEY);
+  }, []);
+
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -125,6 +132,10 @@ const Register = () => {
       );
       navigate("/verification-pending");
     } catch (error) {
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
+      setValue("captcha", "");
+
       const err = error as {
         message?: string;
         response?: { data?: { message?: string } };
@@ -244,7 +255,12 @@ const Register = () => {
               {/* National ID */}
               <div className="space-y-2">
                 <Label htmlFor="nationalId">
-                  {getTranslation(language, "auth.register.nationalId") as string}{" "}
+                  {
+                    getTranslation(
+                      language,
+                      "auth.register.nationalId",
+                    ) as string
+                  }{" "}
                   *
                 </Label>
                 <Input
@@ -264,8 +280,7 @@ const Register = () => {
               {/* Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">
-                  {getTranslation(language, "auth.register.name") as string}{" "}
-                  *
+                  {getTranslation(language, "auth.register.name") as string} *
                 </Label>
                 <Input
                   id="name"
@@ -283,7 +298,12 @@ const Register = () => {
               {/* National ID Image */}
               <div className="space-y-2">
                 <Label htmlFor="nationalIdImage">
-                  {getTranslation(language, "auth.register.nationalIdImage") as string}{" "}
+                  {
+                    getTranslation(
+                      language,
+                      "auth.register.nationalIdImage",
+                    ) as string
+                  }{" "}
                   *
                 </Label>
                 <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-2 text-center hover:border-primary/50 transition-colors duration-300">
@@ -298,7 +318,12 @@ const Register = () => {
                   <Label
                     htmlFor="nationalIdImage"
                     className="cursor-pointer text-sm text-muted-foreground hover:text-primary transition-colors duration-300">
-                    {getTranslation(language, "auth.register.uploadFile") as string}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.uploadFile",
+                      ) as string
+                    }
                   </Label>
                   {uploadedFile && (
                     <p className="mt-2 text-sm text-primary">
@@ -319,27 +344,33 @@ const Register = () => {
                   <div className="space-y-3">
                     <div>
                       <Label htmlFor="printedNumber">
-                        {getTranslation(
-                          language,
-                          "auth.register.printedNumber",
-                        ) as string}{" "}
+                        {
+                          getTranslation(
+                            language,
+                            "auth.register.printedNumber",
+                          ) as string
+                        }{" "}
                         *
                       </Label>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {getTranslation(
-                          language,
-                          "auth.register.printedNumberHelper",
-                        ) as string}
+                        {
+                          getTranslation(
+                            language,
+                            "auth.register.printedNumberHelper",
+                          ) as string
+                        }
                       </p>
                     </div>
                     <Input
                       id="printedNumber"
                       type="text"
                       maxLength={9}
-                      placeholder={getTranslation(
-                        language,
-                        "auth.register.enter9Digits",
-                      ) as string}
+                      placeholder={
+                        getTranslation(
+                          language,
+                          "auth.register.enter9Digits",
+                        ) as string
+                      }
                       {...register("printedNumber")}
                       aria-invalid={!!errors.printedNumber}
                     />
@@ -369,10 +400,12 @@ const Register = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="mobile">
-                    {getTranslation(
-                      language,
-                      "auth.register.mobileNumber",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.mobileNumber",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <Input
@@ -389,10 +422,12 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmMobile">
-                    {getTranslation(
-                      language,
-                      "auth.register.confirmMobileNumber",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.confirmMobileNumber",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <Input
@@ -413,10 +448,12 @@ const Register = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">
-                    {getTranslation(
-                      language,
-                      "auth.register.emailAddress",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.emailAddress",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <Input
@@ -433,10 +470,12 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmEmail">
-                    {getTranslation(
-                      language,
-                      "auth.register.confirmEmailAddress",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.confirmEmailAddress",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <Input
@@ -457,10 +496,12 @@ const Register = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="password">
-                    {getTranslation(
-                      language,
-                      "auth.register.password",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.password",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <div className="relative">
@@ -499,7 +540,12 @@ const Register = () => {
                           ? "text-green-600 dark:text-green-400"
                           : "text-muted-foreground"
                       }>
-                      {getTranslation(language, "auth.register.chars8") as string}
+                      {
+                        getTranslation(
+                          language,
+                          "auth.register.chars8",
+                        ) as string
+                      }
                     </p>
                     <p
                       className={
@@ -508,10 +554,12 @@ const Register = () => {
                           ? "text-green-600 dark:text-green-400"
                           : "text-muted-foreground"
                       }>
-                      {getTranslation(
-                        language,
-                        "auth.register.uppercaseLowercase",
-                      ) as string}
+                      {
+                        getTranslation(
+                          language,
+                          "auth.register.uppercaseLowercase",
+                        ) as string
+                      }
                     </p>
                     <p
                       className={
@@ -520,19 +568,23 @@ const Register = () => {
                           ? "text-green-600 dark:text-green-400"
                           : "text-muted-foreground"
                       }>
-                      {getTranslation(
-                        language,
-                        "auth.register.numberAndSpecial",
-                      ) as string}
+                      {
+                        getTranslation(
+                          language,
+                          "auth.register.numberAndSpecial",
+                        ) as string
+                      }
                     </p>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">
-                    {getTranslation(
-                      language,
-                      "auth.register.confirmPassword",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.confirmPassword",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <div className="relative">
@@ -573,10 +625,12 @@ const Register = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>
-                    {getTranslation(
-                      language,
-                      "auth.register.countryOfNationality",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.countryOfNationality",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <Controller
@@ -607,10 +661,12 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>
-                    {getTranslation(
-                      language,
-                      "auth.register.placeOfResidence",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.placeOfResidence",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <Controller
@@ -645,10 +701,12 @@ const Register = () => {
               {residenceValue === "Egypt" && (
                 <div className="space-y-2">
                   <Label>
-                    {getTranslation(
-                      language,
-                      "auth.register.governorate",
-                    ) as string}{" "}
+                    {
+                      getTranslation(
+                        language,
+                        "auth.register.governorate",
+                      ) as string
+                    }{" "}
                     *
                   </Label>
                   <Controller
@@ -681,10 +739,12 @@ const Register = () => {
 
               <div className="space-y-2">
                 <Label>
-                  {getTranslation(
-                    language,
-                    "auth.register.maritalStatus",
-                  ) as string}{" "}
+                  {
+                    getTranslation(
+                      language,
+                      "auth.register.maritalStatus",
+                    ) as string
+                  }{" "}
                   *
                 </Label>
                 <Controller
@@ -716,10 +776,12 @@ const Register = () => {
               {/* Notification Language */}
               <div className="space-y-2">
                 <Label>
-                  {getTranslation(
-                    language,
-                    "auth.register.preferredLanguage",
-                  ) as string}{" "}
+                  {
+                    getTranslation(
+                      language,
+                      "auth.register.preferredLanguage",
+                    ) as string
+                  }{" "}
                   *
                 </Label>
                 <Controller
@@ -747,7 +809,8 @@ const Register = () => {
               {/* Address */}
               <div className="space-y-2">
                 <Label htmlFor="address">
-                  {getTranslation(language, "auth.register.address") as string} *
+                  {getTranslation(language, "auth.register.address") as string}{" "}
+                  *
                 </Label>
                 <Textarea
                   id="address"
@@ -762,11 +825,20 @@ const Register = () => {
                 )}
               </div>
 
-              <CaptchaField
-                value={captchaValue}
-                onChange={(value) => setValue("captcha", value)}
-                error={errors.captcha?.message}
-              />
+              <div className="space-y-2">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
+                  onChange={(value) => setValue("captcha", value || "")}
+                  onExpired={() => setValue("captcha", "")}
+                  theme="light"
+                />
+                {errors.captcha && (
+                  <p className="text-sm text-destructive">
+                    {errors.captcha.message}
+                  </p>
+                )}
+              </div>
 
               <Button
                 type="submit"
@@ -777,7 +849,12 @@ const Register = () => {
                 ) : (
                   <UserPlus className="mr-2 h-4 w-4" />
                 )}
-                {getTranslation(language, "auth.register.createAccount") as string}
+                {
+                  getTranslation(
+                    language,
+                    "auth.register.createAccount",
+                  ) as string
+                }
               </Button>
 
               {/* National ID Already Exists Error */}
@@ -785,16 +862,20 @@ const Register = () => {
                 <div className="bg-red-50 dark:bg-red-950/20 rounded-lg p-4 border border-red-200 dark:border-red-900 space-y-4">
                   <div>
                     <p className="text-sm font-medium text-red-900 dark:text-red-300 mb-2">
-                      {getTranslation(
-                        language,
-                        "auth.register.nationalIdAlreadyRegistered",
-                      ) as string}
+                      {
+                        getTranslation(
+                          language,
+                          "auth.register.nationalIdAlreadyRegistered",
+                        ) as string
+                      }
                     </p>
                     <p className="text-sm text-red-800 dark:text-red-400">
-                      {getTranslation(
-                        language,
-                        "auth.register.nationalIdExists",
-                      ) as string}
+                      {
+                        getTranslation(
+                          language,
+                          "auth.register.nationalIdExists",
+                        ) as string
+                      }
                     </p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -803,17 +884,24 @@ const Register = () => {
                       onClick={() => navigate("/login")}
                       variant="secondary"
                       className="w-full">
-                      {getTranslation(language, "auth.register.goToLogin") as string}
+                      {
+                        getTranslation(
+                          language,
+                          "auth.register.goToLogin",
+                        ) as string
+                      }
                     </Button>
                     <Button
                       type="button"
                       onClick={() => navigate("/verify-now")}
                       variant="secondary"
                       className="w-full">
-                      {getTranslation(
-                        language,
-                        "auth.register.resendVerification",
-                      ) as string}
+                      {
+                        getTranslation(
+                          language,
+                          "auth.register.resendVerification",
+                        ) as string
+                      }
                     </Button>
                   </div>
                 </div>

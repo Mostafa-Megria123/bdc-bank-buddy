@@ -695,6 +695,7 @@ const ProjectDetail = () => {
         onClose={closeReservationModal}
         unit={selectedUnit}
         projectName={language === "ar" ? project.nameAr : project.nameEn}
+        projectId={id || ""}
       />
 
       <UnitDetailsModal

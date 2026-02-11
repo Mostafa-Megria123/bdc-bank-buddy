@@ -5,10 +5,12 @@ import {
   isValidTokenFormat,
   getTokenTimeRemaining,
 } from "@/lib/jwt-utils";
+import { fetchCsrfToken } from "@/lib/axios";
 
 /**
  * Hook to validate user session on app load
  * Validates token expiration and automatically logs out if expired
+ * Also fetches CSRF token for protected requests
  */
 export const useInitializeAuth = () => {
   const { logout, user } = useAuth();
@@ -47,6 +49,16 @@ export const useInitializeAuth = () => {
       if (isExpired) {
         await logout();
         return;
+      }
+
+      // Fetch CSRF token for protected requests
+      try {
+        const csrfToken = await fetchCsrfToken();
+      } catch (error) {
+        console.error(
+          "Error fetching CSRF token during initialization:",
+          error,
+        );
       }
     };
 

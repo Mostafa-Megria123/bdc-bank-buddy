@@ -41,5 +41,7 @@ export const endpoints = {
   resetPassword: `${config.apiBaseUrl}/auth/reset-password`,
   csrf: `${config.apiBaseUrl}/csrf-token`,
   me: `${config.apiBaseUrl}/auth/me`,
+  paymentCheckout: `${config.apiBaseUrl}/payments/checkOut`,
+  paymentCheckTrxStatus: `${config.apiBaseUrl}/payments/checkTrxStatus`,
   // Add other endpoints here as needed
 } as const;

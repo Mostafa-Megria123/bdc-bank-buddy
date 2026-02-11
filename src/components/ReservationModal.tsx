@@ -23,15 +23,23 @@ import {
   Calendar,
   Home,
   MapPin,
+  ExternalLink,
 } from "lucide-react";
 import { Unit } from "@/types/unit";
 import { UnitType } from "@/types/unit-type";
+import { useAuth } from "@/contexts/useAuth";
+import {
+  paymentService,
+  PaymentRequest,
+  CheckoutResponse,
+} from "@/services/payment.service";
 
 interface ReservationModalProps {
   isOpen: boolean;
   onClose: () => void;
   unit: Unit | null;
   projectName: string;
+  projectId: string; // Add projectId prop
 }
 
 export const ReservationModal: React.FC<ReservationModalProps> = ({
@@ -39,68 +47,41 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   onClose,
   unit,
   projectName,
+  projectId, // Destructure projectId
 }) => {
   const { language, tString } = useLanguage();
   const { toast } = useToast();
-  const [step, setStep] = useState(1); // 1: Unit Details, 2: Personal Info, 3: Payment
+  const { user } = useAuth(); // Get user data from auth context
+  const [step, setStep] = useState(1); // 1: Reservation Details, 2: Payment Confirmation
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const [personalInfo, setPersonalInfo] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    nationalId: "",
-  });
-
-  const [paymentInfo, setPaymentInfo] = useState({
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    cardholderName: "",
-  });
-
-  const [reservationDetails, setReservationDetails] = useState({
+  const [reservationDetails, setReservationDetails] = useState<{
+    reservationDate: string;
+    notes: string;
+  }>({
     reservationDate: "",
     notes: "",
   });
 
   if (!unit) return null;
 
-  const handlePersonalInfoChange = (field: string, value: string) => {
-    setPersonalInfo((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handlePaymentInfoChange = (field: string, value: string) => {
-    setPaymentInfo((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleReservationDetailsChange = (field: string, value: string) => {
+  const handleReservationDetailsChange = (
+    field: keyof typeof reservationDetails,
+    value: string,
+  ) => {
     setReservationDetails((prev) => ({ ...prev, [field]: value }));
   };
 
   const validateStep = (currentStep: number) => {
-    if (currentStep === 2) {
-      return (
-        personalInfo.fullName &&
-        personalInfo.email &&
-        personalInfo.phone &&
-        personalInfo.nationalId
-      );
-    }
-    if (currentStep === 3) {
-      return (
-        paymentInfo.cardNumber &&
-        paymentInfo.expiryDate &&
-        paymentInfo.cvv &&
-        paymentInfo.cardholderName
-      );
+    if (currentStep === 1) {
+      return reservationDetails.reservationDate; // Only reservation date is required since username = nationalId
     }
     return true;
   };
 
   const nextStep = () => {
     if (validateStep(step)) {
-      setStep((prev) => Math.min(prev + 1, 3));
+      setStep((prev) => Math.min(prev + 1, 2));
     } else {
       toast({
         title: tString("reservation.errorTitle"),
@@ -114,57 +95,76 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handlePayment = async () => {
+  const initiatePayment = async () => {
     setIsProcessing(true);
 
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    try {
+      // Use username as national ID since they are the same
+      const nationalId = user?.username?.trim();
 
-    // Mock payment success
-    const bookingId = Math.random().toString(36).substr(2, 9).toUpperCase();
-    toast({
-      title: tString("reservation.successTitle"),
-      description: tString("reservation.successDescription")
-        .replace("{unitId}", unit.id)
-        .replace("{bookingId}", bookingId),
-    });
+      // Validate national ID (username)
+      if (!nationalId) {
+        toast({
+          title: language === "ar" ? "خطأ في المصادقة" : "Authentication Error",
+          description:
+            language === "ar"
+              ? "معرف المستخدم غير متوفر، يرجى تسجيل الدخول مرة أخرى"
+              : "User identifier not available, please login again",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    setIsProcessing(false);
+      const paymentData: PaymentRequest = {
+        unitId: unit.id,
+        projectId: projectId, // Use projectId from props
+        amount: 50000, // Reservation fee amount
+        reservationDate: reservationDetails.reservationDate,
+        notes: reservationDetails.notes,
+        userNationalId: nationalId,
+      };
+
+      const result = await paymentService.checkout(paymentData);
+
+      if (result.errorCode === "0" || result.errorCode === "SUCCESS") {
+        // Store orderId and other details for later verification
+        sessionStorage.setItem(
+          "pendingPayment",
+          JSON.stringify({
+            orderId: result.orderId,
+            unitId: unit.id,
+            projectName: projectName,
+            amount: 50000,
+            userNationalId: nationalId,
+          }),
+        );
+
+        // Redirect to payment form
+        window.location.href = result.formUrl;
+      } else {
+        toast({
+          title: tString("reservation.paymentError"),
+          description: tString("reservation.paymentErrorDesc"),
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Payment initiation error:", error);
+      toast({
+        title: tString("reservation.paymentError"),
+        description: tString("reservation.paymentErrorDesc"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleCancel = () => {
     onClose();
-
     // Reset form
     setStep(1);
-    setPersonalInfo({ fullName: "", email: "", phone: "", nationalId: "" });
-    setPaymentInfo({
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-      cardholderName: "",
-    });
     setReservationDetails({ reservationDate: "", notes: "" });
-  };
-
-  const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-    const matches = v.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || "";
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    if (parts.length) {
-      return parts.join(" ");
-    } else {
-      return v;
-    }
-  };
-
-  const formatExpiryDate = (value: string) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-    if (v.length >= 2) {
-      return v.substring(0, 2) + "/" + v.substring(2, 4);
-    }
-    return v;
   };
 
   return (
@@ -269,7 +269,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             {/* Progress Indicator */}
             <div className="flex items-center justify-center mb-6">
               <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                {[1, 2, 3].map((i) => (
+                {[1, 2].map((i) => (
                   <div key={i} className="flex items-center">
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
@@ -279,7 +279,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                       }`}>
                       {i}
                     </div>
-                    {i < 3 && (
+                    {i < 2 && (
                       <div
                         className={`w-16 h-0.5 mx-2 ${
                           step > i ? "bg-primary" : "bg-muted"
@@ -301,9 +301,34 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {/* User Information Display */}
+                  <div className="bg-muted/30 p-4 rounded-lg space-y-2">
+                    <h4 className="font-medium text-sm text-muted-foreground">
+                      {tString("reservation.customerInfo")}
+                    </h4>
+                    <div className="space-y-1 text-sm">
+                      <p>
+                        <strong>{tString("reservation.fullName")}:</strong>{" "}
+                        {user?.fullName || ""}
+                      </p>
+                      <p>
+                        <strong>{tString("reservation.email")}:</strong>{" "}
+                        {user?.email || ""}
+                      </p>
+                      <p>
+                        <strong>{tString("reservation.mobileNumber")}:</strong>{" "}
+                        {user?.mobileNumber || ""}
+                      </p>
+                      <p>
+                        <strong>{tString("reservation.nationalId")}:</strong>{" "}
+                        {user?.username || ""}
+                      </p>
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="reservationDate">
-                      {tString("reservation.preferredDate")}
+                      {tString("reservation.preferredDate")} *
                     </Label>
                     <Input
                       id="reservationDate"
@@ -312,7 +337,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                       onChange={(e) =>
                         handleReservationDetailsChange(
                           "reservationDate",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       min={new Date().toISOString().split("T")[0]}
@@ -337,202 +362,61 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
               </Card>
             )}
 
-            {/* Step 2: Personal Information */}
+            {/* Step 2: Payment Confirmation */}
             {step === 2 && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    {tString("reservation.personalInfo")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="fullName">
-                        {tString("reservation.fullName")} *
-                      </Label>
-                      <Input
-                        id="fullName"
-                        value={personalInfo.fullName}
-                        onChange={(e) =>
-                          handlePersonalInfoChange("fullName", e.target.value)
-                        }
-                        placeholder={
-                          language === "ar"
-                            ? "أدخل الاسم الكامل"
-                            : "Enter full name"
-                        }
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="nationalId">
-                        {tString("reservation.nationalId")} *
-                      </Label>
-                      <Input
-                        id="nationalId"
-                        value={personalInfo.nationalId}
-                        onChange={(e) =>
-                          handlePersonalInfoChange("nationalId", e.target.value)
-                        }
-                        placeholder={
-                          language === "ar"
-                            ? "أدخل الرقم القومي"
-                            : "Enter national ID"
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">
-                        {tString("reservation.email")} *
-                      </Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="email"
-                          type="email"
-                          className="pl-10"
-                          value={personalInfo.email}
-                          onChange={(e) =>
-                            handlePersonalInfoChange("email", e.target.value)
-                          }
-                          placeholder={
-                            language === "ar"
-                              ? "أدخل البريد الإلكتروني"
-                              : "Enter email address"
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">
-                        {tString("reservation.phoneNumber")} *
-                      </Label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="phone"
-                          className="pl-10"
-                          value={personalInfo.phone}
-                          onChange={(e) =>
-                            handlePersonalInfoChange("phone", e.target.value)
-                          }
-                          placeholder={
-                            language === "ar"
-                              ? "أدخل رقم الهاتف"
-                              : "Enter phone number"
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Step 3: Payment Information */}
-            {step === 3 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5" />
-                    {tString("reservation.paymentInfo")}
+                    {tString("reservation.paymentConfirmation")}
                   </CardTitle>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Lock className="h-4 w-4" />
                     {language === "ar"
-                      ? "معلوماتك آمنة ومشفرة"
-                      : "Your information is secure and encrypted"}
+                      ? "ستتم إعادة توجيهك إلى بوابة الدفع الآمنة"
+                      : "You will be redirected to secure payment gateway"}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="cardholderName">
-                      {language === "ar"
-                        ? "اسم حامل البطاقة"
-                        : "Cardholder Name"}{" "}
-                      *
-                    </Label>
-                    <Input
-                      id="cardholderName"
-                      value={paymentInfo.cardholderName}
-                      onChange={(e) =>
-                        handlePaymentInfoChange(
-                          "cardholderName",
-                          e.target.value
-                        )
-                      }
-                      placeholder={
-                        language === "ar"
-                          ? "كما هو مكتوب على البطاقة"
-                          : "As written on card"
-                      }
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="cardNumber">
-                      {language === "ar" ? "رقم البطاقة" : "Card Number"} *
-                    </Label>
-                    <div className="relative">
-                      <CreditCard className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="cardNumber"
-                        className="pl-10"
-                        value={paymentInfo.cardNumber}
-                        onChange={(e) =>
-                          handlePaymentInfoChange(
-                            "cardNumber",
-                            formatCardNumber(e.target.value)
-                          )
-                        }
-                        placeholder="1234 5678 9012 3456"
-                        maxLength={19}
-                      />
+                  <div className="bg-muted/30 p-4 rounded-lg">
+                    <h4 className="font-medium mb-3">
+                      {tString("reservation.reservationSummary")}
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>{tString("reservation.unit")}:</span>
+                        <span>{unit.id}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{tString("reservation.project")}:</span>
+                        <span>{projectName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{tString("reservation.reservationDate")}:</span>
+                        <span>{reservationDetails.reservationDate}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{tString("reservation.customer")}:</span>
+                        <span>{user?.fullName || ""}</span>
+                      </div>
+                      <Separator className="my-2" />
+                      <div className="flex justify-between font-bold">
+                        <span>{tString("reservation.totalAmount")}:</span>
+                        <span>50,000 {language === "ar" ? "ج.م" : "EGP"}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="expiryDate">
-                        {language === "ar" ? "تاريخ الانتهاء" : "Expiry Date"} *
-                      </Label>
-                      <Input
-                        id="expiryDate"
-                        value={paymentInfo.expiryDate}
-                        onChange={(e) =>
-                          handlePaymentInfoChange(
-                            "expiryDate",
-                            formatExpiryDate(e.target.value)
-                          )
-                        }
-                        placeholder="MM/YY"
-                        maxLength={5}
-                      />
+                  <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 text-sm">
+                      <ExternalLink className="h-4 w-4 text-blue-600" />
+                      <span className="text-blue-600 font-medium">
+                        {tString("reservation.paymentRedirect")}
+                      </span>
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="cvv">
-                        {language === "ar" ? "رمز الأمان" : "CVV"} *
-                      </Label>
-                      <Input
-                        id="cvv"
-                        value={paymentInfo.cvv}
-                        onChange={(e) =>
-                          handlePaymentInfoChange(
-                            "cvv",
-                            e.target.value.replace(/\D/g, "").slice(0, 4)
-                          )
-                        }
-                        placeholder="123"
-                        maxLength={4}
-                      />
-                    </div>
+                    <p className="text-xs text-blue-600/80 mt-1">
+                      {tString("reservation.paymentRedirectDesc")}
+                    </p>
                   </div>
 
                   <div className="bg-muted/30 p-4 rounded-lg">
@@ -554,7 +438,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             <div className="flex justify-between mt-6">
               <Button
                 variant="outline"
-                onClick={step === 1 ? onClose : prevStep}
+                onClick={step === 1 ? handleCancel : prevStep}
                 disabled={isProcessing}>
                 {step === 1
                   ? tString("reservation.cancel")
@@ -562,7 +446,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
               </Button>
 
               <Button
-                onClick={step === 3 ? handlePayment : nextStep}
+                onClick={step === 2 ? initiatePayment : nextStep}
                 disabled={isProcessing || !validateStep(step)}
                 className="bg-gradient-primary hover:opacity-90">
                 {isProcessing ? (
@@ -570,8 +454,11 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     {tString("reservation.processing")}
                   </div>
-                ) : step === 3 ? (
-                  tString("reservation.completePayment")
+                ) : step === 2 ? (
+                  <div className="flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    {tString("reservation.proceedToPayment")}
+                  </div>
                 ) : (
                   tString("reservation.next")
                 )}

@@ -34,9 +34,9 @@ const CLEAN_BASE_URL = BASE_URL.endsWith("/api")
 axios.defaults.baseURL = CLEAN_BASE_URL;
 const API_URL = endpoints.auth;
 
-// Determine if CSRF protection should be enabled (disabled only in development)
+// Enable CSRF protection for all environments since backend requires it
 const isDevelopment = import.meta.env.MODE === "development";
-const enableCsrfProtection = !isDevelopment;
+const enableCsrfProtection = true; // Always enabled since backend requires CSRF tokens
 
 // CRITICAL: Enable credentials for cross-origin requests (CSRF tokens)
 axios.defaults.withCredentials = true;
@@ -54,32 +54,36 @@ function getCookie(name: string): string | null {
   return null;
 }
 
-// Helper to extract CSRF token from response headers
+// Helper to extract CSRF token from response headers or body
 export function extractCsrfTokenFromResponse(
   response: AxiosResponse,
 ): string | null {
   if (!enableCsrfProtection) return null;
 
-  let headerToken = response.headers["x-csrf-token"] as string | undefined;
+  // Check response headers first (primary source from backend)
+  const headerToken = response.headers["x-xsrf-token"] as string | undefined;
 
-  // Check if the header contains a JSON object (backend sends CSRF object)
   if (headerToken) {
-    try {
-      const csrfObject = JSON.parse(headerToken);
-      if (csrfObject?.token) {
-        headerToken = csrfObject.token;
-      }
-    } catch {
-      // Header is already a plain token string, not JSON
-    }
-
-    if (headerToken) {
-      csrfTokenCache = headerToken;
-      localStorage.setItem("csrfToken", headerToken);
-      return headerToken;
+    const token = headerToken.trim();
+    if (token && token.length > 0) {
+      csrfTokenCache = token;
+      localStorage.setItem("csrfToken", token);
+      return token;
     }
   }
 
+  // Fallback to response body - check CSRF-specific keys first
+  // Do NOT use "token" or "accessToken" as they contain the access token, not CSRF token
+  const responseData = response.data as Record<string, unknown>;
+  const bodyToken = (responseData?.["X-XSRF-TOKEN"] ||
+    responseData?.csrfToken ||
+    responseData?.csrf ||
+    responseData?._csrf) as string | undefined;
+  if (bodyToken && typeof bodyToken === "string") {
+    csrfTokenCache = bodyToken;
+    localStorage.setItem("csrfToken", bodyToken);
+    return bodyToken;
+  }
   return null;
 }
 
@@ -88,38 +92,9 @@ export async function fetchCsrfToken(): Promise<string | null> {
   if (!enableCsrfProtection) return null;
 
   try {
-    const response = await axios.get("/api/csrf-token", {
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-    });
-
-    // Extract from response header (primary source)
-    let headerToken = response.headers["x-csrf-token"] as string | undefined;
-
-    if (headerToken) {
-      // Check if the header contains a JSON object
-      try {
-        const csrfObject = JSON.parse(headerToken);
-        if (csrfObject?.token) {
-          headerToken = csrfObject.token;
-        }
-      } catch {
-        // Header is already a plain token string
-      }
-
-      if (headerToken) {
-        csrfTokenCache = headerToken;
-        localStorage.setItem("csrfToken", headerToken);
-        return headerToken;
-      }
-    }
-
-    // Fallback to response body
-    const bodyToken = response.data?.token || response.data?._csrf;
-    if (bodyToken) {
-      csrfTokenCache = bodyToken;
-      localStorage.setItem("csrfToken", bodyToken);
-      return bodyToken;
-    }
+    const response = await axios.get("/api/csrf-token");
+    const extracted = extractCsrfTokenFromResponse(response);
+    return extracted;
   } catch (error) {
     console.warn("Failed to fetch CSRF token from endpoint:", error);
   }
@@ -154,7 +129,7 @@ function getCsrfToken(): string | null {
 
 // Request Interceptor
 axios.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // Log all requests with auth headers
     const accessToken = localStorage.getItem("accessToken");
     const fallbackToken = localStorage.getItem("token");
@@ -234,17 +209,22 @@ axios.interceptors.request.use(
         !config.url?.includes("/csrf-token");
 
       if (needsCsrf) {
-        const csrfToken = getCsrfToken();
+        let csrfToken = getCsrfToken();
+
+        // If CSRF token is missing, try to fetch it
+        if (!csrfToken) {
+          try {
+            csrfToken = await fetchCsrfToken();
+          } catch (error) {
+            console.error("Error fetching CSRF token:", error);
+          }
+        }
 
         if (csrfToken) {
           if (!config.headers) {
             config.headers = new AxiosHeaders();
           }
           config.headers["X-XSRF-TOKEN"] = csrfToken;
-        } else {
-          console.warn(
-            "CSRF Token not found. Request may fail on protected endpoints.",
-          );
         }
       }
     }
@@ -275,10 +255,31 @@ axios.interceptors.request.use(
 // Response Interceptor
 axios.interceptors.response.use(
   (response) => {
+    // Log response details for debugging
+    console.log(`Response from ${response.config.url}:`, {
+      status: response.status,
+      hasHeaders: !!response.headers,
+      headerKeys: Object.keys(response.headers || {}),
+    });
+
+    // For refresh-token endpoint, log the response body structure
+    if (response.config.url?.includes("/refresh-token")) {
+      console.log("Refresh token response body keys:", {
+        keys: Object.keys(response.data || {}),
+        data: response.data,
+      });
+    }
+
     // Extract CSRF token from response headers (especially important for login)
     if (enableCsrfProtection) {
       try {
-        extractCsrfTokenFromResponse(response);
+        const extracted = extractCsrfTokenFromResponse(response);
+        if (response.config.url?.includes("/login")) {
+          console.log(
+            "Login response - CSRF extraction result:",
+            extracted ? "SUCCESS" : "FAILED",
+          );
+        }
       } catch (csrfError) {
         console.error("Error extracting CSRF token:", csrfError);
       }
@@ -332,27 +333,21 @@ axios.interceptors.response.use(
       return axios(originalRequest);
     }
 
-    // Handle 403 Forbidden - possible CSRF token expiration
-    if (
-      error.response?.status === 403 &&
-      !originalRequest._retryForbidden &&
-      enableCsrfProtection
-    ) {
-      originalRequest._retryForbidden = true;
-
-      try {
-        // Attempt to fetch a new CSRF token
-        await fetchCsrfToken();
-
-        // Retry the original request with new token
-        const newCsrfToken = getCsrfToken();
-        if (newCsrfToken) {
-          originalRequest.headers["X-XSRF-TOKEN"] = newCsrfToken;
-          return axios(originalRequest);
-        }
-      } catch (csrfError) {
-        return Promise.reject(csrfError);
-      }
+    // Handle 403 Forbidden - log CSRF token status for debugging
+    if (error.response?.status === 403 && enableCsrfProtection) {
+      const sentCsrfToken = originalRequest.headers?.["X-XSRF-TOKEN"];
+      console.error("❌ 403 Forbidden - CSRF validation failed:", {
+        sentCsrfToken: sentCsrfToken
+          ? sentCsrfToken.substring(0, 20) + "..."
+          : "NOT SENT",
+        hasTokenInMemory: !!csrfTokenCache,
+        hasTokenInStorage: !!localStorage.getItem("csrfToken"),
+        requestUrl: originalRequest.url,
+        requestMethod: originalRequest.method?.toUpperCase(),
+        responseStatus: error.response?.status,
+        responseData: error.response?.data,
+      });
+      // Don't retry to avoid CORS issues with csrf-token endpoint
     }
 
     // Check if error is 401 and we haven't retried yet

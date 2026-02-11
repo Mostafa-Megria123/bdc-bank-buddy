@@ -1,4 +1,5 @@
 import axios from "@/lib/axios";
+import { fetchCsrfToken } from "@/lib/axios";
 import { endpoints } from "@/config";
 import {
   LoginFormData,
@@ -66,10 +67,12 @@ export const authService = {
         localStorage.setItem("refreshToken", authData.refreshToken);
       }
 
-      // CSRF token is already extracted by axios response interceptor
-      // from the X-XSRF-TOKEN header sent by the backend
-      // Add small delay to ensure token is fully cached before returning
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Fetch CSRF token after successful login
+      try {
+        const csrfToken = await fetchCsrfToken();
+      } catch (csrfError) {
+        console.error("Error fetching CSRF token after login:", csrfError);
+      }
 
       return authData;
     } catch (error) {

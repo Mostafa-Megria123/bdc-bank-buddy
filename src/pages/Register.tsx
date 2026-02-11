@@ -28,12 +28,6 @@ const Register = () => {
   const { language } = useLanguage();
   const { register: registerUser, isLoading } = useAuth();
   const navigate = useNavigate();
-
-  // Debug: Log environment variable
-  React.useEffect(() => {
-    console.log("reCAPTCHA Site Key:", import.meta.env.VITE_RECAPTCHA_SITE_KEY);
-  }, []);
-
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

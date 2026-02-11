@@ -13,6 +13,13 @@ export interface User {
   fullName: string;
   email: string;
   phoneNumber?: string;
+  mobileNumber?: string; // Added for mobile phone
+  nationalId?: string; // Added for national ID
+  nationalIdFactoryNumber?: string; // Added for factory number
+  countryOfBirth?: string;
+  placeOfResidence?: string;
+  maritalStatus?: string;
+  address?: string;
   isActive: boolean;
   isEmailVerified: boolean;
   lastLogin?: string;

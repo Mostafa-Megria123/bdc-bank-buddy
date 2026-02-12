@@ -31,7 +31,7 @@ const Projects: React.FC = () => {
         // Minimum loading delay (1.5 seconds) to allow all projects to load
         const [response] = await Promise.all([
           ProjectService.getAllProjects(),
-          new Promise((resolve) => setTimeout(resolve, 1500)),
+          new Promise((resolve) => setTimeout(resolve, 0)),
         ]);
         setProjects(response.content);
       } catch (error) {

@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useAuth } from "@/contexts/useAuth";
 import { ProjectService } from "@/services/project-service";
+import { UnitService } from "@/services/unit.service";
 import { Project } from "@/types/project";
 import { getFileUrl, formatDate } from "@/lib/utils";
 import { useImageWithRetry } from "@/hooks/useImageWithRetry";
@@ -10,6 +11,7 @@ import { ReservationModal } from "@/components/ReservationModal";
 import { UnitDetailsModal } from "@/components/UnitDetailsModal";
 import { ProjectLocation } from "@/components/ProjectLocation";
 import { RequestInfoModal } from "@/components/RequestInfoModal";
+import { AdvancedPagination } from "@/components/AdvancedPagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -63,6 +65,13 @@ const ProjectDetail = () => {
   const [failedGalleryImages, setFailedGalleryImages] = useState<Set<string>>(
     new Set(),
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [units, setUnits] = useState<Unit[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUnitsCount, setTotalUnitsCount] = useState(0);
+  const [unitsLoading, setUnitsLoading] = useState(false);
+  const itemsPerPage = 5;
   const { handleImageError: handleGalleryImageError, getImageUrl } =
     useImageWithRetry(placeholderSvg, {
       maxRetries: 2,
@@ -86,6 +95,34 @@ const ProjectDetail = () => {
     };
     fetchProject();
   }, [id]);
+
+  // Fetch units by project ID with pagination
+  useEffect(() => {
+    const fetchUnits = async () => {
+      if (!id) return;
+      try {
+        setUnitsLoading(true);
+        const response = await UnitService.getUnitsByProjectId(
+          id,
+          currentPage - 1, // Convert to 0-indexed for backend
+          itemsPerPage,
+        );
+        setUnits(response.content);
+        setTotalPages(response.totalPages);
+        setTotalUnitsCount(response.totalElements);
+      } catch (error) {
+        console.error("Failed to fetch units:", error);
+      } finally {
+        setUnitsLoading(false);
+      }
+    };
+    fetchUnits();
+  }, [id, currentPage]);
+
+  // Reset to first page when search query changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   const handleReserveUnit = (unit: Unit) => {
     // Check if user is logged in
@@ -171,6 +208,30 @@ const ProjectDetail = () => {
     }
     return String(unit.status);
   };
+
+  // Filter units based on search query (client-side filtering)
+  const filteredUnits = units.filter((unit) => {
+    const searchLower = searchQuery.toLowerCase();
+    const unitNumber = unit.unitNumber.toString();
+    const unitArea = unit.area.toString();
+    const unitPrice = unit.price.toString();
+    const unitBedrooms = unit.bedrooms?.toString() || "";
+    const unitBathrooms = unit.bathrooms?.toString() || "";
+
+    return (
+      unitNumber.includes(searchLower) ||
+      unitArea.includes(searchLower) ||
+      unitPrice.includes(searchLower) ||
+      unitBedrooms.includes(searchLower) ||
+      unitBathrooms.includes(searchLower)
+    );
+  });
+
+  // For search results, recalculate pagination on client side
+  const displayUnits = searchQuery ? filteredUnits : units;
+  const displayTotalPages = searchQuery
+    ? Math.ceil(filteredUnits.length / itemsPerPage)
+    : totalPages;
 
   const availableUnitsCount = project?.units
     ? project.units.filter((u) => getUnitStatusEn(u) === "Available").length
@@ -307,174 +368,242 @@ const ProjectDetail = () => {
             </Card>
 
             {/* Units Section */}
-            {project.units && project.units.length > 0 && (
+            {units && units.length > 0 && (
               <Card>
                 <CardContent className="p-6">
                   <h2 className="text-2xl font-bold text-foreground mb-6">
                     {tString("projectDetails.availableUnits")}
                   </h2>
 
-                  {/* Units Grid */}
-                  <div className="space-y-4">
-                    {project.units.map((unit) => {
-                      const statusEn = getUnitStatusEn(unit);
-                      return (
-                        <Card
-                          key={unit.unitNumber}
-                          onClick={() => handleUnitClick(unit)}
-                          className={`border-2 transition-all duration-300 hover:shadow-brand cursor-pointer ${
-                            statusEn === "Reserved"
-                              ? "border-destructive/30 bg-destructive/5"
-                              : statusEn === "Sold"
-                                ? "border-muted bg-muted/20"
-                                : "border-primary/30 hover:border-primary/50 cursor-pointer"
-                          }`}>
-                          <CardContent className="p-4">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                              {/* Unit Info */}
-                              <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <h3 className="text-lg font-semibold text-foreground">
-                                    {language === "ar"
-                                      ? `وحدة رقم ${unit.unitNumber}`
-                                      : `Unit #${unit.unitNumber}`}
-                                  </h3>
-                                  <Badge
-                                    variant={
-                                      statusEn === "Available"
-                                        ? "default"
-                                        : statusEn === "Reserved"
-                                          ? "destructive"
-                                          : "secondary"
-                                    }
-                                    className={
-                                      statusEn === "Available"
-                                        ? "bg-green-500 hover:bg-green-600"
-                                        : ""
-                                    }>
-                                    {language === "ar"
-                                      ? typeof unit.status === "object" &&
-                                        unit.status !== null
-                                        ? (unit.status as { statusAr: string })
-                                            .statusAr
-                                        : statusEn === "Available"
-                                          ? "متاح"
-                                          : statusEn === "Reserved"
-                                            ? "محجوز"
-                                            : "مباع"
-                                      : statusEn}
-                                  </Badge>
-                                </div>
-
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                                  <div>
-                                    <p className="text-muted-foreground">
-                                      {tString("reservation.type")}
-                                    </p>
-                                    <p className="font-medium text-foreground">
-                                      {typeof unit.type === "object" &&
-                                      unit.type !== null
-                                        ? language === "ar"
-                                          ? (unit.type as { typeAr: string })
-                                              .typeAr
-                                          : (unit.type as { typeEn: string })
-                                              .typeEn
-                                        : String(unit.type)}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-muted-foreground">
-                                      {tString("reservation.area")}
-                                    </p>
-                                    <p className="font-medium text-foreground">
-                                      {unit.area}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-muted-foreground">
-                                      {tString("reservation.bedrooms")}
-                                    </p>
-                                    <p className="font-medium text-foreground">
-                                      {unit.bedrooms}{" "}
-                                      {tString(
-                                        "projectDetails.units.bedroomsSuffix",
-                                      )}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-muted-foreground">
-                                      {tString("reservation.bathrooms")}
-                                    </p>
-                                    <p className="font-medium text-foreground">
-                                      {unit.bathrooms}{" "}
-                                      {tString(
-                                        "projectDetails.units.bathroomsSuffix",
-                                      )}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Price and Action */}
-                              <div className="flex flex-col md:items-end gap-3">
-                                <div className="text-right">
-                                  <p className="text-2xl font-bold text-primary">
-                                    {unit.price.toLocaleString()}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {tString("common.currency")}
-                                  </p>
-                                </div>
-
-                                {statusEn === "Available" && (
-                                  <Button
-                                    size="sm"
-                                    className="bg-gradient-primary hover:opacity-90 whitespace-nowrap"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleReserveUnit(unit);
-                                    }}>
-                                    {tString("projectDetails.units.reserveNow")}
-                                  </Button>
-                                )}
-
-                                {statusEn === "Reserved" && (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled
-                                    className="whitespace-nowrap">
-                                    {tString(
-                                      "projectDetails.units.status.reserved",
-                                    )}
-                                  </Button>
-                                )}
-
-                                {statusEn === "Sold" && (
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    disabled
-                                    className="whitespace-nowrap">
-                                    {tString(
-                                      "projectDetails.units.status.sold",
-                                    )}
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
+                  {/* Search Bar */}
+                  <div className="mb-6 relative">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                      <input
+                        type="text"
+                        placeholder={
+                          language === "ar"
+                            ? "ابحث عن الوحدات (الرقم، المساحة، السعر...)"
+                            : "Search units (number, area, price...)"
+                        }
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 border border-input rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    {searchQuery && (
+                      <p className="text-sm text-muted-foreground mt-2">
+                        {language === "ar"
+                          ? `${filteredUnits.length} نتائج`
+                          : `${filteredUnits.length} results`}
+                      </p>
+                    )}
                   </div>
+
+                  {/* Loading State */}
+                  {unitsLoading ? (
+                    <div className="text-center py-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
+                      <p className="text-muted-foreground">
+                        {language === "ar"
+                          ? "جاري تحميل الوحدات..."
+                          : "Loading units..."}
+                      </p>
+                    </div>
+                  ) : filteredUnits.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground text-lg">
+                        {language === "ar"
+                          ? "لا توجد وحدات مطابقة للبحث"
+                          : "No units match your search"}
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-4">
+                        {displayUnits.map((unit) => {
+                          const statusEn = getUnitStatusEn(unit);
+                          return (
+                            <Card
+                              key={unit.id}
+                              onClick={() => handleUnitClick(unit)}
+                              className={`border-2 transition-all duration-300 hover:shadow-brand cursor-pointer ${
+                                statusEn === "Reserved"
+                                  ? "border-destructive/30 bg-destructive/5"
+                                  : statusEn === "Sold"
+                                    ? "border-muted bg-muted/20"
+                                    : "border-primary/30 hover:border-primary/50 cursor-pointer"
+                              }`}>
+                              <CardContent className="p-4">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                  {/* Unit Info */}
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                      <h3 className="text-lg font-semibold text-foreground">
+                                        {language === "ar"
+                                          ? `وحدة رقم ${unit.unitNumber}`
+                                          : `Unit #${unit.unitNumber}`}
+                                      </h3>
+                                      <Badge
+                                        variant={
+                                          statusEn === "Available"
+                                            ? "default"
+                                            : statusEn === "Reserved"
+                                              ? "destructive"
+                                              : "secondary"
+                                        }
+                                        className={
+                                          statusEn === "Available"
+                                            ? "bg-green-500 hover:bg-green-600"
+                                            : ""
+                                        }>
+                                        {language === "ar"
+                                          ? typeof unit.status === "object" &&
+                                            unit.status !== null
+                                            ? (
+                                                unit.status as {
+                                                  statusAr: string;
+                                                }
+                                              ).statusAr
+                                            : statusEn === "Available"
+                                              ? "متاح"
+                                              : statusEn === "Reserved"
+                                                ? "محجوز"
+                                                : "مباع"
+                                          : statusEn}
+                                      </Badge>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                      <div>
+                                        <p className="text-muted-foreground">
+                                          {tString("reservation.type")}
+                                        </p>
+                                        <p className="font-medium text-foreground">
+                                          {typeof unit.type === "object" &&
+                                          unit.type !== null
+                                            ? language === "ar"
+                                              ? (
+                                                  unit.type as {
+                                                    typeAr: string;
+                                                  }
+                                                ).typeAr
+                                              : (
+                                                  unit.type as {
+                                                    typeEn: string;
+                                                  }
+                                                ).typeEn
+                                            : String(unit.type)}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p className="text-muted-foreground">
+                                          {tString("reservation.area")}
+                                        </p>
+                                        <p className="font-medium text-foreground">
+                                          {unit.area}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p className="text-muted-foreground">
+                                          {tString("reservation.bedrooms")}
+                                        </p>
+                                        <p className="font-medium text-foreground">
+                                          {unit.bedrooms}{" "}
+                                          {tString(
+                                            "projectDetails.units.bedroomsSuffix",
+                                          )}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p className="text-muted-foreground">
+                                          {tString("reservation.bathrooms")}
+                                        </p>
+                                        <p className="font-medium text-foreground">
+                                          {unit.bathrooms}{" "}
+                                          {tString(
+                                            "projectDetails.units.bathroomsSuffix",
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Price and Action */}
+                                  <div className="flex flex-col md:items-end gap-3">
+                                    <div className="text-right">
+                                      <p className="text-2xl font-bold text-primary">
+                                        {unit.price.toLocaleString()}
+                                      </p>
+                                      <p className="text-sm text-muted-foreground">
+                                        {tString("common.currency")}
+                                      </p>
+                                    </div>
+
+                                    {statusEn === "Available" && (
+                                      <Button
+                                        size="sm"
+                                        className="bg-gradient-primary hover:opacity-90 whitespace-nowrap"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleReserveUnit(unit);
+                                        }}>
+                                        {tString(
+                                          "projectDetails.units.reserveNow",
+                                        )}
+                                      </Button>
+                                    )}
+
+                                    {statusEn === "Reserved" && (
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        disabled
+                                        className="whitespace-nowrap">
+                                        {tString(
+                                          "projectDetails.units.status.reserved",
+                                        )}
+                                      </Button>
+                                    )}
+
+                                    {statusEn === "Sold" && (
+                                      <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        disabled
+                                        className="whitespace-nowrap">
+                                        {tString(
+                                          "projectDetails.units.status.sold",
+                                        )}
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </div>
+
+                      {/* Pagination Controls */}
+                      <AdvancedPagination
+                        currentPage={currentPage}
+                        totalPages={displayTotalPages}
+                        onPageChange={setCurrentPage}
+                        language={language as "en" | "ar"}
+                        itemsCount={displayUnits.length}
+                        itemsPerPage={itemsPerPage}
+                        className="mt-8"
+                      />
+                    </>
+                  )}
 
                   {/* Units Summary */}
                   <div className="mt-6 grid grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg">
                     <div className="text-center">
                       <p className="text-2xl font-bold text-green-600">
                         {
-                          project.units.filter(
+                          units.filter(
                             (u) => getUnitStatusEn(u) === "Available",
                           ).length
                         }
@@ -486,9 +615,8 @@ const ProjectDetail = () => {
                     <div className="text-center">
                       <p className="text-2xl font-bold text-destructive">
                         {
-                          project.units.filter(
-                            (u) => getUnitStatusEn(u) === "Reserved",
-                          ).length
+                          units.filter((u) => getUnitStatusEn(u) === "Reserved")
+                            .length
                         }
                       </p>
                       <p className="text-sm text-muted-foreground">
@@ -498,9 +626,8 @@ const ProjectDetail = () => {
                     <div className="text-center">
                       <p className="text-2xl font-bold text-muted-foreground">
                         {
-                          project.units.filter(
-                            (u) => getUnitStatusEn(u) === "Sold",
-                          ).length
+                          units.filter((u) => getUnitStatusEn(u) === "Sold")
+                            .length
                         }
                       </p>
                       <p className="text-sm text-muted-foreground">

@@ -43,5 +43,6 @@ export const endpoints = {
   me: `${config.apiBaseUrl}/auth/me`,
   paymentCheckout: `${config.apiBaseUrl}/payments/checkOut`,
   paymentCheckTrxStatus: `${config.apiBaseUrl}/payments/checkTrxStatus`,
+  reservations: `${config.apiBaseUrl}/reservations`,
   // Add other endpoints here as needed
 } as const;

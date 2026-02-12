@@ -237,7 +237,10 @@
     "paymentRedirectDesc": "ستتم إعادة توجيهك إلى بوابة دفع آمنة لإتمام المعاملة.",
     "proceedToPayment": "المتابعة للدفع",
     "paymentError": "خطأ في الدفع",
-    "paymentErrorDesc": "فشل في بدء عملية الدفع. يرجى المحاولة مرة أخرى."
+    "paymentErrorDesc": "فشل في بدء عملية الدفع. يرجى المحاولة مرة أخرى.",
+    "authErrorTitle": "خطأ في المصادقة",
+    "authErrorDesc": "معرف المستخدم غير متوفر، يرجى تسجيل الدخول مرة أخرى",
+    "paymentRedirectInfo": "ستتم إعادة توجيهك إلى بوابة الدفع الآمنة"
   },
   "payment": {
     "verifyingTitle": "التحقق من الدفعة",
@@ -265,8 +268,13 @@
   },
 
   "myReservations": {
+    "loading": "جاري تحميل الحجوزات...",
     "pageTitle": "طلبات الحجز الخاصة بي",
     "pageSubtitle": "تتبع وإدارة جميع طلبات الحجز الخاصة بك",
+    "refresh": "تحديث",
+    "refreshing": "جاري التحديث...",
+    "refreshSuccess": "تم تحديث الحجوزات بنجاح",
+    "refreshError": "فشل تحديث الحجوزات. يرجى المحاولة مرة أخرى.",
     "filterTitle": "تصفية النتائج",
     "filters": {
       "projectLabel": "المشروع",
@@ -274,24 +282,30 @@
       "statusLabel": "حالة الطلب",
       "allStatuses": "جميع الحالات",
       "dateFrom": "من تاريخ",
-      "dateTo": "إلى تاريخ"
+      "dateTo": "إلى تاريخ",
+      "reset": "إعادة تعيين التصفية"
     },
     "table": {
+      "orderId": "رقم الطلب",
       "project": "المشروع",
       "formNo": "رقم الطلب",
       "status": "الحالة",
       "unitType": "نوع الوحدة",
       "price": "السعر",
+      "unitPrice": "سعر الوحدة",
+      "deposit": "العربون",
       "modified": "آخر تعديل",
       "city": "المدينة",
       "unitNo": "رقم الوحدة",
       "attachments": "المرفقات",
       "actions": "الإجراءات"
     },
+    "noReservations": "لم يتم العثور على حجوزات",
     "paymentDialog": {
       "addPayment": "إضافة بيانات الدفع",
       "editPayment": "تعديل بيانات الدفع",
       "title": "بيانات الدفع",
+      "description": "أدخل تفاصيل الدفع أدناه",
       "depositLabel": "العربون (جنيه مصري)",
       "depositPlaceholder": "أدخل المبلغ",
       "paymentMethodLabel": "طريقة الدفع",
@@ -306,7 +320,11 @@
       "serialPlaceholder": "أدخل رقم العملية",
       "attachmentsLabel": "مرفقات الدفع (PDF, JPG, JPEG)",
       "clickToUpload": "اضغط لرفع الملف",
-      "save": "حفظ"
+      "save": "حفظ",
+      "requiredFieldsError": "يرجى ملء جميع الحقول المطلوبة",
+      "submissionError": "فشل تقديم الدفع. يرجى المحاولة مرة أخرى.",
+      "sessionExpired": "انتهت الجلسة",
+      "pleaseLoginAgain": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى."
     },
     "sampleProjects": [
       "مشروع النخيل الذهبي",
@@ -318,6 +336,7 @@
     "statuses": {
       "New": "جديد",
       "PaymentDataEntered": "تم إدخال بيانات الدفع",
+      "PendingPaymentCompletion": "استكمال الدفع قيد الانتظار",
       "Approved": "مقبول",
       "Rejected": "مرفوض",
       "PaymentRefundRequested": "طلب استرداد الدفع"
@@ -354,7 +373,16 @@
       "ground": "أرضي"
     },
     "none": "لا يوجد",
-    "requestRefund": "طلب استرداد"
+    "requestRefund": "طلب استرداد",
+    "userNotAuthenticated": "المستخدم غير مصرح",
+    "failedLoadReservations": "فشل تحميل الحجوزات. يرجى المحاولة مرة أخرى.",
+    "downloadAttachment": "تحميل",
+    "downloading": "جاري التحميل...",
+    "downloadError": "فشل تحميل المرفق. يرجى المحاولة مرة أخرى.",
+    "paymentSubmitSuccess": "تم تقديم بيانات الدفع بنجاح",
+    "submitting": "جاري التقديم...",
+    "refundRequestSuccess": "تم طلب استرجاع الأموال بنجاح",
+    "refundRequestError": "فشل طلب استرجاع الأموال. يرجى المحاولة مرة أخرى."
   },
 
   "auth": {

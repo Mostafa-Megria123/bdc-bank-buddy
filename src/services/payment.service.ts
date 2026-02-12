@@ -16,6 +16,15 @@ export interface CheckoutResponse {
   formUrl: string;
 }
 
+export interface CustomApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: {
+    code?: string;
+    message?: string;
+  };
+}
+
 export interface TransactionStatusRequest {
   orderId: string;
   userNationalId: string;
@@ -139,14 +148,33 @@ export const checkout = async (
 
     // Make API call using endpoint from config
     // CSRF token will be automatically added by axios interceptor
-    const { data: response } = await axios.post<CheckoutResponse>(
-      endpoints.paymentCheckout,
-      paymentData,
-    );
+    const { data: apiResponse } = await axios.post<
+      CustomApiResponse<CheckoutResponse>
+    >(endpoints.paymentCheckout, paymentData);
 
-    // Validate response
-    if (!response.orderId || !response.formUrl) {
-      throw new CheckoutError("Invalid checkout response from server");
+    // Extract the actual response from the wrapper
+    console.log("API Response:", apiResponse);
+    const response = apiResponse.data;
+
+    if (!response) {
+      throw new CheckoutError(
+        `Invalid API response: ${JSON.stringify(apiResponse)}`,
+      );
+    }
+
+    // Check if response has required fields
+    const hasRequiredFields = response.orderId && response.formUrl;
+
+    if (!hasRequiredFields) {
+      console.error("Checkout response missing required fields:", {
+        orderId: response.orderId,
+        formUrl: response.formUrl,
+        errorCode: response.errorCode,
+        fullResponse: response,
+      });
+      throw new CheckoutError(
+        `Invalid checkout response from server: ${JSON.stringify(response)}`,
+      );
     }
 
     // Store session data if project name provided
@@ -167,6 +195,10 @@ export const checkout = async (
 
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("Checkout error details:", {
+      message: errorMessage,
+      error,
+    });
 
     console.error("Checkout API error:", error);
     throw new CheckoutError(

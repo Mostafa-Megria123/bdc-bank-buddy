@@ -237,7 +237,10 @@
     "paymentRedirectDesc": "You will be redirected to a secure payment gateway to complete your transaction.",
     "proceedToPayment": "Proceed to Payment",
     "paymentError": "Payment Error",
-    "paymentErrorDesc": "Failed to initiate payment. Please try again."
+    "paymentErrorDesc": "Failed to initiate payment. Please try again.",
+    "authErrorTitle": "Authentication Error",
+    "authErrorDesc": "User identifier not available, please login again",
+    "paymentRedirectInfo": "You will be redirected to secure payment gateway"
   },
   "payment": {
     "verifyingTitle": "Verifying Payment",
@@ -265,8 +268,13 @@
   },
 
   "myReservations": {
+    "loading": "Loading reservations...",
     "pageTitle": "My Reservation Requests",
     "pageSubtitle": "Track and manage all your reservation requests",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
+    "refreshSuccess": "Reservations refreshed successfully",
+    "refreshError": "Failed to refresh reservations. Please try again.",
     "filterTitle": "Filter Results",
     "filters": {
       "projectLabel": "Project",
@@ -278,21 +286,26 @@
       "reset": "Reset Filters"
     },
     "table": {
+      "orderId": "Order ID",
       "project": "Project",
       "formNo": "Form No",
       "status": "Status",
       "unitType": "Unit Type",
       "price": "Price",
+      "unitPrice": "Unit Price",
+      "deposit": "Deposit",
       "modified": "Modified",
       "city": "City",
       "unitNo": "Unit No",
       "attachments": "Attachments",
       "actions": "Actions"
     },
+    "noReservations": "No reservations found",
     "paymentDialog": {
       "addPayment": "Add Payment Data",
       "editPayment": "Edit Payment Data",
       "title": "Payment Data",
+      "description": "Enter your payment details below",
       "depositLabel": "Deposit (EGP)",
       "depositPlaceholder": "Enter amount",
       "paymentMethodLabel": "Payment Method",
@@ -307,7 +320,11 @@
       "serialPlaceholder": "Enter serial number",
       "attachmentsLabel": "Payment Attachments (PDF, JPG, JPEG)",
       "clickToUpload": "Click to upload file",
-      "save": "Save"
+      "save": "Save",
+      "requiredFieldsError": "Please fill in all required fields",
+      "submissionError": "Failed to submit payment. Please try again.",
+      "sessionExpired": "Session Expired",
+      "pleaseLoginAgain": "Your session has ended. Please login again."
     },
     "sampleProjects": [
       "Golden Palm Project",
@@ -319,6 +336,7 @@
     "statuses": {
       "New": "New",
       "PaymentDataEntered": "Payment data entered",
+      "PendingPaymentCompletion": "Pending Payment Completion",
       "Approved": "Approved",
       "Rejected": "Rejected",
       "PaymentRefundRequested": "Payment Refund Requested"
@@ -355,7 +373,16 @@
       "ground": "Ground"
     },
     "none": "None",
-    "requestRefund": "Request Refund"
+    "requestRefund": "Request Refund",
+    "userNotAuthenticated": "User not authenticated",
+    "failedLoadReservations": "Failed to load reservations. Please try again later.",
+    "downloadAttachment": "Download",
+    "downloading": "Downloading...",
+    "downloadError": "Failed to download attachment. Please try again.",
+    "paymentSubmitSuccess": "Payment details submitted successfully",
+    "submitting": "Submitting...",
+    "refundRequestSuccess": "Refund request submitted successfully",
+    "refundRequestError": "Failed to submit refund request. Please try again."
   },
 
   "auth": {

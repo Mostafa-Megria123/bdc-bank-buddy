@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -49,6 +50,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   projectName,
   projectId, // Destructure projectId
 }) => {
+  const navigate = useNavigate();
   const { language, tString } = useLanguage();
   const { toast } = useToast();
   const { user } = useAuth(); // Get user data from auth context
@@ -105,13 +107,13 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
       // Validate national ID (username)
       if (!nationalId) {
         toast({
-          title: language === "ar" ? "خطأ في المصادقة" : "Authentication Error",
-          description:
-            language === "ar"
-              ? "معرف المستخدم غير متوفر، يرجى تسجيل الدخول مرة أخرى"
-              : "User identifier not available, please login again",
+          title: tString("reservation.authErrorTitle"),
+          description: tString("reservation.authErrorDesc"),
           variant: "destructive",
         });
+        // Close the modal and redirect to login
+        onClose();
+        navigate("/login");
         return;
       }
 
@@ -139,8 +141,10 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
           }),
         );
 
-        // Redirect to payment form
-        window.location.href = result.formUrl;
+        // Open payment form in new tab
+        if (result.formUrl) {
+          window.open(result.formUrl, "_blank");
+        }
       } else {
         toast({
           title: tString("reservation.paymentError"),
@@ -372,9 +376,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   </CardTitle>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Lock className="h-4 w-4" />
-                    {language === "ar"
-                      ? "ستتم إعادة توجيهك إلى بوابة الدفع الآمنة"
-                      : "You will be redirected to secure payment gateway"}
+                    {tString("reservation.paymentRedirectInfo")}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">

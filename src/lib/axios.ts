@@ -130,6 +130,11 @@ function getCsrfToken(): string | null {
 // Request Interceptor
 axios.interceptors.request.use(
   async (config) => {
+    // CRITICAL: Handle FormData - delete Content-Type header to let axios/browser handle it with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
+
     // Log all requests with auth headers
     const accessToken = localStorage.getItem("accessToken");
     const fallbackToken = localStorage.getItem("token");
@@ -255,21 +260,6 @@ axios.interceptors.request.use(
 // Response Interceptor
 axios.interceptors.response.use(
   (response) => {
-    // Log response details for debugging
-    console.log(`Response from ${response.config.url}:`, {
-      status: response.status,
-      hasHeaders: !!response.headers,
-      headerKeys: Object.keys(response.headers || {}),
-    });
-
-    // For refresh-token endpoint, log the response body structure
-    if (response.config.url?.includes("/refresh-token")) {
-      console.log("Refresh token response body keys:", {
-        keys: Object.keys(response.data || {}),
-        data: response.data,
-      });
-    }
-
     // Extract CSRF token from response headers (especially important for login)
     if (enableCsrfProtection) {
       try {

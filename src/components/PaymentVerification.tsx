@@ -9,6 +9,7 @@ import {
   paymentService,
   TransactionStatusResponse,
 } from "@/services/payment.service";
+import { ProjectService } from "@/services/project-service";
 
 export const PaymentVerification: React.FC = () => {
   const navigate = useNavigate();
@@ -40,6 +41,20 @@ export const PaymentVerification: React.FC = () => {
           // Clear pending payment from session storage
           sessionStorage.removeItem("pendingPayment");
 
+          // Refresh project/unit data to check for status changes
+          try {
+            if (paymentData.projectId) {
+              console.log(
+                "Refreshing project data for project:",
+                paymentData.projectId,
+              );
+              await ProjectService.getProjectById(paymentData.projectId);
+            }
+          } catch (refreshError) {
+            console.warn("Failed to refresh project data:", refreshError);
+            // Don't throw error, payment was successful even if refresh fails
+          }
+
           toast({
             title: tString("payment.successTitle"),
             description: tString("payment.successDescription").replace(
@@ -58,7 +73,7 @@ export const PaymentVerification: React.FC = () => {
         console.error("Payment verification error:", error);
         setVerificationResult({
           success: false,
-          status: "error",
+          status: "FAILED",
           message: "Verification failed",
         });
 

@@ -400,8 +400,8 @@ const ProjectDetail = () => {
                     )}
                   </div>
 
-                  {/* Loading State */}
-                  {unitsLoading ? (
+                  {/* Loading State - Only on initial load */}
+                  {units.length === 0 && unitsLoading ? (
                     <div className="text-center py-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
                       <p className="text-muted-foreground">

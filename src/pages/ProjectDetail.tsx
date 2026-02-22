@@ -474,7 +474,7 @@ const ProjectDetail = () => {
                                       </Badge>
                                     </div>
 
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                                       <div>
                                         <p className="text-muted-foreground">
                                           {tString("reservation.type")}
@@ -506,24 +506,38 @@ const ProjectDetail = () => {
                                       </div>
                                       <div>
                                         <p className="text-muted-foreground">
-                                          {tString("reservation.bedrooms")}
+                                          {language === "ar"
+                                            ? "سعر المتر"
+                                            : "Meter Price"}
                                         </p>
                                         <p className="font-medium text-foreground">
-                                          {unit.bedrooms}{" "}
-                                          {tString(
-                                            "projectDetails.units.bedroomsSuffix",
-                                          )}
+                                          {unit.meterPrice
+                                            ? unit.meterPrice.toLocaleString()
+                                            : "N/A"}
                                         </p>
                                       </div>
                                       <div>
                                         <p className="text-muted-foreground">
-                                          {tString("reservation.bathrooms")}
+                                          {language === "ar"
+                                            ? "إجمالي الدفعة المقدمة"
+                                            : "Total Advance"}
                                         </p>
                                         <p className="font-medium text-foreground">
-                                          {unit.bathrooms}{" "}
-                                          {tString(
-                                            "projectDetails.units.bathroomsSuffix",
-                                          )}
+                                          {unit.totalAdvancePayment
+                                            ? unit.totalAdvancePayment.toLocaleString()
+                                            : "N/A"}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p className="text-muted-foreground">
+                                          {language === "ar"
+                                            ? "جدية التعاقد"
+                                            : "Down Payment"}
+                                        </p>
+                                        <p className="font-medium text-foreground text-primary font-bold">
+                                          {unit.downPayment
+                                            ? unit.downPayment.toLocaleString()
+                                            : "N/A"}
                                         </p>
                                       </div>
                                     </div>

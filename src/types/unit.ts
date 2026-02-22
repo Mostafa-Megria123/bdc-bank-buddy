@@ -10,6 +10,9 @@ export interface Unit {
   floor: number;
   area: number;
   price: number;
+  downPayment?: number;
+  meterPrice?: number;
+  totalAdvancePayment?: number;
   status: UnitStatus | string;
   bedrooms?: number;
   bathrooms?: number;

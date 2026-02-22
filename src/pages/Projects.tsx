@@ -135,25 +135,18 @@ const Projects: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <Link to={`/projects/${project.id}`} className="flex-1">
-                        <Button className="w-full bg-gradient-primary hover:shadow-brand transition-all duration-500 text-lg py-6 story-link group/button">
-                          <span className="flex items-center justify-center">
-                            {tString("common.viewDetails")}
-                            {language === "ar" ? (
-                              <ArrowLeft className="mr-3 h-5 w-5 group-hover/button:-translate-x-1 transition-transform duration-300" />
-                            ) : (
-                              <ArrowRight className="ml-3 h-5 w-5 group-hover/button:translate-x-1 transition-transform duration-300" />
-                            )}
-                          </span>
-                        </Button>
-                      </Link>
-
-                      <Button variant="outline" className="flex-1">
-                        <Download className="mr-2 h-4 w-4" />
-                        {tString("common.termsAndConditions")}
+                    <Link to={`/projects/${project.id}`} className="block">
+                      <Button className="w-full h-5 bg-gradient-primary hover:shadow-brand transition-all duration-500 text-lg py-6 story-link group/button">
+                        <span className="flex items-center justify-center">
+                          {tString("common.viewDetails")}
+                          {language === "ar" ? (
+                            <ArrowLeft className="mr-3 h-5 w-5 group-hover/button:-translate-x-1 transition-transform duration-300" />
+                          ) : (
+                            <ArrowRight className="ml-3 h-5 w-5 group-hover/button:translate-x-1 transition-transform duration-300" />
+                          )}
+                        </span>
                       </Button>
-                    </div>
+                    </Link>
                   </CardContent>
                 </Card>
               );

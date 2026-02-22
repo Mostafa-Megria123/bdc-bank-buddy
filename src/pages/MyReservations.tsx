@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useAuth } from "@/contexts/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -31,6 +32,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Calendar,
   Filter,
   Upload,
@@ -49,6 +58,10 @@ interface PaymentDialogProps {
   reservation: ReservationDTO;
   tString: (key: string) => string;
   onSuccess?: () => void;
+}
+
+interface LocationState {
+  showPaymentPendingAlert?: boolean;
 }
 
 const PaymentDialog = ({
@@ -305,6 +318,8 @@ const PaymentDialog = ({
 const MyReservations = () => {
   const { tString, language } = useLanguage();
   const { user } = useAuth();
+  const location = useLocation();
+  const [showPaymentPendingAlert, setShowPaymentPendingAlert] = useState(false);
 
   const [reservations, setReservations] = useState<ReservationDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -359,6 +374,16 @@ const MyReservations = () => {
 
     fetchReservations();
   }, [user?.id, page, tString]);
+
+  // Handle payment pending alert from navigation state
+  useEffect(() => {
+    const state = location.state as LocationState;
+    if (state && state.showPaymentPendingAlert) {
+      setShowPaymentPendingAlert(true);
+      // Clear the state to prevent alert from reappearing on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const handleResetFilters = () => {
     setFilters(initialFilters);
@@ -520,6 +545,30 @@ const MyReservations = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Payment Pending Alert Dialog */}
+      <AlertDialog open={showPaymentPendingAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-blue-600" />
+              {language === "ar" ? "إكمال الدفع" : "Complete Your Payment"}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="pt-2">
+              {language === "ar"
+                ? "تم فتح صفحة الدفع في نافذة جديدة. بعد إكمال عملية الدفع، عد إلى هنا واضغط على زر 'تحديث' لتحديث حالة حجزك."
+                : "The payment form has been opened in a new window. After completing the payment, please return here and click the 'Refresh' button to update your reservation status."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowPaymentPendingAlert(false)}>
+              {language === "ar" ? "حسناً" : "OK"}
+            </Button>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-screen-2xl mx-auto">
@@ -685,6 +734,18 @@ const MyReservations = () => {
                         </TableHead>
                         <TableHead
                           className={language === "ar" ? "text-right" : ""}>
+                          {tString("myReservations.table.meterPrice")}
+                        </TableHead>
+                        <TableHead
+                          className={language === "ar" ? "text-right" : ""}>
+                          {tString("myReservations.table.totalAdvancePayment")}
+                        </TableHead>
+                        <TableHead
+                          className={language === "ar" ? "text-right" : ""}>
+                          {tString("myReservations.table.downPayment")}
+                        </TableHead>
+                        <TableHead
+                          className={language === "ar" ? "text-right" : ""}>
                           {tString("myReservations.table.modified")}
                         </TableHead>
                         {/* <TableHead
@@ -701,7 +762,7 @@ const MyReservations = () => {
                       {filteredReservations.length === 0 ? (
                         <TableRow>
                           <TableCell
-                            colSpan={9}
+                            colSpan={10}
                             className="text-center py-8 text-muted-foreground">
                             {tString("myReservations.noReservations") ||
                               "No reservations found"}
@@ -731,6 +792,21 @@ const MyReservations = () => {
                             <TableCell>
                               {reservation.deposit
                                 ? `${reservation.deposit.toLocaleString()} EGP`
+                                : tString("myReservations.none")}
+                            </TableCell>
+                            <TableCell>
+                              {reservation.meterPrice
+                                ? `${reservation.meterPrice.toLocaleString()} EGP`
+                                : tString("myReservations.none")}
+                            </TableCell>
+                            <TableCell>
+                              {reservation.totalAdvancePayment
+                                ? `${reservation.totalAdvancePayment.toLocaleString()} EGP`
+                                : tString("myReservations.none")}
+                            </TableCell>
+                            <TableCell>
+                              {reservation.downPayment
+                                ? `${reservation.downPayment.toLocaleString()} EGP`
                                 : tString("myReservations.none")}
                             </TableCell>
                             <TableCell>

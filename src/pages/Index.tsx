@@ -131,10 +131,9 @@ const Index = () => {
                       alt={language === "ar" ? a.titleAr : a.titleEn}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       onError={(e) => {
-                        const imageUrl =
-                          a.gallery?.[0]?.imagePath
-                            ? getFileUrl(a.gallery[0].imagePath)
-                            : placeholderSvg;
+                        const imageUrl = a.gallery?.[0]?.imagePath
+                          ? getFileUrl(a.gallery[0].imagePath)
+                          : placeholderSvg;
                         handleImageError(imageUrl);
                       }}
                     />
@@ -237,23 +236,16 @@ const Index = () => {
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <Link to={`/projects/${project.id}`} className="flex-1">
-                        <Button className="w-full bg-gradient-primary hover:opacity-90">
-                          {tString("common.viewDetails")}
-                          {language === "ar" ? (
-                            <ArrowLeft className="ml-2 h-4 w-4" />
-                          ) : (
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          )}
-                        </Button>
-                      </Link>
-
-                      <Button variant="outline" className="flex-1">
-                        <Download className="mr-2 h-4 w-4" />
-                        {tString("common.termsAndConditions")}
+                    <Link to={`/projects/${project.id}`} className="block">
+                      <Button className="w-full bg-gradient-primary hover:opacity-90">
+                        {tString("common.viewDetails")}
+                        {language === "ar" ? (
+                          <ArrowLeft className="ml-2 h-4 w-4" />
+                        ) : (
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        )}
                       </Button>
-                    </div>
+                    </Link>
                   </CardContent>
                 </Card>
               );

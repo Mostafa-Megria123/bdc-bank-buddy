@@ -25,6 +25,10 @@ import {
   Home,
   MapPin,
   ExternalLink,
+  Building,
+  Maximize2,
+  BedDouble,
+  Droplet,
 } from "lucide-react";
 import { Unit } from "@/types/unit";
 import { UnitType } from "@/types/unit-type";
@@ -120,7 +124,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
       const paymentData: PaymentRequest = {
         unitId: unit.id,
         projectId: projectId, // Use projectId from props
-        amount: 50000, // Reservation fee amount
+        amount: unit.downPayment || 50000, // Use unit's downPayment or fallback to 50000
         reservationDate: reservationDetails.reservationDate,
         notes: reservationDetails.notes,
         userNationalId: nationalId,
@@ -136,15 +140,32 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             orderId: result.orderId,
             unitId: unit.id,
             projectName: projectName,
-            amount: 50000,
+            amount: paymentData.amount,
             userNationalId: nationalId,
           }),
         );
 
-        // Open payment form in new tab
+        // Open payment form in new tab first (before navigation)
         if (result.formUrl) {
-          window.open(result.formUrl, "_blank");
+          const paymentWindow = window.open(result.formUrl, "_blank");
+          if (!paymentWindow) {
+            console.warn("Payment window could not be opened");
+            toast({
+              title: tString("reservation.paymentWarning"),
+              description:
+                "Payment window blocked. Please check your browser settings.",
+              variant: "destructive",
+            });
+          }
         }
+
+        // Close the modal and navigate to My Reservations with a small delay to ensure window opens
+        setTimeout(() => {
+          onClose();
+          navigate("/my-reservations", {
+            state: { showPaymentPendingAlert: true },
+          });
+        }, 500);
       } else {
         toast({
           title: tString("reservation.paymentError"),
@@ -210,26 +231,45 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     <span className="text-sm">{projectName}</span>
                   </div>
 
-                  <div className="space-y-1">
-                    <p>
-                      <strong>{tString("reservation.type")}</strong>{" "}
-                      {typeof unit.type === "object" && unit.type !== null
-                        ? language === "ar"
-                          ? (unit.type as UnitType).typeAr
-                          : (unit.type as UnitType).typeEn
-                        : String(unit.type)}
-                    </p>
-                    <p>
-                      <strong>{tString("reservation.area")}</strong> {unit.area}
-                    </p>
-                    <p>
-                      <strong>{tString("reservation.bedrooms")}</strong>{" "}
-                      {unit.bedrooms}
-                    </p>
-                    <p>
-                      <strong>{tString("reservation.bathrooms")}</strong>{" "}
-                      {unit.bathrooms}
-                    </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Building className="h-4 w-4 text-primary" />
+                      <span className="font-medium">
+                        {tString("reservation.type")}
+                      </span>
+                      <span className="text-sm">
+                        {typeof unit.type === "object" && unit.type !== null
+                          ? language === "ar"
+                            ? (unit.type as UnitType).typeAr
+                            : (unit.type as UnitType).typeEn
+                          : String(unit.type)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Maximize2 className="h-4 w-4 text-primary" />
+                      <span className="font-medium">
+                        {tString("reservation.area")}
+                      </span>
+                      <span className="text-sm">{unit.area}</span>
+                    </div>
+                    {unit.bedrooms && (
+                      <div className="flex items-center gap-2">
+                        <BedDouble className="h-4 w-4 text-primary" />
+                        <span className="font-medium">
+                          {tString("reservation.bedrooms")}
+                        </span>
+                        <span className="text-sm">{unit.bedrooms}</span>
+                      </div>
+                    )}
+                    {unit.bathrooms && (
+                      <div className="flex items-center gap-2">
+                        <Droplet className="h-4 w-4 text-primary" />
+                        <span className="font-medium">
+                          {tString("reservation.bathrooms")}
+                        </span>
+                        <span className="text-sm">{unit.bathrooms}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -249,14 +289,16 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                       {tString("reservation.reservationFee")}
                     </span>
                     <span className="text-sm">
-                      50,000 {language === "ar" ? "ج.م" : "EGP"}
+                      {unit.totalAdvancePayment.toLocaleString()}{" "}
+                      {language === "ar" ? "ج.م" : "EGP"}
                     </span>
                   </div>
                   <Separator />
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>{tString("reservation.dueNow")}</span>
                     <span className="text-primary">
-                      50,000 {language === "ar" ? "ج.م" : "EGP"}
+                      {unit.downPayment.toLocaleString()}{" "}
+                      {language === "ar" ? "ج.م" : "EGP"}
                     </span>
                   </div>
                 </div>

@@ -18,6 +18,9 @@ export interface ReservationDTO {
   status: string;
   deposit: number;
   unitPrice: number;
+  meterPrice?: number;
+  totalAdvancePayment?: number;
+  downPayment?: number;
   paymentCompletion?: PaymentCompletionDTO;
   createdDate: string;
   lastModifiedDate: string;

@@ -19,6 +19,7 @@ import {
   CheckCircle2,
   XCircle,
   Building2,
+  CreditCard,
 } from "lucide-react";
 
 interface UnitDetailsModalProps {
@@ -32,7 +33,7 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
   onClose,
   unit,
 }) => {
-  const { language } = useLanguage();
+  const { language, tString } = useLanguage();
 
   if (!unit) return null;
 
@@ -114,8 +115,8 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                   statusEn === "Available"
                     ? "default"
                     : statusEn === "Reserved"
-                    ? "destructive"
-                    : "secondary"
+                      ? "destructive"
+                      : "secondary"
                 }
                 className={
                   statusEn === "Available"
@@ -126,10 +127,10 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                   ? typeof unit.status === "object" && unit.status !== null
                     ? (unit.status as { statusAr: string }).statusAr
                     : statusEn === "Available"
-                    ? "متاح"
-                    : statusEn === "Reserved"
-                    ? "محجوز"
-                    : "مباع"
+                      ? "متاح"
+                      : statusEn === "Reserved"
+                        ? "محجوز"
+                        : "مباع"
                   : statusEn}
               </Badge>
               <div className="text-xl font-bold text-primary">
@@ -179,6 +180,51 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                   {language === "ar" ? "الدور" : "Floor"}:
                 </span>
                 <span className="font-medium">{unit.floor}</span>
+              </div>
+            </div>
+
+            <div className="bg-muted/30 p-4 rounded-lg space-y-2 mt-2">
+              <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-primary" />
+                {language === "ar" ? "تفاصيل الأسعار" : "Pricing Details"}
+              </h4>
+              <div className="space-y-2 text-sm">
+                {unit.meterPrice && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">
+                      {language === "ar" ? "سعر المتر" : "Meter Price"}:
+                    </span>
+                    <span className="font-medium">
+                      {unit.meterPrice.toLocaleString()}{" "}
+                      {language === "ar" ? "ج.م" : "EGP"}
+                    </span>
+                  </div>
+                )}
+                {unit.totalAdvancePayment && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">
+                      {language === "ar"
+                        ? "إجمالي الدفعة المقدمة"
+                        : "Total Advance Payment"}
+                      :
+                    </span>
+                    <span className="font-medium">
+                      {unit.totalAdvancePayment.toLocaleString()}{" "}
+                      {language === "ar" ? "ج.م" : "EGP"}
+                    </span>
+                  </div>
+                )}
+                {unit.downPayment && (
+                  <div className="flex justify-between border-t pt-2">
+                    <span className="font-semibold">
+                      {tString("myReservations.table.downPayment")}:
+                    </span>
+                    <span className="font-bold text-primary">
+                      {unit.downPayment.toLocaleString()}{" "}
+                      {language === "ar" ? "ج.م" : "EGP"}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 

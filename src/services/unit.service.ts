@@ -19,16 +19,22 @@ export interface PaginatedUnitsResponse {
 
 export const UnitService = {
   /**
-   * Fetches units by project ID with pagination
+   * Fetches units by project ID with pagination and optional search filters
    * @param projectId The ID of the project
    * @param page The page number (0-indexed)
    * @param size The number of items per page
+   * @param search Optional search parameter to filter units
+   * @param status Optional status parameter to filter units
+   * @param projectIndex Optional project index parameter to filter units
    * @returns Paginated units response
    */
   getUnitsByProjectId: async (
     projectId: string | number,
     page: number = 0,
     size: number = 5,
+    search?: string,
+    status?: string,
+    projectIndex?: number,
   ): Promise<PaginatedUnitsResponse> => {
     try {
       const url = `${API_URL}/project/${projectId}`;
@@ -36,6 +42,9 @@ export const UnitService = {
         params: {
           page,
           size,
+          ...(search && { search }),
+          ...(status && { status }),
+          ...(projectIndex !== undefined && { projectIndex }),
         },
       });
       return response.data;

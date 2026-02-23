@@ -179,7 +179,13 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                 <span className="text-sm text-muted-foreground">
                   {language === "ar" ? "الدور" : "Floor"}:
                 </span>
-                <span className="font-medium">{unit.floor}</span>
+                <span className="font-medium">
+                  {unit.floor === 0
+                    ? language === "ar"
+                      ? "الارضي"
+                      : "Ground"
+                    : unit.floor}
+                </span>
               </div>
             </div>
 

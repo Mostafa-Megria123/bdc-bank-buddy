@@ -106,6 +106,7 @@ const ProjectDetail = () => {
           id,
           currentPage - 1, // Convert to 0-indexed for backend
           itemsPerPage,
+          searchQuery || undefined, // Pass search query to backend
         );
         setUnits(response.content);
         setTotalPages(response.totalPages);
@@ -117,7 +118,7 @@ const ProjectDetail = () => {
       }
     };
     fetchUnits();
-  }, [id, currentPage]);
+  }, [id, currentPage, searchQuery]);
 
   // Reset to first page when search query changes
   React.useEffect(() => {
@@ -209,29 +210,9 @@ const ProjectDetail = () => {
     return String(unit.status);
   };
 
-  // Filter units based on search query (client-side filtering)
-  const filteredUnits = units.filter((unit) => {
-    const searchLower = searchQuery.toLowerCase();
-    const unitNumber = unit.unitNumber.toString();
-    const unitArea = unit.area.toString();
-    const unitPrice = unit.price.toString();
-    const unitBedrooms = unit.bedrooms?.toString() || "";
-    const unitBathrooms = unit.bathrooms?.toString() || "";
-
-    return (
-      unitNumber.includes(searchLower) ||
-      unitArea.includes(searchLower) ||
-      unitPrice.includes(searchLower) ||
-      unitBedrooms.includes(searchLower) ||
-      unitBathrooms.includes(searchLower)
-    );
-  });
-
-  // For search results, recalculate pagination on client side
-  const displayUnits = searchQuery ? filteredUnits : units;
-  const displayTotalPages = searchQuery
-    ? Math.ceil(filteredUnits.length / itemsPerPage)
-    : totalPages;
+  // For search results handled by backend, use server-side pagination
+  const displayUnits = units;
+  const displayTotalPages = totalPages;
 
   const availableUnitsCount = project?.units
     ? project.units.filter((u) => getUnitStatusEn(u) === "Available").length
@@ -368,7 +349,7 @@ const ProjectDetail = () => {
             </Card>
 
             {/* Units Section */}
-            {units && units.length > 0 && (
+            {(units && units.length > 0) || searchQuery ? (
               <Card>
                 <CardContent className="p-6">
                   <h2 className="text-2xl font-bold text-foreground mb-6">
@@ -394,8 +375,8 @@ const ProjectDetail = () => {
                     {searchQuery && (
                       <p className="text-sm text-muted-foreground mt-2">
                         {language === "ar"
-                          ? `${filteredUnits.length} نتائج`
-                          : `${filteredUnits.length} results`}
+                          ? `${totalUnitsCount} نتائج`
+                          : `${totalUnitsCount} results`}
                       </p>
                     )}
                   </div>
@@ -410,7 +391,7 @@ const ProjectDetail = () => {
                           : "Loading units..."}
                       </p>
                     </div>
-                  ) : filteredUnits.length === 0 ? (
+                  ) : displayUnits.length === 0 ? (
                     <div className="text-center py-12">
                       <p className="text-muted-foreground text-lg">
                         {language === "ar"
@@ -651,7 +632,7 @@ const ProjectDetail = () => {
                   </div>
                 </CardContent>
               </Card>
-            )}
+            ) : null}
 
             {/* Gallery Grid */}
             {project.projectGallery.length > 0 && (

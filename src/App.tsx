@@ -29,7 +29,7 @@ import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import PaymentVerification from "./pages/PaymentVerification";
 import { AnnouncementDetails } from "@/components/AnnouncementDetails";
-import { ScrollToTop } from "@/components/ScrollToTop";
+import { ScrollToTop, ScrollToTopButton } from "@/components/ui/scroll-to-top";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +47,7 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
+      <ScrollToTopButton position="bottom-right" scrollThreshold={300} />
       <div className="min-h-screen flex flex-col">
         <Navigation />
         <main className="flex-1">

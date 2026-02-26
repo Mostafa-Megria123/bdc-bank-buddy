@@ -101,6 +101,16 @@ const Register = () => {
     setNationalIdError(false);
     setRegistrationError("");
 
+    // Debug logs
+    console.log("Form data:", data);
+    console.log("Form errors:", errors);
+    console.log(
+      "Captcha token:",
+      data.captcha,
+      "Length:",
+      data.captcha?.length,
+    );
+
     // Check if there are any validation errors
     if (Object.keys(errors).length > 0) {
       const errorMessages = Object.values(errors)
@@ -114,10 +124,13 @@ const Register = () => {
     }
 
     try {
-      await registerUser({
+      // Ensure only the captcha token string is sent
+      const payload = {
         ...data,
+        captcha: typeof data.captcha === "string" ? data.captcha : "",
         nationalIdImage: uploadedFile,
-      });
+      };
+      await registerUser(payload);
       toast.success(
         getTranslation(
           language,
@@ -823,7 +836,10 @@ const Register = () => {
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
-                  onChange={(value) => setValue("captcha", value || "")}
+                  onChange={(value) => {
+                    console.log("Captcha value:", value);
+                    setValue("captcha", value || "");
+                  }}
                   onExpired={() => setValue("captcha", "")}
                   theme="light"
                 />

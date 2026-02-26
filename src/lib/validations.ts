@@ -16,7 +16,7 @@ export const loginSchema = z.object({
   captcha: z
     .string()
     .min(6, "Please enter the captcha")
-    .max(6, "Invalid captcha"),
+    .max(10000, "Invalid captcha"),
 });
 
 export const registerSchema = z
@@ -88,7 +88,7 @@ export const registerSchema = z
     captcha: z
       .string()
       .min(6, "Please enter the captcha")
-      .max(6, "Invalid captcha"),
+      .max(10000, "Invalid captcha"),
   })
   .refine((data) => data.mobile === data.confirmMobile, {
     message: "Mobile numbers don't match",

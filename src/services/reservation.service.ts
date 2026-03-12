@@ -35,7 +35,7 @@ export const reservationService = {
     try {
       const { data: apiResponse } = await axios.get<
         CustomApiResponse<ReservationsResponse>
-      >(`${API_URL}/user/${userId}`, {
+      >(`${API_URL}/user/userId/${userId}`, {
         params: {
           page,
           size,

@@ -465,30 +465,36 @@ const MyReservations = () => {
   };
 
   // Apply filters to reservations
-  const filteredReservations = reservations.filter((r) => {
-    // Status filter
-    if (filters.status) {
-      const statusNormalized = String(filters.status).toLowerCase();
-      const reservationStatus = String(r.status).toLowerCase();
-      if (statusNormalized !== reservationStatus) return false;
-    }
+  const filteredReservations = reservations
+    .filter((r) => {
+      // Status filter
+      if (filters.status) {
+        const statusNormalized = String(filters.status).toLowerCase();
+        const reservationStatus = String(r.status).toLowerCase();
+        if (statusNormalized !== reservationStatus) return false;
+      }
 
-    // Date filters (compare based on lastModifiedDate)
-    if (filters.dateFrom) {
-      const from = new Date(filters.dateFrom);
-      const modifiedDate = new Date(r.lastModifiedDate);
-      if (isNaN(from.getTime()) || modifiedDate < from) return false;
-    }
-    if (filters.dateTo) {
-      const to = new Date(filters.dateTo);
-      const modifiedDate = new Date(r.lastModifiedDate);
-      // include the end date by setting time to end of day
-      to.setHours(23, 59, 59, 999);
-      if (isNaN(to.getTime()) || modifiedDate > to) return false;
-    }
+      // Date filters (compare based on lastModifiedDate)
+      if (filters.dateFrom) {
+        const from = new Date(filters.dateFrom);
+        const modifiedDate = new Date(r.lastModifiedDate);
+        if (isNaN(from.getTime()) || modifiedDate < from) return false;
+      }
+      if (filters.dateTo) {
+        const to = new Date(filters.dateTo);
+        const modifiedDate = new Date(r.lastModifiedDate);
+        // include the end date by setting time to end of day
+        to.setHours(23, 59, 59, 999);
+        if (isNaN(to.getTime()) || modifiedDate > to) return false;
+      }
 
-    return true;
-  });
+      return true;
+    })
+    .sort(
+      (a, b) =>
+        new Date(b.lastModifiedDate).getTime() -
+        new Date(a.lastModifiedDate).getTime(),
+    );
 
   const statuses = [
     { value: "NEW", label: tString("myReservations.statuses.New") },

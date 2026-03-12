@@ -8,7 +8,7 @@ import { endpoints } from "@/config/index";
 export const ProjectService = {
   getAllProjects: async (
     page = 0,
-    size = 10
+    size = 10,
   ): Promise<{
     content: Project[];
     totalPages: number;
@@ -33,6 +33,8 @@ export const ProjectService = {
   getFeaturedProjects: async (): Promise<Project[]> => {
     const url = `${endpoints.projects}?page=0&size=3`;
     const response = await axios.get(url);
-    return response.data.content;
+
+    const dataToReturn = response.data.content || response.data;
+    return dataToReturn;
   },
 };

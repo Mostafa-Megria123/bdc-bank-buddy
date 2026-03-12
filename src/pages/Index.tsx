@@ -34,18 +34,41 @@ const Index = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [announcementsData, projectsData, aboutList] = await Promise.all([
-          AnnouncementService.getLatest(3),
-          ProjectService.getFeaturedProjects(),
-          AboutService.getAll(),
-        ]);
+        console.log("Starting data fetch...");
+
+        // Fetch announcements with error handling
+        let announcementsData: Announcement[] = [];
+        try {
+          announcementsData = await AnnouncementService.getLatest(3);
+        } catch (announcementError) {
+          console.error("Failed to fetch announcements:", announcementError);
+        }
+
+        // Fetch projects with error handling
+        let projectsData: Project[] = [];
+        try {
+          projectsData = await ProjectService.getFeaturedProjects();
+        } catch (projectError) {
+          console.error("Failed to fetch projects:", projectError);
+        }
+
+        // Fetch about with error handling
+        let aboutList: About[] = [];
+        try {
+          aboutList = await AboutService.getAll();
+        } catch (aboutError) {
+          console.error("Failed to fetch about:", aboutError);
+        }
+
+        // Set state for all data
         setLatestAnnouncements(announcementsData);
         setFeaturedProjects(projectsData);
+
         if (aboutList && aboutList.length > 0) {
           setAboutData(aboutList[0]);
         }
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Unexpected error in fetchData:", error);
       }
     };
     fetchData();

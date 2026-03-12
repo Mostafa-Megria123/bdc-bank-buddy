@@ -5,6 +5,17 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface ProfileDTO {
+  id: number;
+  profileName: string;
+  description: string;
+  isActive: boolean;
+  createdAt: string;
+  createdByUsername: string;
+  roleCount: number;
+  userCount: number;
+}
+
 export interface AuthResponse {
   id: number;
   token: string;
@@ -19,7 +30,7 @@ export interface AuthResponse {
   placeOfResidence?: string;
   maritalStatus?: string;
   address?: string;
-  role: string;
+  profiles: ProfileDTO[];
   preferredLanguage: string;
   tokenType: string;
   isActive: boolean;

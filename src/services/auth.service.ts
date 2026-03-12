@@ -8,6 +8,7 @@ import {
   ResetPasswordFormData,
 } from "@/lib/validations";
 import { User } from "@/types/user";
+import { AuthResponse } from "@/types/auth";
 
 const AUTH_API_URL = endpoints.auth;
 const REGISTER_API_URL = endpoints.register;
@@ -46,7 +47,7 @@ export const authService = {
     return response.data;
   },
 
-  login: async (data: LoginFormData) => {
+  login: async (data: LoginFormData): Promise<AuthResponse> => {
     try {
       const response = await axios.post(`${LOGIN_API_URL}`, {
         username: data.nationalId,
@@ -57,7 +58,7 @@ export const authService = {
         throw new Error("Invalid login response: no data");
       }
 
-      const authData = response.data;
+      const authData: AuthResponse = response.data;
 
       // Store tokens
       if (authData.token) {

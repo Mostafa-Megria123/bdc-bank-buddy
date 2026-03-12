@@ -281,7 +281,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                       {tString("reservation.unitPrice")}
                     </span>
                     <span className="text-xl font-bold text-primary">
-                      {unit.price.toLocaleString()}
+                      {unit.price ? unit.price.toLocaleString() : "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -289,7 +289,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                       {tString("reservation.reservationFee")}
                     </span>
                     <span className="text-sm">
-                      {unit.totalAdvancePayment.toLocaleString()}{" "}
+                      {unit.totalAdvancePayment
+                        ? unit.totalAdvancePayment.toLocaleString()
+                        : "N/A"}{" "}
                       {language === "ar" ? "ج.م" : "EGP"}
                     </span>
                   </div>
@@ -297,7 +299,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>{tString("reservation.dueNow")}</span>
                     <span className="text-primary">
-                      {unit.downPayment.toLocaleString()}{" "}
+                      {unit.downPayment
+                        ? unit.downPayment.toLocaleString()
+                        : "N/A"}{" "}
                       {language === "ar" ? "ج.م" : "EGP"}
                     </span>
                   </div>

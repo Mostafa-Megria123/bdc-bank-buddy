@@ -66,12 +66,14 @@ const Login = () => {
     } catch (error) {
       const errorMessage = (error as Error).message || "";
 
-      // Check if the error is an account verification error
+      // Check if the error is an account verification error or disabled account
       if (
         errorMessage.includes("ACCOUNT_NOT_VERIFIED") ||
         errorMessage.includes("account is not active") ||
+        errorMessage.includes("Account Disabled") ||
         errorMessage.toLowerCase().includes("not verified") ||
-        errorMessage.toLowerCase().includes("not active")
+        errorMessage.toLowerCase().includes("not active") ||
+        errorMessage.toLowerCase().includes("disabled")
       ) {
         setVerificationError(true);
         setLoginError(

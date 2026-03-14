@@ -11,11 +11,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormData } from "@/lib/validations";
 import { toast } from "sonner";
-import CaptchaField from "@/components/CaptchaField";
+import ReCAPTCHA from "react-google-recaptcha";
 import { redirectService } from "@/services/redirect.service";
 import { getTranslation } from "@/locales";
 
 const Login = () => {
+  const recaptchaRef = React.useRef<ReCAPTCHA>(null);
   const { language, setLanguage } = useLanguage();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -33,7 +34,6 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -43,12 +43,27 @@ const Login = () => {
     },
   });
 
-  const captchaValue = watch("captcha");
-
   const onSubmit = async (data: LoginFormData) => {
     setVerificationError(false);
     setLoginError("");
+
+    // Validate captcha is present and is a string
+    if (!data.captcha || typeof data.captcha !== "string") {
+      setLoginError(
+        getTranslation(language, "auth.login.captchaRequired") as string,
+      );
+      toast.error("Please complete the reCAPTCHA verification");
+      return;
+    }
+
     try {
+      // Debug log for captcha submission
+      console.log("Login attempt with captcha:", {
+        nationalId: data.nationalId,
+        captchaPresent: !!data.captcha,
+        captchaLength: data.captcha.length,
+      });
+
       await login(data.nationalId, data.password, data.captcha);
 
       // Set user's preferred language from localStorage after successful login
@@ -64,6 +79,10 @@ const Login = () => {
       const redirectUrl = redirectService.getPostLoginRedirect("/projects");
       navigate(redirectUrl);
     } catch (error) {
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
+      setValue("captcha", "");
+
       const errorMessage = (error as Error).message || "";
 
       // Check if the error is an account verification error or disabled account
@@ -153,11 +172,22 @@ const Login = () => {
                 )}
               </div>
 
-              <CaptchaField
-                value={captchaValue}
-                onChange={(value) => setValue("captcha", value)}
-                error={errors.captcha?.message}
-              />
+              <div className="space-y-2">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
+                  onChange={(value) => {
+                    setValue("captcha", value || "");
+                  }}
+                  onExpired={() => setValue("captcha", "")}
+                  theme="light"
+                />
+                {errors.captcha && (
+                  <p className="text-sm text-destructive">
+                    {errors.captcha.message}
+                  </p>
+                )}
+              </div>
 
               <Button
                 type="submit"

@@ -49,9 +49,13 @@ export const authService = {
 
   login: async (data: LoginFormData): Promise<AuthResponse> => {
     try {
+      // Ensure captcha is a string (reCAPTCHA token)
+      const captchaToken = typeof data.captcha === "string" ? data.captcha : "";
+
       const response = await axios.post(`${LOGIN_API_URL}`, {
         username: data.nationalId,
         password: data.password,
+        captcha: captchaToken,
       });
 
       if (!response || !response.data) {

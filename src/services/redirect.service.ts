@@ -33,7 +33,8 @@ export const redirectService = {
     if (
       lastPage.includes("/login") ||
       lastPage.includes("/register") ||
-      lastPage.includes("/verification")
+      lastPage.includes("/verification") ||
+      lastPage.includes("/verify-email")
     ) {
       return null;
     }
@@ -50,8 +51,17 @@ export const redirectService = {
   /**
    * Get redirect URL after login
    * Returns the last visited page if available, otherwise returns default
+   * Special case: if last page was /verify-email, redirect to home (/)
    */
   getPostLoginRedirect: (defaultPath: string = "/projects"): string => {
+    const rawLastPage = sessionStorage.getItem(LAST_VISITED_PAGE_KEY);
+
+    // Special handling for verify-email - redirect to home instead
+    if (rawLastPage && rawLastPage.includes("/verify-email")) {
+      sessionStorage.removeItem(LAST_VISITED_PAGE_KEY);
+      return "/";
+    }
+
     const lastPage = redirectService.getLastPage();
     if (lastPage) {
       redirectService.clearLastPage();

@@ -240,7 +240,8 @@
     "paymentErrorDesc": "فشل في بدء عملية الدفع. يرجى المحاولة مرة أخرى.",
     "authErrorTitle": "خطأ في المصادقة",
     "authErrorDesc": "معرف المستخدم غير متوفر، يرجى تسجيل الدخول مرة أخرى",
-    "paymentRedirectInfo": "ستتم إعادة توجيهك إلى بوابة الدفع الآمنة"
+    "paymentRedirectInfo": "ستتم إعادة توجيهك إلى بوابة الدفع الآمنة",
+    "captchaVerification": "التحقق الأمني (reCAPTCHA)"
   },
   "payment": {
     "verifyingTitle": "التحقق من الدفعة",

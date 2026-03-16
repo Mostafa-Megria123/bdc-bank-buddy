@@ -8,6 +8,7 @@ export interface PaymentRequest {
   reservationDate: string;
   notes: string;
   userNationalId: string;
+  captcha: string;
 }
 
 export interface CheckoutResponse {
@@ -74,6 +75,7 @@ const validatePaymentRequest = (data: PaymentRequest): void => {
     "amount",
     "reservationDate",
     "userNationalId",
+    "captcha",
   ];
 
   for (const field of requiredFields) {

@@ -240,7 +240,8 @@
     "paymentErrorDesc": "Failed to initiate payment. Please try again.",
     "authErrorTitle": "Authentication Error",
     "authErrorDesc": "User identifier not available, please login again",
-    "paymentRedirectInfo": "You will be redirected to secure payment gateway"
+    "paymentRedirectInfo": "You will be redirected to secure payment gateway",
+    "captchaVerification": "Security Verification (reCAPTCHA)"
   },
   "payment": {
     "verifyingTitle": "Verifying Payment",

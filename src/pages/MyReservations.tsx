@@ -48,6 +48,8 @@ import {
   RefreshCw,
   ShoppingCart,
   Loader,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import { reservationService } from "@/services/reservation.service";
@@ -326,6 +328,8 @@ const MyReservations = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [refundingId, setRefundingId] = useState<number | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [downloadingAttachmentId, setDownloadingAttachmentId] = useState<
@@ -361,6 +365,8 @@ const MyReservations = () => {
           10,
         );
         setReservations(response.content || []);
+        setTotalPages(response.totalPages);
+        setTotalElements(response.totalElements);
       } catch (err) {
         console.error("Error fetching reservations:", err);
         setError(
@@ -400,6 +406,8 @@ const MyReservations = () => {
         10,
       );
       setReservations(response.content || []);
+      setTotalPages(response.totalPages);
+      setTotalElements(response.totalElements);
       setSuccessMessage(
         tString("myReservations.refreshSuccess") ||
           "Reservations refreshed successfully",
@@ -432,6 +440,8 @@ const MyReservations = () => {
           10,
         );
         setReservations(response.content || []);
+        setTotalPages(response.totalPages);
+        setTotalElements(response.totalElements);
       }
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(null), 3000);
@@ -937,6 +947,46 @@ const MyReservations = () => {
                       )}
                     </TableBody>
                   </Table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Pagination Controls */}
+          {!isLoading && filteredReservations.length > 0 && (
+            <Card className="mt-8 animate-fade-in">
+              <CardContent className="p-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-sm text-muted-foreground">
+                    {language === "ar"
+                      ? `عرض ${page * 10 + 1}-${Math.min((page + 1) * 10, totalElements)} من أصل ${totalElements} حجز`
+                      : `Showing ${page * 10 + 1}-${Math.min((page + 1) * 10, totalElements)} of ${totalElements} reservations`}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(page - 1)}
+                      disabled={page === 0}
+                      className={language === "ar" ? "ml-2" : ""}>
+                      <ChevronLeft className="h-4 w-4" />
+                      {language === "ar" ? "التالي" : "Previous"}
+                    </Button>
+                    <div className="px-4 py-2 bg-muted rounded text-sm font-medium">
+                      {language === "ar"
+                        ? `الصفحة ${page + 1} من ${totalPages}`
+                        : `Page ${page + 1} of ${totalPages}`}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(page + 1)}
+                      disabled={page >= totalPages - 1}
+                      className={language === "ar" ? "mr-2" : ""}>
+                      {language === "ar" ? "السابق" : "Next"}
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

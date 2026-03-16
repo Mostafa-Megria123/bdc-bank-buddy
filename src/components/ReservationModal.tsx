@@ -148,6 +148,17 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
       const result = await paymentService.checkout(paymentData);
 
+      if (result.errorCode === "UNIT_NOT_AVAILABLE") {
+        toast({
+          title: "Unit Reserved",
+          description:
+            "This unit was just reserved by another user. Please select a different unit.",
+          variant: "destructive",
+        });
+        onClose(); // Close modal
+        navigate("/projects"); // Redirect to units list
+      }
+
       if (result.errorCode === "0" || result.errorCode === "SUCCESS") {
         // Store orderId and other details for later verification
         sessionStorage.setItem(

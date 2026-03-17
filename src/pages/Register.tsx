@@ -318,7 +318,7 @@ const Register = () => {
                   <input
                     id="nationalIdImage"
                     type="file"
-                    accept=".jpg,.jpeg,.pdf"
+                    accept=".jpg,.jpeg"
                     onChange={handleFileChange}
                     className="hidden"
                   />

@@ -10,6 +10,10 @@ export interface Project {
   location: string;
   projectStatus: ProjectStatus;
   totalUnits: number;
+  totalUnitsCount: number;
+  soldUnitsCount: number;
+  reservedUnitsCount: number;
+  availableUnitsCount: number;
   priceMin: number;
   priceMax: number;
   developerEn: string;

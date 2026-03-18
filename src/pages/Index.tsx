@@ -253,7 +253,7 @@ const Index = () => {
                         <span>
                           {tString("projects.display.unitsAvailable").replace(
                             "{count}",
-                            project.totalUnits.toString(),
+                            project.totalUnitsCount.toString(),
                           )}
                         </span>
                       </div>

@@ -131,7 +131,7 @@ const Projects: React.FC = () => {
 
                       <div className="flex items-center">
                         <Home className="h-4 w-4 mr-2 flex-shrink-0" />
-                        <span>{project.totalUnits} Units</span>
+                        <span>{project.totalUnitsCount} Units</span>
                       </div>
                     </div>
 

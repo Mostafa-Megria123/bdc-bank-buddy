@@ -13,7 +13,7 @@ export const ProjectService = {
     content: Project[];
     totalPages: number;
   }> => {
-    const url = `${endpoints.projects}?page=${page}&size=${size}`;
+    const url = `${endpoints.projects}/enhancedUnitsData?page=${page}&size=${size}`;
     const response = await axios.get(url);
     return response.data;
   },
@@ -23,7 +23,9 @@ export const ProjectService = {
    * @param projectId The ID of the project to fetch.
    */
   getProjectById: async (id: string): Promise<Project> => {
-    const response = await axios.get(`${endpoints.projects}/${id}`);
+    const response = await axios.get(
+      `${endpoints.projects}/enhancedUnitsData/${id}`,
+    );
     return response.data;
   },
 
@@ -31,7 +33,7 @@ export const ProjectService = {
    * Fetches featured projects (e.g., for Home Page)
    */
   getFeaturedProjects: async (): Promise<Project[]> => {
-    const url = `${endpoints.projects}?page=0&size=3`;
+    const url = `${endpoints.projects}/enhancedUnitsData?page=0&size=4`;
     const response = await axios.get(url);
 
     const dataToReturn = response.data.content || response.data;

@@ -282,9 +282,9 @@ const ProjectDetail = () => {
                   {tString("projectDetails.availableUnits")}
                 </p>
                 <p className="text-xl font-semibold">
-                  {availableUnitsCount}{" "}
+                  {project.availableUnitsCount}{" "}
                   <span className="text-sm font-normal">
-                    {tString("projectDetails.of")} {project.totalUnits}
+                    {tString("projectDetails.of")} {project.totalUnitsCount}
                   </span>
                 </p>
               </div>
@@ -597,11 +597,7 @@ const ProjectDetail = () => {
                   <div className="mt-6 grid grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg">
                     <div className="text-center">
                       <p className="text-2xl font-bold text-green-600">
-                        {
-                          units.filter(
-                            (u) => getUnitStatusEn(u) === "Available",
-                          ).length
-                        }
+                        {project.availableUnitsCount}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {tString("projectDetails.units.status.available")}
@@ -609,10 +605,7 @@ const ProjectDetail = () => {
                     </div>
                     <div className="text-center">
                       <p className="text-2xl font-bold text-destructive">
-                        {
-                          units.filter((u) => getUnitStatusEn(u) === "Reserved")
-                            .length
-                        }
+                        {project.reservedUnitsCount}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {tString("projectDetails.units.status.reserved")}
@@ -620,10 +613,7 @@ const ProjectDetail = () => {
                     </div>
                     <div className="text-center">
                       <p className="text-2xl font-bold text-muted-foreground">
-                        {
-                          units.filter((u) => getUnitStatusEn(u) === "Sold")
-                            .length
-                        }
+                        {project.soldUnitsCount}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {tString("projectDetails.units.status.sold")}
@@ -719,8 +709,8 @@ const ProjectDetail = () => {
                         {tString("projectDetails.availableUnits")}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {availableUnitsCount} {tString("projectDetails.of")}{" "}
-                        {project.totalUnits}
+                        {project.availableUnitsCount}{" "}
+                        {tString("projectDetails.of")} {project.totalUnitsCount}
                       </p>
                     </div>
                   </div>

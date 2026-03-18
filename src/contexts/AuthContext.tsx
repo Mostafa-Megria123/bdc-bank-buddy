@@ -9,7 +9,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Start as true so the app waits for session restoration before rendering auth-dependent UI
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Restore user session on page refresh
+  useEffect(() => {
+    const restoreSession = async () => {
+      const accessToken =
+        localStorage.getItem("accessToken") || localStorage.getItem("token");
+
+      if (!accessToken) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
+      } catch {
+        // Token is invalid or expired — clear it; logout API will be called by useTokenRefresh
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("csrfToken");
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    restoreSession();
+  }, []);
 
   // Handle token expiration event from fetchClient
   useEffect(() => {
@@ -52,7 +82,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       }
 
       // API returns user object directly, not wrapped in response.user
-      const userData = response.user || response;
+      const userData: User = response.user ?? (response as unknown as User);
       setUser(userData);
     } catch (error) {
       const errorMessage =

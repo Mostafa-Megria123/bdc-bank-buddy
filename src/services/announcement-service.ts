@@ -50,16 +50,16 @@ export const AnnouncementService = {
   // Get all announcements
   getAll: async (
     page: number = 0,
-    size: number = 10
+    size: number = 10,
   ): Promise<PaginatedResponse<Announcement>> => {
-    const url = `${API_URL}?page=${page}&size=${size}`;
+    const url = `${API_URL}/getAllAvailableAnnouncements?page=${page}&size=${size}`;
     try {
       const response = await axios.get(url);
       const data = response.data;
       return {
         ...data,
         content: (data.content || []).map((item: unknown) =>
-          normalizeAnnouncement(item)
+          normalizeAnnouncement(item),
         ),
       };
     } catch (error) {
@@ -81,13 +81,24 @@ export const AnnouncementService = {
     }
   },
 
-  /**
-   * Fetch latest announcements (e.g. for a homepage widget)
-   */
-  getLatest: async (limit = 3): Promise<Announcement[]> => {
-    const params = new URLSearchParams({ limit: limit.toString() });
-    const response = await axios.get(`${API_URL}/latest?${params}`);
-    const data = response.data;
-    return Array.isArray(data) ? data.map(normalizeAnnouncement) : [];
+  // Fetch latest announcements (e.g. for a homepage widget)
+  getLatest: async (
+    page: number = 0,
+    size: number = 3,
+  ): Promise<PaginatedResponse<Announcement>> => {
+    const url = `${API_URL}/getAllAvailableAnnouncements?page=${page}&size=${size}`;
+    try {
+      const response = await axios.get(url);
+      const data = response.data;
+      return {
+        ...data,
+        content: (data.content || []).map((item: unknown) =>
+          normalizeAnnouncement(item),
+        ),
+      };
+    } catch (error) {
+      console.error("Error fetching announcements:", error, "URL:", url);
+      throw error;
+    }
   },
 };

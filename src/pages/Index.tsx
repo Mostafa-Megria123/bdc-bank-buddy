@@ -39,7 +39,8 @@ const Index = () => {
         // Fetch announcements with error handling
         let announcementsData: Announcement[] = [];
         try {
-          announcementsData = await AnnouncementService.getLatest(3);
+          const response = await AnnouncementService.getLatest();
+          announcementsData = response.content;
         } catch (announcementError) {
           console.error("Failed to fetch announcements:", announcementError);
         }

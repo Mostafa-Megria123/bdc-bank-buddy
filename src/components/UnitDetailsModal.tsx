@@ -160,20 +160,24 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                 </span>
                 <span className="font-medium">{unit.area}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <BedDouble className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  {language === "ar" ? "غرف" : "Bedrooms"}:
-                </span>
-                <span className="font-medium">{unit.bedrooms}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Bath className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  {language === "ar" ? "حمامات" : "Bathrooms"}:
-                </span>
-                <span className="font-medium">{unit.bathrooms}</span>
-              </div>
+              {unit.bedrooms > 0 && (
+                <div className="flex items-center gap-2">
+                  <BedDouble className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    {language === "ar" ? "غرف" : "Bedrooms"}:
+                  </span>
+                  <span className="font-medium">{unit.bedrooms}</span>
+                </div>
+              )}
+              {unit.bathrooms > 0 && (
+                <div className="flex items-center gap-2">
+                  <Bath className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    {language === "ar" ? "حمامات" : "Bathrooms"}:
+                  </span>
+                  <span className="font-medium">{unit.bathrooms}</span>
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <Building2 className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">

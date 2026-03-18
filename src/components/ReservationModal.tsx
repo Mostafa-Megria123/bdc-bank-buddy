@@ -322,7 +322,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                         </span>
                         <span className="text-sm">{unit.area}</span>
                       </div>
-                      {unit.bedrooms && (
+                      {unit.bedrooms > 0 && (
                         <div className="flex items-center gap-2">
                           <BedDouble className="h-4 w-4 text-primary" />
                           <span className="font-medium">
@@ -331,7 +331,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                           <span className="text-sm">{unit.bedrooms}</span>
                         </div>
                       )}
-                      {unit.bathrooms && (
+                      {unit.bathrooms > 0 && (
                         <div className="flex items-center gap-2">
                           <Droplet className="h-4 w-4 text-primary" />
                           <span className="font-medium">

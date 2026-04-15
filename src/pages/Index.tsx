@@ -34,8 +34,6 @@ const Index = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("Starting data fetch...");
-
         // Fetch announcements with error handling
         let announcementsData: Announcement[] = [];
         try {

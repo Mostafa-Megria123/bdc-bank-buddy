@@ -57,13 +57,6 @@ const Login = () => {
     }
 
     try {
-      // Debug log for captcha submission
-      console.log("Login attempt with captcha:", {
-        nationalId: data.nationalId,
-        captchaPresent: !!data.captcha,
-        captchaLength: data.captcha.length,
-      });
-
       await login(data.nationalId, data.password, data.captcha);
 
       // Set user's preferred language from localStorage after successful login

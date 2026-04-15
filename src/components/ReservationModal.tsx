@@ -496,36 +496,25 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <div className="bg-muted/30 p-4 rounded-lg">
-                        <h4 className="font-medium mb-3">
-                          {tString("reservation.reservationSummary")}
-                        </h4>
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span>{tString("reservation.unit")}:</span>
-                            <span>{unit.id}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>{tString("reservation.project")}:</span>
-                            <span>{projectName}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>
-                              {tString("reservation.reservationDate")}:
-                            </span>
-                            <span>{reservationDetails.reservationDate}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>{tString("reservation.customer")}:</span>
-                            <span>{user?.fullName || ""}</span>
-                          </div>
-                          <Separator className="my-2" />
-                          <div className="flex justify-between font-bold">
-                            <span>{tString("reservation.totalAmount")}:</span>
-                            <span>
-                              50,000 {language === "ar" ? "ج.م" : "EGP"}
-                            </span>
-                          </div>
+                      <h4 className="font-medium mb-3">
+                        {tString("reservation.reservationSummary")}
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span>{tString("reservation.unit")}:</span>
+                          <span>{unit.unitNumber}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>{tString("reservation.project")}:</span>
+                          <span>{projectName}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>{tString("reservation.reservationDate")}:</span>
+                          <span>{reservationDetails.reservationDate}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>{tString("reservation.customer")}:</span>
+                          <span>{user?.fullName || ""}</span>
                         </div>
                       </div>
 

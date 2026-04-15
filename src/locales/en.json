@@ -198,7 +198,7 @@
     "bedrooms": "Bedrooms",
     "bathrooms": "Bathrooms",
     "unitPrice": "Unit Price",
-    "reservationFee": "Reservation Fee",
+    "reservationFee": "Total Down Payment",
     "available": "Available for Reservation",
     "dueNow": "Due Now",
     "detailsTitle": "Reservation Details",

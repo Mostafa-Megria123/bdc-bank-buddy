@@ -101,16 +101,6 @@ const Register = () => {
     setNationalIdError(false);
     setRegistrationError("");
 
-    // Debug logs
-    console.log("Form data:", data);
-    console.log("Form errors:", errors);
-    console.log(
-      "Captcha token:",
-      data.captcha,
-      "Length:",
-      data.captcha?.length,
-    );
-
     // Check if there are any validation errors
     if (Object.keys(errors).length > 0) {
       const errorMessages = Object.values(errors)
@@ -148,8 +138,8 @@ const Register = () => {
         response?: { data?: { message?: string } };
       };
       const errorMessage =
-        err?.message ||
         err?.response?.data?.message ||
+        err?.message ||
         (getTranslation(
           language,
           "auth.register.registrationFailed",
@@ -162,12 +152,7 @@ const Register = () => {
       ) {
         setNationalIdError(true);
         setRegistrationError(errorMessage);
-        toast.error(
-          getTranslation(
-            language,
-            "auth.register.nationalIdAlreadyRegistered",
-          ) as string,
-        );
+        toast.error(errorMessage);
       } else {
         setRegistrationError(errorMessage);
         toast.error(errorMessage);
@@ -837,7 +822,6 @@ const Register = () => {
                   ref={recaptchaRef}
                   sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
                   onChange={(value) => {
-                    console.log("Captcha value:", value);
                     setValue("captcha", value || "");
                   }}
                   onExpired={() => setValue("captcha", "")}

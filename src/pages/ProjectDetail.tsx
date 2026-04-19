@@ -535,19 +535,21 @@ const ProjectDetail = () => {
                                       </p>
                                     </div>
 
-                                    {statusEn === "Available" && (
-                                      <Button
-                                        size="sm"
-                                        className="bg-gradient-primary hover:opacity-90 whitespace-nowrap"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleReserveUnit(unit);
-                                        }}>
-                                        {tString(
-                                          "projectDetails.units.reserveNow",
-                                        )}
-                                      </Button>
-                                    )}
+                                    {statusEn === "Available" &&
+                                      project.projectStatus.statusEn ===
+                                        "Available" && (
+                                        <Button
+                                          size="sm"
+                                          className="bg-gradient-primary hover:opacity-90 whitespace-nowrap"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleReserveUnit(unit);
+                                          }}>
+                                          {tString(
+                                            "projectDetails.units.reserveNow",
+                                          )}
+                                        </Button>
+                                      )}
 
                                     {statusEn === "Reserved" && (
                                       <Button

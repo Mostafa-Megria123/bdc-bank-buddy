@@ -452,7 +452,17 @@
       "noAccount": "ليس لديك حساب؟",
       "registerNow": "سجل الآن",
       "accountNotVerified": "حسابك لم يتم التحقق منه بعد",
-      "resendVerificationEmail": "إعادة إرسال رسالة التحقق"
+      "resendVerificationEmail": "إعادة إرسال رسالة التحقق",
+      "captchaRequired": "يرجى إكمال التحقق من reCAPTCHA",
+      "accountLocked": "تم قفل حسابك بعد 5 محاولات دخول فاشلة. سيتم فتحه تلقائياً بعد 24 ساعة.",
+      "accountLockedWarning": "تم قفل الحساب. حاول مرة أخرى بعد 24 ساعة.",
+      "accountUnlockTime": "سيتم فتح حسابك تلقائياً بعد 24 ساعة.",
+      "accountRecovery": "هل تحتاج للمساعدة؟ أعد تعيين كلمة المرور لاستعادة حسابك.",
+      "resetPassword": "إعادة تعيين كلمة المرور",
+      "failedAttemptsWarning": "تحذير: سيتم قفل حسابك بعد {attempts} محاولات إضافية.",
+      "failedAttempts3": "تحذير: سيتم قفل حسابك بعد محاولتين إضافيتين.",
+      "failedAttempts4": "تحذير: سيتم قفل حسابك بعد محاولة إضافية واحدة.",
+      "accountMayBeLocked": "قد يتم قفل حسابك الآن. يرجى المحاولة مرة أخرى أو الانتظار 24 ساعة."
     },
     "emailVerification": {
       "verifyingEmail": "جاري التحقق...",

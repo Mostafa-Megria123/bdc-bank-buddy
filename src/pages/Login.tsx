@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
+import { Eye, EyeOff, LogIn, Loader2, Lock, AlertTriangle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,10 +23,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
   const [loginError, setLoginError] = useState<string>("");
+  const [accountLocked, setAccountLocked] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
 
   useEffect(() => {
     // Store current page before user might navigate to register/forgot password
     redirectService.storeLastPage(window.location.pathname);
+
+    // Reset failed attempts counter on page load/reload
+    setFailedAttempts(0);
   }, []);
 
   const {
@@ -46,6 +51,7 @@ const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     setVerificationError(false);
     setLoginError("");
+    setAccountLocked(false);
 
     // Validate captcha is present and is a string
     if (!data.captcha || typeof data.captcha !== "string") {
@@ -58,6 +64,9 @@ const Login = () => {
 
     try {
       await login(data.nationalId, data.password, data.captcha);
+
+      // Reset failed attempts on successful login
+      setFailedAttempts(0);
 
       // Set user's preferred language from localStorage after successful login
       const preferredLanguage = localStorage.getItem("preferredLanguage");
@@ -76,10 +85,43 @@ const Login = () => {
       recaptchaRef.current?.reset();
       setValue("captcha", "");
 
-      const errorMessage = (error as Error).message || "";
+      const err = error as Error & { status?: number; errorField?: string };
+      const errorMessage = err.message || "";
+      const statusCode = err.status;
+      const errorField = err.errorField;
 
-      // Check if the error is an account verification error or disabled account
-      if (
+      // Handle 403 Account Locked
+      if (statusCode === 403 && errorField === "Account Locked") {
+        setAccountLocked(true);
+        setLoginError(errorMessage);
+        toast.error(errorMessage);
+      }
+      // Handle 403 Account Disabled (Unverified)
+      else if (
+        statusCode === 403 &&
+        (errorField === "Account Disabled" ||
+          errorMessage.includes("Account Disabled") ||
+          errorMessage.includes("not verified") ||
+          errorMessage.includes("not active"))
+      ) {
+        setVerificationError(true);
+        setLoginError(
+          getTranslation(language, "auth.login.accountNotVerified") as string,
+        );
+        toast.error(
+          getTranslation(language, "auth.login.accountNotVerified") as string,
+        );
+      }
+      // Handle 401 Unauthorized (wrong credentials)
+      else if (statusCode === 401) {
+        // Increment failed attempts on 401
+        const newFailedAttempts = failedAttempts + 1;
+        setFailedAttempts(newFailedAttempts);
+        setLoginError(errorMessage);
+        toast.error(errorMessage);
+      }
+      // Other errors
+      else if (
         errorMessage.includes("ACCOUNT_NOT_VERIFIED") ||
         errorMessage.includes("account is not active") ||
         errorMessage.includes("Account Disabled") ||
@@ -184,7 +226,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || accountLocked}
                 className="w-full bg-gradient-primary hover:opacity-90 transition-all duration-300 disabled:opacity-50">
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -194,10 +236,76 @@ const Login = () => {
                 {getTranslation(language, "auth.login.login") as string}
               </Button>
 
-              {loginError && (
+              {accountLocked && (
+                <div className="rounded-lg bg-red-50 border border-red-200 p-4 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Lock className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div className="space-y-2">
+                      <p className="text-sm font-semibold text-red-900">
+                        {loginError}
+                      </p>
+                      <div className="space-y-2 text-sm text-red-800">
+                        <p>
+                          {
+                            getTranslation(
+                              language,
+                              "auth.login.accountUnlockTime",
+                            ) as string
+                          }
+                        </p>
+                        <p>
+                          {
+                            getTranslation(
+                              language,
+                              "auth.login.accountRecovery",
+                            ) as string
+                          }{" "}
+                          <Link
+                            to="/forgot-password"
+                            className="font-semibold text-red-700 hover:text-red-900 underline">
+                            {
+                              getTranslation(
+                                language,
+                                "auth.login.resetPassword",
+                              ) as string
+                            }
+                          </Link>
+                          .
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {!accountLocked && loginError && !verificationError && (
                 <p className="text-sm text-destructive text-center">
                   {loginError}
                 </p>
+              )}
+
+              {!accountLocked && failedAttempts >= 3 && !verificationError && (
+                <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-3">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-yellow-800">
+                      {failedAttempts >= 5
+                        ? (getTranslation(
+                            language,
+                            "auth.login.accountMayBeLocked",
+                          ) as string)
+                        : (
+                            getTranslation(
+                              language,
+                              "auth.login.failedAttemptsWarning",
+                            ) as string
+                          ).replace(
+                            "{attempts}",
+                            (5 - failedAttempts).toString(),
+                          )}
+                    </p>
+                  </div>
+                </div>
               )}
 
               {verificationError && (

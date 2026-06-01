@@ -1,3 +1,4 @@
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -45,7 +46,7 @@ const AppContent = () => {
   useTrackLastPage();
 
   return (
-    <>
+    <React.Fragment>
       <ScrollToTop />
       <ScrollToTopButton position="bottom-right" scrollThreshold={300} />
       <div className="min-h-screen flex flex-col">
@@ -85,7 +86,7 @@ const AppContent = () => {
         </main>
         <Footer />
       </div>
-    </>
+    </React.Fragment>
   );
 };
 

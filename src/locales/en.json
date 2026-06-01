@@ -452,7 +452,17 @@
       "noAccount": "Don't have an account?",
       "registerNow": "Register Now",
       "accountNotVerified": "Your account has not been verified yet",
-      "resendVerificationEmail": "Resend Verification Email"
+      "resendVerificationEmail": "Resend Verification Email",
+      "captchaRequired": "Please complete the reCAPTCHA verification",
+      "accountLocked": "Your account has been locked after 5 failed login attempts. It will unlock automatically after 24 hours.",
+      "accountLockedWarning": "Account locked. Try again after 24 hours.",
+      "accountUnlockTime": "Your account will be automatically unlocked after 24 hours.",
+      "accountRecovery": "Need help? Reset your password to recover your account.",
+      "resetPassword": "Reset your password",
+      "failedAttemptsWarning": "Warning: Your account will be locked after {attempts} more failed attempts.",
+      "failedAttempts3": "Warning: Your account will be locked after 2 more failed attempts.",
+      "failedAttempts4": "Warning: Your account will be locked after 1 more failed attempt.",
+      "accountMayBeLocked": "Your account may now be locked. Please try again or wait 24 hours."
     },
     "emailVerification": {
       "verifyingEmail": "Verifying Email...",

@@ -85,10 +85,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const userData: User = response.user ?? (response as unknown as User);
       setUser(userData);
     } catch (error) {
+      const err = error as Error & { status?: number; errorField?: string };
       const errorMessage =
-        (error as Error).message ||
+        err.message ||
         "Login failed. Please check your credentials.";
-      throw new Error(errorMessage);
+      
+      // Re-throw with preserved error details
+      const customError = new Error(errorMessage) as Error & {
+        status?: number;
+        errorField?: string;
+      };
+      customError.status = err.status;
+      customError.errorField = err.errorField;
+      throw customError;
     } finally {
       setIsLoading(false);
     }

@@ -81,7 +81,7 @@ export const authService = {
 
       return authData;
     } catch (error) {
-      // Extract backend error message
+      // Extract backend error message and HTTP status
       if (axios.isAxiosError(error) && error.response?.data) {
         const backendError = error.response.data;
         const errorMessage =
@@ -89,7 +89,17 @@ export const authService = {
           backendError.message ||
           backendError.error ||
           "Login failed. Please check your credentials.";
-        throw new Error(errorMessage);
+        const status = error.response.status;
+        const errorField = backendError.error;
+
+        // Create a custom error with additional details
+        const customError = new Error(errorMessage) as Error & {
+          status?: number;
+          errorField?: string;
+        };
+        customError.status = status;
+        customError.errorField = errorField;
+        throw customError;
       }
 
       throw error;

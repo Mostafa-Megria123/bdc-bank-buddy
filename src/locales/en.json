@@ -203,6 +203,7 @@
     "dueNow": "Due Now",
     "detailsTitle": "Reservation Details",
     "preferredDate": "Preferred Reservation Date",
+    "reservationDateInfo": "Your reservation date is set to today",
     "additionalNotes": "Additional Notes (Optional)",
     "notesPlaceholder": "Any special requirements or notes...",
     "personalInfo": "Personal Information",
@@ -218,11 +219,14 @@
     "next": "Next",
     "processing": "Processing...",
     "completePayment": "Complete Payment",
+    "confirmReservation": "Confirm Reservation",
     "errorTitle": "Error",
     "errorDesc": "Please fill all required fields",
     "successTitle": "Reservation Successful!",
     "successDescription": "Unit {unitId} reserved successfully. Booking ID: {bookingId}",
+    "successPendingApproval": "Your reservation has been submitted successfully. It is now pending approval and will go through the maker-checker process. You will be notified about the status.",
     "dialogDescription": "Fill in the reservation details and proceed to confirm your booking.",
+    "dialogDescriptionNewFlow": "Complete your unit reservation. No immediate payment required - visit the nearest branch to process payment after approval.",
     "loginRequired": "Login Required",
     "loginRequiredMessage": "You must be logged in to make a reservation. Please log in or create an account.",
     "customerInfo": "Customer Information",
@@ -241,7 +245,9 @@
     "authErrorTitle": "Authentication Error",
     "authErrorDesc": "User identifier not available, please login again",
     "paymentRedirectInfo": "You will be redirected to secure payment gateway",
-    "captchaVerification": "Security Verification (reCAPTCHA)"
+    "captchaVerification": "Security Verification (reCAPTCHA)",
+    "pendingApprovalTitle": "Reservation Process",
+    "pendingApprovalDesc": "Your reservation will be pending for approval. After approval, please visit the nearest BDC branch to process payment and complete your booking."
   },
   "payment": {
     "verifyingTitle": "Verifying Payment",

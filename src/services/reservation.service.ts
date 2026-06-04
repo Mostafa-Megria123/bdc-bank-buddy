@@ -5,6 +5,8 @@ import type {
   ReservationDTO,
   ReservationsResponse,
   PendingActionResponse,
+  ReservationCreateRequest,
+  ApiResponse,
 } from "@/types/reservation";
 
 export type {
@@ -12,6 +14,8 @@ export type {
   ReservationDTO,
   ReservationsResponse,
   PendingActionResponse,
+  ReservationCreateRequest,
+  ApiResponse,
 };
 
 // Generic wrapper type for all API responses
@@ -124,6 +128,27 @@ export const reservationService = {
       return apiResponse.data;
     } catch (error) {
       console.error("Error editing payment completion:", error);
+      throw error;
+    }
+  },
+
+  createReservation: async (
+    request: ReservationCreateRequest,
+  ): Promise<ReservationDTO> => {
+    try {
+      const { data: apiResponse } = await axios.post<
+        CustomApiResponse<ReservationDTO>
+      >(`${API_URL}/create`, request);
+
+      if (!apiResponse.success) {
+        const errorMessage =
+          apiResponse.error?.message || "Failed to create reservation";
+        throw new Error(errorMessage);
+      }
+
+      return apiResponse.data as ReservationDTO;
+    } catch (error) {
+      console.error("Error creating reservation:", error);
       throw error;
     }
   },

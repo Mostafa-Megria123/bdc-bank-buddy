@@ -18,7 +18,6 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import {
-  CreditCard,
   Lock,
   User,
   Phone,
@@ -26,27 +25,26 @@ import {
   Calendar,
   Home,
   MapPin,
-  ExternalLink,
   Building,
   Maximize2,
   BedDouble,
   Droplet,
+  CheckCircle,
 } from "lucide-react";
 import { Unit } from "@/types/unit";
 import { UnitType } from "@/types/unit-type";
 import { useAuth } from "@/contexts/useAuth";
 import {
-  paymentService,
-  PaymentRequest,
-  CheckoutResponse,
-} from "@/services/payment.service";
+  reservationService,
+  ReservationCreateRequest,
+} from "@/services/reservation.service";
 
 interface ReservationModalProps {
   isOpen: boolean;
   onClose: () => void;
   unit: Unit | null;
   projectName: string;
-  projectId: string; // Add projectId prop
+  projectId: string;
 }
 
 export const ReservationModal: React.FC<ReservationModalProps> = ({
@@ -54,162 +52,127 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   onClose,
   unit,
   projectName,
-  projectId, // Destructure projectId
+  projectId,
 }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
   const { language, tString } = useLanguage();
   const { toast } = useToast();
-  const { user } = useAuth(); // Get user data from auth context
-  const [step, setStep] = useState(1); // 1: Reservation Details, 2: Payment Confirmation
+  const { user } = useAuth();
   const [captcha, setCaptcha] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [reservationDetails, setReservationDetails] = useState<{
-    reservationDate: string;
     notes: string;
   }>({
-    reservationDate: new Date().toISOString().split("T")[0],
     notes: "",
   });
 
   if (!unit) return null;
 
-  const handleReservationDetailsChange = (
-    field: keyof typeof reservationDetails,
-    value: string,
-  ) => {
-    setReservationDetails((prev) => ({ ...prev, [field]: value }));
+  const handleReservationDetailsChange = (value: string) => {
+    setReservationDetails((prev) => ({ ...prev, notes: value }));
   };
 
-  const validateStep = (currentStep: number) => {
-    if (currentStep === 1) {
-      return reservationDetails.reservationDate; // Only reservation date is required since username = nationalId
+  const validateForm = () => {
+    if (!captcha || typeof captcha !== "string") {
+      toast({
+        title: tString("reservation.errorTitle"),
+        description: "Please complete the reCAPTCHA verification",
+        variant: "destructive",
+      });
+      return false;
     }
+
+    const nationalId = user?.username?.trim();
+    if (!nationalId) {
+      toast({
+        title: tString("reservation.authErrorTitle"),
+        description: tString("reservation.authErrorDesc"),
+        variant: "destructive",
+      });
+      return false;
+    }
+
     return true;
   };
 
-  const nextStep = () => {
-    if (validateStep(step)) {
-      setStep((prev) => Math.min(prev + 1, 2));
-    } else {
-      toast({
-        title: tString("reservation.errorTitle"),
-        description: tString("reservation.errorDesc"),
-        variant: "destructive",
-      });
+  const handleCreateReservation = async () => {
+    if (!validateForm()) {
+      return;
     }
-  };
 
-  const prevStep = () => {
-    setStep((prev) => Math.max(prev - 1, 1));
-  };
-
-  const initiatePayment = async () => {
     setIsProcessing(true);
 
     try {
-      // Validate captcha first
-      if (!captcha || typeof captcha !== "string") {
-        toast({
-          title: tString("reservation.errorTitle"),
-          description: "Please complete the reCAPTCHA verification",
-          variant: "destructive",
-        });
-        setIsProcessing(false);
-        return;
-      }
-
-      // Use username as national ID since they are the same
       const nationalId = user?.username?.trim();
 
-      // Validate national ID (username)
-      if (!nationalId) {
-        toast({
-          title: tString("reservation.authErrorTitle"),
-          description: tString("reservation.authErrorDesc"),
-          variant: "destructive",
-        });
-        // Close the modal and redirect to login
-        onClose();
-        navigate("/login");
-        return;
-      }
-
-      const paymentData: PaymentRequest = {
-        unitId: unit.id,
+      const reservationRequest: ReservationCreateRequest = {
+        unitId: unit.id.toString(),
         projectId: projectId,
-        amount: unit.downPayment || 50000,
-        reservationDate: reservationDetails.reservationDate,
-        notes: reservationDetails.notes,
-        userNationalId: nationalId,
+        userNationalId: nationalId || "",
         captcha: captcha,
+        notes: reservationDetails.notes,
       };
 
-      const result = await paymentService.checkout(paymentData);
+      const result =
+        await reservationService.createReservation(reservationRequest);
 
-      if (result.errorCode === "UNIT_NOT_AVAILABLE") {
+      // Success - show success message and redirect
+      toast({
+        title: tString("reservation.successTitle"),
+        description: tString("reservation.successPendingApproval"),
+        variant: "default",
+      });
+
+      onClose();
+      navigate("/my-reservations", {
+        state: { showReservationPendingAlert: true },
+      });
+    } catch (error: unknown) {
+      console.error("Reservation creation error:", error);
+
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      // Handle specific error cases
+      if (errorMessage.includes("Unit is not available")) {
         toast({
           title: "Unit Reserved",
           description:
-            "This unit was just reserved by another user. Please select a different unit.",
+            "This unit has already been reserved. Please select another unit.",
           variant: "destructive",
         });
-        onClose(); // Close modal
-        navigate("/projects"); // Redirect to units list
-      }
-
-      if (result.errorCode === "0" || result.errorCode === "SUCCESS") {
-        // Store orderId and other details for later verification
-        sessionStorage.setItem(
-          "pendingPayment",
-          JSON.stringify({
-            orderId: result.orderId,
-            unitId: unit.id,
-            projectName: projectName,
-            amount: paymentData.amount,
-            userNationalId: nationalId,
-          }),
-        );
-
-        // Open payment form in new tab first (before navigation)
-        if (result.formUrl) {
-          const paymentWindow = window.open(result.formUrl, "_blank");
-          if (!paymentWindow) {
-            console.warn("Payment window could not be opened");
-            toast({
-              title: tString("reservation.paymentWarning"),
-              description:
-                "Payment window blocked. Please check your browser settings.",
-              variant: "destructive",
-            });
-          }
-        }
-
-        // Close the modal and navigate to My Reservations with a small delay to ensure window opens
-        setTimeout(() => {
-          onClose();
-          navigate("/my-reservations", {
-            state: { showPaymentPendingAlert: true },
-          });
-        }, 500);
+        onClose();
+        navigate("/projects");
+      } else if (errorMessage.includes("duplicate reservation")) {
+        toast({
+          title: "Duplicate Reservation",
+          description: "You already have a reservation for this unit.",
+          variant: "destructive",
+        });
+      } else if (errorMessage.includes("User not found")) {
+        toast({
+          title: "User Error",
+          description: "User account not found. Please check your credentials.",
+          variant: "destructive",
+        });
+        onClose();
+        navigate("/login");
+      } else if (errorMessage.includes("Unit not found")) {
+        toast({
+          title: "Unit Error",
+          description: "The selected unit is no longer available.",
+          variant: "destructive",
+        });
       } else {
         toast({
-          title: tString("reservation.paymentError"),
-          description: tString("reservation.paymentErrorDesc"),
+          title: tString("reservation.errorTitle"),
+          description: "Failed to create reservation. Please try again.",
           variant: "destructive",
         });
-        // Reset reCAPTCHA on error
-        recaptchaRef.current?.reset();
-        setCaptcha("");
       }
-    } catch (error) {
-      console.error("Payment initiation error:", error);
-      toast({
-        title: tString("reservation.paymentError"),
-        description: tString("reservation.paymentErrorDesc"),
-        variant: "destructive",
-      });
+
       // Reset reCAPTCHA on error
       recaptchaRef.current?.reset();
       setCaptcha("");
@@ -220,14 +183,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
   const handleCancel = () => {
     onClose();
-    // Reset form
-    setStep(1);
-    setReservationDetails({ reservationDate: "", notes: "" });
+    setReservationDetails({ notes: "" });
     recaptchaRef.current?.reset();
     setCaptcha("");
   };
 
-  // Detect clicks on the reCAPTCHA challenge iframe (appended to body by Google)
+  // Detect clicks on the reCAPTCHA challenge iframe
   const isRecaptchaTarget = (target: EventTarget | null): boolean => {
     if (!target) return false;
     const el = target as HTMLElement;
@@ -270,7 +231,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
               {tString("reservation.title")}
             </DialogTitle>
             <DialogDescription className="text-sm text-muted-foreground">
-              {tString("reservation.dialogDescription")}
+              {tString("reservation.dialogDescriptionNewFlow")}
             </DialogDescription>
           </DialogHeader>
 
@@ -354,204 +315,92 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                         {unit.price ? unit.price.toLocaleString() : "N/A"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">
-                        {tString("reservation.reservationFee")}
-                      </span>
-                      <span className="text-sm">
-                        {unit.totalAdvancePayment
-                          ? unit.totalAdvancePayment.toLocaleString()
-                          : "N/A"}{" "}
-                        {language === "ar" ? "ج.م" : "EGP"}
-                      </span>
-                    </div>
-                    <Separator />
-                    <div className="flex justify-between items-center text-lg font-bold">
-                      <span>{tString("reservation.dueNow")}</span>
-                      <span className="text-primary">
-                        {unit.downPayment
-                          ? unit.downPayment.toLocaleString()
-                          : "N/A"}{" "}
-                        {language === "ar" ? "ج.م" : "EGP"}
-                      </span>
-                    </div>
                   </div>
 
                   <Badge variant="outline" className="w-full justify-center">
                     {tString("reservation.available")}
                   </Badge>
+
+                  {/* Reservation Info Box */}
+                  <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm">
+                        <p className="font-medium text-blue-900 dark:text-blue-200">
+                          {tString("reservation.pendingApprovalTitle")}
+                        </p>
+                        <p className="text-blue-700 dark:text-blue-300 text-xs mt-1">
+                          {tString("reservation.pendingApprovalDesc")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Multi-Step Form */}
+            {/* Reservation Form */}
             <div className="lg:col-span-2">
-              {/* Progress Indicator */}
-              <div className="flex items-center justify-center mb-6">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="flex items-center">
-                      <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-                          step >= i
-                            ? "bg-primary border-primary text-white"
-                            : "border-muted text-muted-foreground"
-                        }`}>
-                        {i}
-                      </div>
-                      {i < 2 && (
-                        <div
-                          className={`w-16 h-0.5 mx-2 ${
-                            step > i ? "bg-primary" : "bg-muted"
-                          }`}
-                        />
-                      )}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    {tString("reservation.detailsTitle")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* User Information Display */}
+                  <div className="bg-muted/30 p-4 rounded-lg space-y-2">
+                    <h4 className="font-medium text-sm text-muted-foreground">
+                      {tString("reservation.customerInfo")}
+                    </h4>
+                    <div className="space-y-1 text-sm">
+                      <p>
+                        <strong>{tString("reservation.fullName")}:</strong>{" "}
+                        {user?.fullName || ""}
+                      </p>
+                      <p>
+                        <strong>{tString("reservation.email")}:</strong>{" "}
+                        {user?.email || ""}
+                      </p>
+                      <p>
+                        <strong>{tString("reservation.mobileNumber")}:</strong>{" "}
+                        {user?.mobileNumber || ""}
+                      </p>
+                      <p>
+                        <strong>{tString("reservation.nationalId")}:</strong>{" "}
+                        {user?.username || ""}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
 
-              {/* Step 1: Reservation Details */}
-              {step === 1 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Calendar className="h-5 w-5" />
-                      {tString("reservation.detailsTitle")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* User Information Display */}
-                    <div className="bg-muted/30 p-4 rounded-lg space-y-2">
-                      <h4 className="font-medium text-sm text-muted-foreground">
-                        {tString("reservation.customerInfo")}
-                      </h4>
-                      <div className="space-y-1 text-sm">
-                        <p>
-                          <strong>{tString("reservation.fullName")}:</strong>{" "}
-                          {user?.fullName || ""}
-                        </p>
-                        <p>
-                          <strong>{tString("reservation.email")}:</strong>{" "}
-                          {user?.email || ""}
-                        </p>
-                        <p>
-                          <strong>
-                            {tString("reservation.mobileNumber")}:
-                          </strong>{" "}
-                          {user?.mobileNumber || ""}
-                        </p>
-                        <p>
-                          <strong>{tString("reservation.nationalId")}:</strong>{" "}
-                          {user?.username || ""}
-                        </p>
-                      </div>
-                    </div>
+                  <Separator />
 
-                    <div className="space-y-2">
-                      <Label htmlFor="reservationDate">
-                        {tString("reservation.preferredDate")} *
-                      </Label>
-                      <Input
-                        id="reservationDate"
-                        type="date"
-                        value={new Date().toISOString().split("T")[0]}
-                        disabled={true}
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">
+                      {tString("reservation.additionalNotes")}
+                    </Label>
+                    <textarea
+                      id="notes"
+                      className="w-full min-h-[100px] p-3 border border-input bg-background rounded-md"
+                      placeholder={tString("reservation.notesPlaceholder")}
+                      value={reservationDetails.notes}
+                      onChange={(e) =>
+                        handleReservationDetailsChange(e.target.value)
+                      }
+                    />
+                  </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="notes">
-                        {tString("reservation.additionalNotes")}
-                      </Label>
-                      <textarea
-                        id="notes"
-                        className="w-full min-h-[100px] p-3 border border-input bg-background rounded-md"
-                        placeholder={tString("reservation.notesPlaceholder")}
-                        value={reservationDetails.notes}
-                        onChange={(e) =>
-                          handleReservationDetailsChange(
-                            "notes",
-                            e.target.value,
-                          )
-                        }
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                  <Separator />
 
-              {/* Step 2: Payment Confirmation */}
-              {step === 2 && (
-                <>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <CreditCard className="h-5 w-5" />
-                        {tString("reservation.paymentConfirmation")}
-                      </CardTitle>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Lock className="h-4 w-4" />
-                        {tString("reservation.paymentRedirectInfo")}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <h4 className="font-medium mb-3">
-                        {tString("reservation.reservationSummary")}
-                      </h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span>{tString("reservation.unit")}:</span>
-                          <span>{unit.unitNumber}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>{tString("reservation.project")}:</span>
-                          <span>{projectName}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>{tString("reservation.reservationDate")}:</span>
-                          <span>{reservationDetails.reservationDate}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>{tString("reservation.customer")}:</span>
-                          <span>{user?.fullName || ""}</span>
-                        </div>
-                      </div>
-
-                      <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
-                        <div className="flex items-center gap-2 text-sm">
-                          <ExternalLink className="h-4 w-4 text-blue-600" />
-                          <span className="text-blue-600 font-medium">
-                            {tString("reservation.paymentRedirect")}
-                          </span>
-                        </div>
-                        <p className="text-xs text-blue-600/80 mt-1">
-                          {tString("reservation.paymentRedirectDesc")}
-                        </p>
-                      </div>
-
-                      <div className="bg-muted/30 p-4 rounded-lg">
-                        <div className="flex items-center gap-2 text-sm">
-                          <Lock className="h-4 w-4 text-green-600" />
-                          <span className="text-green-600 font-medium">
-                            {tString("reservation.securePayment")}
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {tString("reservation.securePaymentDesc")}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <div className="mt-6 p-4 border rounded-lg bg-background">
-                    <Label className="block mb-4">
+                  {/* Security Verification Section */}
+                  <div className="space-y-2">
+                    <Label className="block">
                       {tString("reservation.captchaVerification") ||
-                        "Verification"}{" "}
+                        "Security Verification"}{" "}
                       *
                     </Label>
-                    {/* Render reCAPTCHA directly in the dialog */}
-                    <div className="flex justify-center py-4">
+                    <div className="flex justify-center py-4 border rounded-lg">
                       <ReCAPTCHA
                         ref={recaptchaRef}
                         sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
@@ -564,43 +413,38 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                       />
                     </div>
                   </div>
-                </>
-              )}
 
-              {/* Navigation Buttons */}
-              <div className="flex justify-between mt-6">
-                <Button
-                  variant="outline"
-                  onClick={step === 1 ? handleCancel : prevStep}
-                  disabled={isProcessing}>
-                  {step === 1
-                    ? tString("reservation.cancel")
-                    : tString("reservation.previous")}
-                </Button>
+                  <Separator />
 
-                <Button
-                  onClick={step === 2 ? initiatePayment : nextStep}
-                  disabled={
-                    isProcessing ||
-                    !validateStep(step) ||
-                    (step === 2 && !captcha)
-                  }
-                  className="bg-gradient-primary hover:opacity-90">
-                  {isProcessing ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      {tString("reservation.processing")}
-                    </div>
-                  ) : step === 2 ? (
-                    <div className="flex items-center gap-2">
-                      <ExternalLink className="h-4 w-4" />
-                      {tString("reservation.proceedToPayment")}
-                    </div>
-                  ) : (
-                    tString("reservation.next")
-                  )}
-                </Button>
-              </div>
+                  {/* Navigation Buttons */}
+                  <div className="flex justify-between gap-3 pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={handleCancel}
+                      disabled={isProcessing}
+                      className="flex-1">
+                      {tString("reservation.cancel")}
+                    </Button>
+
+                    <Button
+                      onClick={handleCreateReservation}
+                      disabled={isProcessing || !captcha}
+                      className="flex-1 bg-gradient-primary hover:opacity-90">
+                      {isProcessing ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          {tString("reservation.processing")}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4" />
+                          {tString("reservation.confirmReservation")}
+                        </div>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </DialogContent>

@@ -203,6 +203,7 @@
     "dueNow": "المطلوب الآن:",
     "detailsTitle": "تفاصيل الحجز",
     "preferredDate": "تاريخ الحجز المفضل",
+    "reservationDateInfo": "تاريخ الحجز محدد لليوم",
     "additionalNotes": "ملاحظات إضافية (اختياري)",
     "notesPlaceholder": "أي متطلبات خاصة أو ملاحظات...",
     "personalInfo": "المعلومات الشخصية",
@@ -218,11 +219,14 @@
     "next": "التالي",
     "processing": "جاري المعالجة...",
     "completePayment": "إتمام الدفع",
+    "confirmReservation": "تأكيد الحجز",
     "errorTitle": "خطأ",
     "errorDesc": "يرجى ملء جميع الحقول المطلوبة",
     "successTitle": "تم الحجز بنجاح!",
     "successDescription": "تم حجز الوحدة {unitId} بنجاح. رقم الحجز: {bookingId}",
+    "successPendingApproval": "تم تقديم حجزك بنجاح. الحجز قيد الانتظار للموافقة ويمر عبر عملية التحقق الثنائي. سيتم إخطارك بحالة الحجز.",
     "dialogDescription": "املأ تفاصيل الحجز ثم تابع لتأكيد الحجز.",
+    "dialogDescriptionNewFlow": "أكمل حجز الوحدة الخاصة بك. لا يلزم دفع فوري - يرجى الذهاب إلى أقرب فرع من فروع بنك القاهره لاستكمال دفع مقدم الوحدة الدفع بعد الموافقة.",
     "loginRequired": "تسجيل الدخول مطلوب",
     "loginRequiredMessage": "يجب عليك تسجيل الدخول لإجراء عملية حجز. يرجى تسجيل الدخول أو إنشاء حساب.",
     "customerInfo": "معلومات العميل",
@@ -241,7 +245,9 @@
     "authErrorTitle": "خطأ في المصادقة",
     "authErrorDesc": "معرف المستخدم غير متوفر، يرجى تسجيل الدخول مرة أخرى",
     "paymentRedirectInfo": "ستتم إعادة توجيهك إلى بوابة الدفع الآمنة",
-    "captchaVerification": "التحقق الأمني (reCAPTCHA)"
+    "captchaVerification": "التحقق الأمني (reCAPTCHA)",
+    "pendingApprovalTitle": "عملية الحجز",
+    "pendingApprovalDesc": "حجزك قيد الانتظار للموافقة. بعد الموافقة، يرجى الذهاب إلى أقرب فرع من فروع بنك القاهرة لمعالجة الدفع وإتمام حجزك."
   },
   "payment": {
     "verifyingTitle": "التحقق من الدفعة",

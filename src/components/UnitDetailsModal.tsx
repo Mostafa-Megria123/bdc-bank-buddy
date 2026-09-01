@@ -20,6 +20,7 @@ import {
   XCircle,
   Building2,
   CreditCard,
+  Building,
 } from "lucide-react";
 
 interface UnitDetailsModalProps {
@@ -190,6 +191,13 @@ export const UnitDetailsModal: React.FC<UnitDetailsModalProps> = ({
                       : "Ground"
                     : unit.floor}
                 </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Building className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">
+                  {language === "ar" ? "رقم المبني" : "Building Number"}:
+                </span>
+                <span className="font-medium">{unit.buildingNumber}</span>
               </div>
             </div>
 

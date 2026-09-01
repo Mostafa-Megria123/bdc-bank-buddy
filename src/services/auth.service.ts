@@ -56,6 +56,7 @@ export const authService = {
         username: data.nationalId,
         password: data.password,
         captcha: captchaToken,
+        rememberMe: false,
       });
 
       if (!response || !response.data) {

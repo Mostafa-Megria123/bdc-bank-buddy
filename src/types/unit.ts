@@ -4,6 +4,7 @@ import { UnitType } from "./unit-type";
 export interface Unit {
   id: string;
   unitNumber: string;
+  buildingNumber: string;
   projectId: string;
   projectName: string;
   type: UnitType | string;
